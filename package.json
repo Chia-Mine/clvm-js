@@ -1,0 +1,40 @@
+{
+  "name": "clvm-js",
+  "version": "0.0.0",
+  "author": "Admin ChiaMineJP <admin@chiamine.jp>",
+  "description": "Javascript implementation of chia lisp",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chia-Mine/clvm-js.git"
+  },
+  "bugs": "https://github.com/Chia-Mine/clvm-js/issues",
+  "main": "./index.js",
+  "scripts": {
+    "build": "node ./pre_publish.js && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./build --outDir ./build",
+    "build:prod": "node ./pre_publish.js --prod && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./dist --outDir ./dist"
+  },
+  "keywords": [
+    "chia",
+    "clvm",
+    "chialisp",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=12.13.0"
+  },
+  "dependencies": {
+    "bls-signatures": "^0.2.5",
+    "chia-agent": "^1.1.0-beta.7",
+    "jscrypto": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
+    "eslint": "^7.8.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsdoc": "^30.4.1",
+    "typescript": "^4.2.4"
+  }
+}
