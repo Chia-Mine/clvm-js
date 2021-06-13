@@ -18,7 +18,7 @@ export type CastableType = SExp
   | Tuple2<any, any>
   ;
 
-export const NULL = new Bytes(new Uint8Array());
+export const NULL = Bytes.NULL;
 
 export function looks_like_clvm_object(o: any): o is CLVMObject {
   if(!o || typeof o !== "object"){
@@ -283,7 +283,7 @@ export class SExp extends CLVMObject {
             return false;
           }
         }
-        else if(s2.as_pair() || !(s1.atom?.equal_to(s2?.atom))){
+        else if(s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom)) || !(!s1.atom && !s2.atom)){
           return false;
         }
       }
