@@ -242,7 +242,7 @@ balanced-match@^1.0.0:
 
 bls-signatures@Chia-Mine/bls-signatures#npm:
   version "0.2.1-beta.0"
-  resolved "https://codeload.github.com/Chia-Mine/bls-signatures/tar.gz/8ff3170327bee2a2b2adf7892f95a58411ab1b17"
+  resolved "https://codeload.github.com/Chia-Mine/bls-signatures/tar.gz/7d2642f0f1fc875cd332dea1811cb634a7a74fbc"
 
 brace-expansion@^1.1.7:
   version "1.1.11"

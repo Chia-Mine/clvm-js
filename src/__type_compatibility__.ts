@@ -11,6 +11,7 @@ export function to_hexstr(i: Uint8Array) {
  */
 export class Bytes {
   private readonly _b: Uint8Array;
+  public static readonly NULL = new Bytes();
   
   public constructor(value?: Word32Array|Uint8Array|Bytes|str|int[]|G1Element|None) {
     if(value instanceof Word32Array){
@@ -79,11 +80,30 @@ export class Bytes {
     return to_hexstr(this._b);
   }
   
-  public equal_to(b: any){
-    if(!(b instanceof Bytes)){
-      return false;
-    }
+  public equal_to(b: Bytes){
     return this.toString() === b.toString();
+  }
+  
+  /**
+   * Returns:
+   *   +1 if argument is smaller
+   *   0 if this and argument is the same
+   *   -1 if argument is larger
+   * @param other
+   */
+  public compare(other: Bytes): -1|0|1 {
+    if(this.length !== other.length){
+      return this.length > other.length ? 1 : -1;
+    }
+    for(let i=0;i<this.length;i++){
+      const self_i = this.get_byte_at(i);
+      const other_i = other.get_byte_at(i);
+      if(self_i === other_i){
+        continue;
+      }
+      return self_i > other_i ? 1 : -1;
+    }
+    return 0;
   }
 }
 
