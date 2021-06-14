@@ -13,6 +13,10 @@ export class Bytes {
   private readonly _b: Uint8Array;
   public static readonly NULL = new Bytes();
   
+  public static from(value?: Word32Array|Uint8Array|Bytes|str|int[]|G1Element|None){
+    return new Bytes(value);
+  }
+  
   public constructor(value?: Word32Array|Uint8Array|Bytes|str|int[]|G1Element|None) {
     if(value instanceof Word32Array){
       this._b = value.toUint8Array();
@@ -45,7 +49,7 @@ export class Bytes {
   }
   
   public get_byte_at(i: number){
-    return this._b[i];
+    return this._b[i] | 0;
   }
   
   public concat(b: Bytes){

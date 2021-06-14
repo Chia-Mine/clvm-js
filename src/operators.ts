@@ -207,6 +207,12 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
   });
 }
 
+export type TBaseOpDict = {
+  quote_atom: str; // Should be converted to Bytes for actual use
+  apply_atom: str; // Should be converted to Bytes for actual use
+  unknown_op_handler: typeof default_unknown_op;
+} & ((op: Bytes, args: SExp) => Tuple2<int, CLVMObject>);
+
 export function OperatorDict(
   op_atom_function_map: TOpAtomFunctionMap,
   quote?: str, // `Bytes.toString()` of the quote atom
@@ -215,8 +221,8 @@ export function OperatorDict(
 ){
   const dict = {
     ...op_atom_function_map,
-    quote_atom: quote || op_atom_function_map.quate_atom || QUOTE_ATOM,
-    apply_atom: apply || op_atom_function_map.apply_atom || APPLY_ATOM,
+    quote_atom: quote || op_atom_function_map.quote_atom, // @todo Shouldn't quote_atom be Bytes?
+    apply_atom: apply || op_atom_function_map.apply_atom, // @todo Shouldn't quote_atom be Bytes?
     unknown_op_handler: unknown_op_handler || default_unknown_op,
   };
   
