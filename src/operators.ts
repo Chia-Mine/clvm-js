@@ -340,4 +340,4 @@ const _OPERATOR_LOOKUP = OperatorDict(
 
 merge(_OPERATOR_LOOKUP as any, operators_for_module(KEYWORD_TO_ATOM, more_ops, OP_REWRITE));
 
-export const OPERATOR_LOOKUP = _OPERATOR_LOOKUP;
+export const OPERATOR_LOOKUP = _OPERATOR_LOOKUP as TOperatorDict<ATOMS>;
