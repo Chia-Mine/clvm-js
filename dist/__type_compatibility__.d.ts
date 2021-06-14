@@ -8,7 +8,7 @@ export declare function to_hexstr(i: Uint8Array): string;
 export declare class Bytes {
     private readonly _b;
     static readonly NULL: Bytes;
-    static from(value?: Word32Array | Uint8Array | Bytes | str | int[] | G1Element | None): Bytes;
+    static from(value: Word32Array | Uint8Array | Bytes | str | int[] | G1Element | None, type?: "hex"): Bytes;
     constructor(value?: Word32Array | Uint8Array | Bytes | str | int[] | G1Element | None);
     get length(): number;
     get_byte_at(i: number): number;

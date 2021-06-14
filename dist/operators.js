@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OPERATOR_LOOKUP = exports.OperatorDict = exports.APPLY_ATOM = exports.QUOTE_ATOM = exports.default_unknown_op = exports.args_len = exports.OP_REWRITE = exports.KEYWORD_TO_ATOM = exports.KEYWORD_FROM_ATOM = exports.KEYWORDS = void 0;
+exports.OPERATOR_LOOKUP = exports.OperatorDict = exports.APPLY_ATOM = exports.QUOTE_ATOM = exports.default_unknown_op = exports.args_len = exports.OP_REWRITE = exports.KEYWORD_TO_ATOM = exports.KEYWORD_FROM_ATOM = void 0;
 const casts_1 = require("./casts");
 const SExp_1 = require("./SExp");
 const __type_compatibility__1 = require("./__type_compatibility__");
@@ -9,41 +9,134 @@ const costs_1 = require("./costs");
 const op_utils_1 = require("./op_utils");
 const core_ops = require("./core_ops");
 const more_ops = require("./more_ops");
-exports.KEYWORDS = [
-    // core opcodes 0x01-x08
-    ". q a i c f r l x ",
-    // opcodes on atoms as strings 0x09-0x0f
-    "= >s sha256 substr strlen concat . ",
-    // opcodes on atoms as ints 0x10-0x17
-    "+ - * / divmod > ash lsh ",
-    // opcodes on atoms as vectors of bools 0x18-0x1c
-    "logand logior logxor lognot . ",
-    // opcodes for bls 1381 0x1d-0x1f
-    "point_add pubkey_for_exp . ",
-    // bool opcodes 0x20-0x23
-    "not any all . ",
-    // misc 0x24
-    "softfork ",
-].join("").trim().split(/\s/);
 /*
- {
-   "2f": "xxx",
-   "30": "yyy",
-   ...
- }
- */
-exports.KEYWORD_FROM_ATOM = Object
-    .entries(exports.KEYWORDS)
-    .reduce((acc, v) => {
-    acc[casts_1.int_to_bytes(+v[0]).toString()] = v[1];
+export const KEYWORDS = [
+  // core opcodes 0x01-x08
+  ". q a i c f r l x ",
+  
+  // opcodes on atoms as strings 0x09-0x0f
+  "= >s sha256 substr strlen concat . ",
+  
+  // opcodes on atoms as ints 0x10-0x17
+  "+ - * / divmod > ash lsh ",
+  
+  // opcodes on atoms as vectors of bools 0x18-0x1c
+  "logand logior logxor lognot . ",
+  
+  // opcodes for bls 1381 0x1d-0x1f
+  "point_add pubkey_for_exp . ",
+  
+  // bool opcodes 0x20-0x23
+  "not any all . ",
+  
+  // misc 0x24
+  "softfork ",
+].join("").trim().split(/\s/);
+export const KEYWORD_FROM_ATOM = Object
+  .entries(KEYWORDS)
+  .reduce<Record<str, str>>((acc, v) => {
+    acc[int_to_bytes(+v[0]).toString()] = v[1];
     return acc;
-}, {});
-exports.KEYWORD_TO_ATOM = Object
-    .entries(exports.KEYWORD_FROM_ATOM)
-    .reduce((acc, v) => {
+  }, {});
+export const KEYWORD_TO_ATOM = Object
+  .entries(KEYWORD_FROM_ATOM)
+  .reduce<Record<str, str>>((acc, v) => {
     acc[v[1]] = v[0];
     return acc;
-}, {});
+  }, {});
+ */
+exports.KEYWORD_FROM_ATOM = {
+    "00": ".",
+    // core opcodes 0x01-x08
+    "01": "q",
+    "02": "a",
+    "03": "i",
+    "04": "c",
+    "05": "f",
+    "06": "r",
+    "07": "l",
+    "08": "x",
+    // opcodes on atoms as strings 0x09-0x0f
+    "09": "=",
+    "0a": ">s",
+    "0b": "sha256",
+    "0c": "substr",
+    "0d": "strlen",
+    "0e": "concat",
+    "0f": ".",
+    // opcodes on atoms as ints 0x10-0x17
+    "10": "+",
+    "11": "-",
+    "12": "*",
+    "13": "/",
+    "14": "divmod",
+    "15": ">",
+    "16": "ash",
+    "17": "lsh",
+    // opcodes on atoms as vectors of bools 0x18-0x1c
+    "18": "logand",
+    "19": "logior",
+    "1a": "logxor",
+    "1b": "lognot",
+    "1c": ".",
+    // opcodes for bls 1381 0x1d-0x1f
+    "1d": "point_add",
+    "1e": "pubkey_for_exp",
+    "1f": ".",
+    // bool opcodes 0x20-0x23
+    "20": "not",
+    "21": "any",
+    "22": "all",
+    "23": ".",
+    // misc 0x24
+    "24": "softfork",
+};
+exports.KEYWORD_TO_ATOM = {
+    // ".": "00",
+    // core opcodes 0x01-x08
+    "q": "01",
+    "a": "02",
+    "i": "03",
+    "c": "04",
+    "f": "05",
+    "r": "06",
+    "l": "07",
+    "x": "08",
+    // opcodes on atoms as strings 0x09-0x0f
+    "=": "09",
+    ">s": "0a",
+    "sha256": "0b",
+    "substr": "0c",
+    "strlen": "0d",
+    "concat": "0e",
+    // ".": "0f",
+    // opcodes on atoms as ints 0x10-0x17
+    "+": "10",
+    "-": "11",
+    "*": "12",
+    "/": "13",
+    "divmod": "14",
+    ">": "15",
+    "ash": "16",
+    "lsh": "17",
+    // opcodes on atoms as vectors of bools 0x18-0x1c
+    "logand": "18",
+    "logior": "19",
+    "logxor": "1a",
+    "lognot": "1b",
+    // ".": "1c",
+    // opcodes for bls 1381 0x1d-0x1f
+    "point_add": "1d",
+    "pubkey_for_exp": "1e",
+    // ".": "1f",
+    // bool opcodes 0x20-0x23
+    "not": "20",
+    "any": "21",
+    "all": "22",
+    ".": "23",
+    // misc 0x24
+    "softfork": "24",
+};
 exports.OP_REWRITE = {
     "+": "add",
     "-": "subtract",
@@ -170,17 +263,15 @@ function default_unknown_op(op, args) {
     return __type_compatibility__1.t(cost, SExp_1.SExp.null());
 }
 exports.default_unknown_op = default_unknown_op;
-exports.QUOTE_ATOM = exports.KEYWORD_TO_ATOM["q"];
-exports.APPLY_ATOM = exports.KEYWORD_TO_ATOM["a"];
+exports.QUOTE_ATOM = __type_compatibility__1.Bytes.from(exports.KEYWORD_TO_ATOM["q"], "hex");
+exports.APPLY_ATOM = __type_compatibility__1.Bytes.from(exports.KEYWORD_TO_ATOM["a"], "hex");
 function merge(obj1, obj2) {
     Object.keys(obj2).forEach(key => {
         obj1[key] = obj2[key];
     });
 }
-function OperatorDict(op_atom_function_map, quote, // `Bytes.toString()` of the quote atom
-apply, // `Bytes.toString()` of the apply atom
-unknown_op_handler) {
-    const dict = Object.assign(Object.assign({}, op_atom_function_map), { quote_atom: quote || op_atom_function_map.quote_atom, apply_atom: apply || op_atom_function_map.apply_atom, unknown_op_handler: unknown_op_handler || default_unknown_op });
+function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_handler) {
+    const dict = Object.assign(Object.assign({}, atom_op_function_map), { quote_atom: quote_atom || atom_op_function_map.quote_atom || exports.QUOTE_ATOM, apply_atom: apply_atom || atom_op_function_map.apply_atom || exports.APPLY_ATOM, unknown_op_handler: unknown_op_handler || default_unknown_op });
     const OperatorDict = function (op, args) {
         const f = dict[op.toString()];
         if (typeof f !== "function") {
