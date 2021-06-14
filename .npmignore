@@ -1,0 +1,10 @@
+build/
+src/
+test/
+.editorconfig
+.eslintignore
+.eslintrc.js
+.gitignore
+pre_publish.js
+tsconfig.json
+yarn.lock
