@@ -3,7 +3,11 @@ import {int, None, str} from "./__python_types__";
 import {G1Element} from "bls-signatures";
 
 export function to_hexstr(i: Uint8Array) {
-  return (new Word32Array(i)).toString(Hex).replace(/^([0]{2})+|^([f]{2})+/, "");
+  const hex = (new Word32Array(i)).toString(Hex);
+  if(hex === "00" || hex === "ff"){
+    return hex;
+  }
+  return hex.replace(/^([0]{2})+|^([f]{2})+/, "");
 }
 
 /**
@@ -13,7 +17,10 @@ export class Bytes {
   private readonly _b: Uint8Array;
   public static readonly NULL = new Bytes();
   
-  public static from(value?: Word32Array|Uint8Array|Bytes|str|int[]|G1Element|None){
+  public static from(value: Word32Array|Uint8Array|Bytes|str|int[]|G1Element|None, type?: "hex"){
+    if(type === "hex" && typeof value === "string"){
+      return new Bytes([parseInt(value, 16)]);
+    }
     return new Bytes(value);
   }
   
@@ -31,7 +38,7 @@ export class Bytes {
       this._b = Utf8.parse(value).toUint8Array();
     }
     else if(Array.isArray(value)){
-      const w = Hex.parse(value.map(v => v.toString(16)).join(""));
+      const w = Hex.parse(value.map(v => v.toString(16).padStart(2, "0")).join(""));
       this._b = w.toUint8Array();
     }
     else if(!value || value === None){
@@ -40,8 +47,9 @@ export class Bytes {
     else if(typeof value.serialize === "function"){
       this._b = value.serialize();
     }
-    
-    throw new Error(`Invalid value: ${JSON.stringify(value)}`);
+    else{
+      throw new Error(`Invalid value: ${JSON.stringify(value)}`);
+    }
   }
   
   public get length(){

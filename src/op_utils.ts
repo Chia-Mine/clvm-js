@@ -7,7 +7,7 @@ export function operators_for_dict(
   op_name_lookup: Record<str, str>,
 ){
   const d: Record<str, (args: SExp) => unknown> = {};
-  for(const op of Object(keyword_to_atom).keys()){
+  for(const op of Object.keys(keyword_to_atom)){
     const op_name = `op_${op_name_lookup[op] || op}`;
     const op_f = op_dict[op_name] as (args: SExp) => unknown;
     if(typeof op_f === "function"){
