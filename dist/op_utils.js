@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.operators_for_module = exports.operators_for_dict = void 0;
 function operators_for_dict(keyword_to_atom, op_dict, op_name_lookup) {
     const d = {};
-    for (const op of Object(keyword_to_atom).keys()) {
+    for (const op of Object.keys(keyword_to_atom)) {
         const op_name = `op_${op_name_lookup[op] || op}`;
         const op_f = op_dict[op_name];
         if (typeof op_f === "function") {

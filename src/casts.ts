@@ -15,7 +15,7 @@ export function int_to_bytes(v: int): Bytes {
   if(v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER){
     throw new Error(`int value go over ${v > 0 ? "MAX_SAFE_INTEGER" : "MIN_SAFE_INTEGER"}: ${v}`);
   }
-  return new Bytes(Hex.parse(v.toString(16)));
+  return new Bytes(Hex.parse(v.toString(16).padStart(2, "0")));
 }
 
 /**

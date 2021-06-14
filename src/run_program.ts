@@ -11,7 +11,7 @@ import {
   QUOTE_COST
 } from "./costs";
 import {EvalError} from "./EvalError";
-import {TBaseOpDict} from "./operators";
+import {TOperatorDict} from "./operators";
 
 export type OpCallable = (opStack: OpStackType, valStack: ValStackType) => int;
 export type ValStackType = SExp[];
@@ -43,7 +43,7 @@ export function msb_mask(byte: uint8){
 export function run_program(
   program: SExp,
   args: CLVMObject,
-  operator_lookup: TBaseOpDict,
+  operator_lookup: TOperatorDict,
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
 ): Tuple2<int, CLVMObject>{
@@ -144,7 +144,7 @@ export function run_program(
     const op = operator.atom as Bytes;
     let operand_list = sexp.rest();
     // op === operator_lookup.quote_atom
-    if(op.equal_to(Bytes.from(operator_lookup.quote_atom))){
+    if(op.equal_to(operator_lookup.quote_atom)){
       value_stack.push(operand_list);
       return QUOTE_COST;
     }
@@ -172,7 +172,7 @@ export function run_program(
     
     const op = operator.atom;
     // op === operator_lookup.apply_atom
-    if(op.equal_to(Bytes.from(operator_lookup.apply_atom))){
+    if(op.equal_to(operator_lookup.apply_atom)){
       if(operand_list.list_len() !== 2){
         throw new EvalError("apply requires exactly 2 parameters", operand_list);
       }

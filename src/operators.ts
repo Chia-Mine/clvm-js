@@ -20,6 +20,7 @@ import {operators_for_module} from "./op_utils";
 import * as core_ops from "./core_ops";
 import * as more_ops from "./more_ops";
 
+/*
 export const KEYWORDS = [
   // core opcodes 0x01-x08
   ". q a i c f r l x ",
@@ -42,28 +43,111 @@ export const KEYWORDS = [
   // misc 0x24
   "softfork ",
 ].join("").trim().split(/\s/);
-
-/*
- {
-   "2f": "xxx",
-   "30": "yyy",
-   ...
- }
- */
 export const KEYWORD_FROM_ATOM = Object
   .entries(KEYWORDS)
   .reduce<Record<str, str>>((acc, v) => {
     acc[int_to_bytes(+v[0]).toString()] = v[1];
     return acc;
   }, {});
-
 export const KEYWORD_TO_ATOM = Object
   .entries(KEYWORD_FROM_ATOM)
   .reduce<Record<str, str>>((acc, v) => {
     acc[v[1]] = v[0];
     return acc;
   }, {});
-
+ */
+export const KEYWORD_FROM_ATOM = {
+  "00": ".",
+  // core opcodes 0x01-x08
+  "01": "q",
+  "02": "a",
+  "03": "i",
+  "04": "c",
+  "05": "f",
+  "06": "r",
+  "07": "l",
+  "08": "x",
+  // opcodes on atoms as strings 0x09-0x0f
+  "09": "=",
+  "0a": ">s",
+  "0b": "sha256",
+  "0c": "substr",
+  "0d": "strlen",
+  "0e": "concat",
+  "0f": ".",
+  // opcodes on atoms as ints 0x10-0x17
+  "10": "+",
+  "11": "-",
+  "12": "*",
+  "13": "/",
+  "14": "divmod",
+  "15": ">",
+  "16": "ash",
+  "17": "lsh",
+  // opcodes on atoms as vectors of bools 0x18-0x1c
+  "18": "logand",
+  "19": "logior",
+  "1a": "logxor",
+  "1b": "lognot",
+  "1c": ".",
+  // opcodes for bls 1381 0x1d-0x1f
+  "1d": "point_add",
+  "1e": "pubkey_for_exp",
+  "1f": ".",
+  // bool opcodes 0x20-0x23
+  "20": "not",
+  "21": "any",
+  "22": "all",
+  "23": ".",
+  // misc 0x24
+  "24": "softfork",
+};
+export const KEYWORD_TO_ATOM = {
+  // ".": "00",
+  // core opcodes 0x01-x08
+  "q": "01",
+  "a": "02",
+  "i": "03",
+  "c": "04",
+  "f": "05",
+  "r": "06",
+  "l": "07",
+  "x": "08",
+  // opcodes on atoms as strings 0x09-0x0f
+  "=": "09",
+  ">s": "0a",
+  "sha256": "0b",
+  "substr": "0c",
+  "strlen": "0d",
+  "concat": "0e",
+  // ".": "0f",
+  // opcodes on atoms as ints 0x10-0x17
+  "+": "10",
+  "-": "11",
+  "*": "12",
+  "/": "13",
+  "divmod": "14",
+  ">": "15",
+  "ash": "16",
+  "lsh": "17",
+  // opcodes on atoms as vectors of bools 0x18-0x1c
+  "logand": "18",
+  "logior": "19",
+  "logxor": "1a",
+  "lognot": "1b",
+  // ".": "1c",
+  // opcodes for bls 1381 0x1d-0x1f
+  "point_add": "1d",
+  "pubkey_for_exp": "1e",
+  // ".": "1f",
+  // bool opcodes 0x20-0x23
+  "not": "20",
+  "any": "21",
+  "all": "22",
+  ".": "23",
+  // misc 0x24
+  "softfork": "24",
+};
 export const OP_REWRITE = {
   "+": "add",
   "-": "subtract",
@@ -79,6 +163,9 @@ export const OP_REWRITE = {
   ">": "gr",
   ">s": "gr_bytes",
 };
+
+export type ATOMS = keyof typeof KEYWORD_FROM_ATOM;
+export type KEYWORDS = keyof typeof KEYWORD_TO_ATOM;
 
 export function* args_len(op_name: str, args: SExp){
   for(const arg of args.as_iter()){
@@ -196,10 +283,12 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple2<int, CLVMObjec
   return t(cost, SExp.null());
 }
 
-export const QUOTE_ATOM = KEYWORD_TO_ATOM["q"];
-export const APPLY_ATOM = KEYWORD_TO_ATOM["a"];
+export const QUOTE_ATOM = Bytes.from(KEYWORD_TO_ATOM["q"], "hex");
+export const APPLY_ATOM = Bytes.from(KEYWORD_TO_ATOM["a"], "hex");
 
-type TOpAtomFunctionMap = Record<str, (args: SExp) => unknown>;
+type TOpFunc<R = unknown> = (args: SExp) => R;
+type TBasicAtom = "quote_atom"|"apply_atom";
+type TAtomOpFunctionMap<A extends str = ATOMS> = Record<A, TOpFunc> & Partial<Record<TBasicAtom, Bytes>>;
 
 function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
   Object.keys(obj2).forEach(key => {
@@ -207,27 +296,29 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
   });
 }
 
-export type TBaseOpDict = {
-  quote_atom: str; // Should be converted to Bytes for actual use
-  apply_atom: str; // Should be converted to Bytes for actual use
-  unknown_op_handler: typeof default_unknown_op;
-} & ((op: Bytes, args: SExp) => Tuple2<int, CLVMObject>);
+export type TOperatorDict<A extends str = ATOMS> = {
+    unknown_op_handler: typeof default_unknown_op;
+  }
+  & ((op: Bytes, args: SExp) => Tuple2<int, CLVMObject>)
+  & TAtomOpFunctionMap<A>
+  & Record<TBasicAtom, Bytes>
+  ;
 
-export function OperatorDict(
-  op_atom_function_map: TOpAtomFunctionMap,
-  quote?: str, // `Bytes.toString()` of the quote atom
-  apply?: str, // `Bytes.toString()` of the apply atom
+export function OperatorDict<A extends str = ATOMS>(
+  atom_op_function_map: TAtomOpFunctionMap<A>,
+  quote_atom?: Bytes,
+  apply_atom?: Bytes,
   unknown_op_handler?: typeof default_unknown_op,
-){
+): TOperatorDict<A> {
   const dict = {
-    ...op_atom_function_map,
-    quote_atom: quote || op_atom_function_map.quote_atom, // @todo Shouldn't quote_atom be Bytes?
-    apply_atom: apply || op_atom_function_map.apply_atom, // @todo Shouldn't quote_atom be Bytes?
+    ...atom_op_function_map,
+    quote_atom: quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom || QUOTE_ATOM,
+    apply_atom: apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom || APPLY_ATOM,
     unknown_op_handler: unknown_op_handler || default_unknown_op,
   };
   
   const OperatorDict = function(op: Bytes, args: SExp){
-    const f = (dict as TOpAtomFunctionMap | Record<string, unknown>)[op.toString()];
+    const f = (dict as Record<string, unknown>)[op.toString()];
     if(typeof f !== "function"){
       return dict.unknown_op_handler(op, args);
     }
@@ -238,7 +329,7 @@ export function OperatorDict(
   
   merge(OperatorDict as any, dict);
   
-  return OperatorDict;
+  return OperatorDict as TOperatorDict<A>;
 }
 
 const _OPERATOR_LOOKUP = OperatorDict(
