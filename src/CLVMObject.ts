@@ -1,6 +1,5 @@
 import {None, Optional} from "./__python_types__";
 import {Bytes, Tuple2} from "./__type_compatibility__";
-import {SExp} from "./SExp";
 import {EvalError} from "./EvalError";
 
 export type CLVMType = {
@@ -27,10 +26,10 @@ export class CLVMObject implements CLVMType {
   
   public constructor(v: any) {
     if(v instanceof CLVMObject){
-      return v;
+      this.atom = v.atom;
+      this.pair = v.pair;
     }
-    
-    if(v instanceof Tuple2){
+    else if(v instanceof Tuple2){
       this.pair = v;
       this.atom = None;
     }
