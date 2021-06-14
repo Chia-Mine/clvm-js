@@ -1,10 +1,9 @@
 {
   "name": "clvm",
-  "version": "0.0.0-beta.1",
+  "version": "0.0.0",
   "author": "Admin ChiaMineJP <admin@chiamine.jp>",
   "description": "Javascript implementation of chia lisp",
   "license": "MIT",
-  "homepage": "https://github.com/Chia-Mine/clvm-js/tree/v0.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Chia-Mine/clvm-js.git"
