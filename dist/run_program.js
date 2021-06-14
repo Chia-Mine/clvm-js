@@ -113,7 +113,7 @@ function run_program(program, args, operator_lookup, max_cost = __python_types__
         const op = operator.atom;
         let operand_list = sexp.rest();
         // op === operator_lookup.quote_atom
-        if (op.equal_to(__type_compatibility__1.Bytes.from(operator_lookup.quote_atom))) {
+        if (op.equal_to(operator_lookup.quote_atom)) {
             value_stack.push(operand_list);
             return costs_1.QUOTE_COST;
         }
@@ -138,7 +138,7 @@ function run_program(program, args, operator_lookup, max_cost = __python_types__
         }
         const op = operator.atom;
         // op === operator_lookup.apply_atom
-        if (op.equal_to(__type_compatibility__1.Bytes.from(operator_lookup.apply_atom))) {
+        if (op.equal_to(operator_lookup.apply_atom)) {
             if (operand_list.list_len() !== 2) {
                 throw new EvalError_1.EvalError("apply requires exactly 2 parameters", operand_list);
             }

@@ -4,7 +4,11 @@ exports.Stream = exports.isIterable = exports.t = exports.Tuple2 = exports.Bytes
 const jscrypto_1 = require("jscrypto");
 const __python_types__1 = require("./__python_types__");
 function to_hexstr(i) {
-    return (new jscrypto_1.Word32Array(i)).toString(jscrypto_1.Hex).replace(/^([0]{2})+|^([f]{2})+/, "");
+    const hex = (new jscrypto_1.Word32Array(i)).toString(jscrypto_1.Hex);
+    if (hex === "00" || hex === "ff") {
+        return hex;
+    }
+    return hex.replace(/^([0]{2})+|^([f]{2})+/, "");
 }
 exports.to_hexstr = to_hexstr;
 /**
@@ -25,7 +29,7 @@ class Bytes {
             this._b = jscrypto_1.Utf8.parse(value).toUint8Array();
         }
         else if (Array.isArray(value)) {
-            const w = jscrypto_1.Hex.parse(value.map(v => v.toString(16)).join(""));
+            const w = jscrypto_1.Hex.parse(value.map(v => v.toString(16).padStart(2, "0")).join(""));
             this._b = w.toUint8Array();
         }
         else if (!value || value === __python_types__1.None) {
@@ -34,9 +38,14 @@ class Bytes {
         else if (typeof value.serialize === "function") {
             this._b = value.serialize();
         }
-        throw new Error(`Invalid value: ${JSON.stringify(value)}`);
+        else {
+            throw new Error(`Invalid value: ${JSON.stringify(value)}`);
+        }
     }
-    static from(value) {
+    static from(value, type) {
+        if (type === "hex" && typeof value === "string") {
+            return new Bytes([parseInt(value, 16)]);
+        }
         return new Bytes(value);
     }
     get length() {
