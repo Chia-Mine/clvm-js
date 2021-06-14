@@ -1,0 +1,31 @@
+import { G1Element } from "bls-signatures";
+import { int, None, str } from "./__python_types__";
+import { CLVMObject } from "./CLVMObject";
+import { Bytes, Tuple2 } from "./__type_compatibility__";
+export declare type CastableType = SExp | CLVMObject | Bytes | str | int | None | G1Element | Array<unknown> | Tuple2<any, any>;
+export declare const NULL: Bytes;
+export declare function looks_like_clvm_object(o: any): o is CLVMObject;
+export declare function convert_atom_to_bytes(v: any): Bytes;
+export declare function to_sexp_type(value: CastableType): CLVMObject;
+export declare class SExp extends CLVMObject {
+    static readonly TRUE: SExp;
+    static readonly FALSE: SExp;
+    static readonly __NULL__: SExp;
+    static to(v: CastableType): SExp;
+    static null(): SExp;
+    constructor(v: CLVMObject);
+    as_pair(): Tuple2<SExp, SExp> | None;
+    listp(): boolean;
+    nullp(): boolean;
+    as_int(): number;
+    as_bin(): Bytes;
+    cons(right: any): SExp;
+    first(): SExp;
+    rest(): SExp;
+    as_iter(): Generator<SExp, void, unknown>;
+    equal_to(other: CastableType): boolean;
+    list_len(): number;
+    as_javascript(): SExp;
+    toString(): string;
+    repl(): string;
+}
