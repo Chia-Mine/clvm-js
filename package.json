@@ -1,6 +1,6 @@
 {
   "name": "clvm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Admin ChiaMineJP <admin@chiamine.jp>",
   "description": "Javascript implementation of chia lisp",
   "license": "MIT",
