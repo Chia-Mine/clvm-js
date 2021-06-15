@@ -312,7 +312,7 @@ export class SExp extends CLVMObject {
     return this.as_bin().toString();
   }
   
-  public repl(){
-    return `${SExp}(${this})`;
+  public __repl__(){
+    return `SExp(0x${this.as_bin().toString()})`;
   }
 }
