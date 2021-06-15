@@ -93,7 +93,7 @@ export class Bytes {
   }
   
   public equal_to(b: Bytes){
-    return this.toString() === b.toString();
+    return this.compare(b) === 0;
   }
   
   /**
