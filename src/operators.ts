@@ -207,7 +207,7 @@ export function* args_len(op_name: str, args: SExp){
 export function default_unknown_op(op: Bytes, args: SExp): Tuple2<int, CLVMObject> {
   // # any opcode starting with ffff is reserved (i.e. fatal error)
   // # opcodes are not allowed to be empty
-  if(op.length === 0 || op.slice(0, 2).equal_to(new Bytes([0xffff]))){
+  if(op.length === 0 || op.slice(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
     throw new EvalError("reserved operator", SExp.to(op));
   }
   
