@@ -1,6 +1,6 @@
 import { int, str } from "./__python_types__";
 import { SExp } from "./SExp";
-import { Bytes, Tuple2 } from "./__type_compatibility__";
+import { Bytes, Tuple } from "./__type_compatibility__";
 import { CLVMObject } from "./CLVMObject";
 export declare const KEYWORD_FROM_ATOM: {
     "00": string;
@@ -94,7 +94,7 @@ export declare const OP_REWRITE: {
 export declare type ATOMS = keyof typeof KEYWORD_FROM_ATOM;
 export declare type KEYWORDS = keyof typeof KEYWORD_TO_ATOM;
 export declare function args_len(op_name: str, args: SExp): Generator<number, void, unknown>;
-export declare function default_unknown_op(op: Bytes, args: SExp): Tuple2<int, CLVMObject>;
+export declare function default_unknown_op(op: Bytes, args: SExp): Tuple<int, CLVMObject>;
 export declare const QUOTE_ATOM: Bytes;
 export declare const APPLY_ATOM: Bytes;
 declare type TOpFunc<R = unknown> = (args: SExp) => R;
@@ -102,7 +102,7 @@ declare type TBasicAtom = "quote_atom" | "apply_atom";
 declare type TAtomOpFunctionMap<A extends str = ATOMS> = Record<A, TOpFunc> & Partial<Record<TBasicAtom, Bytes>>;
 export declare type TOperatorDict<A extends str = ATOMS> = {
     unknown_op_handler: typeof default_unknown_op;
-} & ((op: Bytes, args: SExp) => Tuple2<int, CLVMObject>) & TAtomOpFunctionMap<A> & Record<TBasicAtom, Bytes>;
+} & ((op: Bytes, args: SExp) => Tuple<int, CLVMObject>) & TAtomOpFunctionMap<A> & Record<TBasicAtom, Bytes>;
 export declare function OperatorDict<A extends str = ATOMS>(atom_op_function_map: TAtomOpFunctionMap<A>, quote_atom?: Bytes, apply_atom?: Bytes, unknown_op_handler?: typeof default_unknown_op): TOperatorDict<A>;
 export declare const OPERATOR_LOOKUP: TOperatorDict<"01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "0a" | "0b" | "0c" | "0d" | "0e" | "10" | "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "19" | "1a" | "1b" | "1d" | "1e" | "20" | "21" | "22" | "23" | "24" | "00" | "0f" | "1c" | "1f">;
 export {};
