@@ -66,7 +66,7 @@ export function op_sha256(args: SExp){
     h.update(atom.as_word());
   }
   cost += arg_len * SHA256_COST_PER_BYTE;
-  return malloc_cost(cost, SExp.to(new Bytes(h.finalize())));
+  return malloc_cost(cost, SExp.to(Bytes.from(h.finalize())));
 }
 
 export function* args_as_ints(op_name: str, args: SExp){
