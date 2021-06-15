@@ -2,7 +2,7 @@ import {int, None, uint8} from "./__python_types__";
 import {SExp} from "./SExp";
 import {TToSexpF} from "./as_javascript";
 import {CLVMObject, isAtom, isCons} from "./CLVMObject";
-import {Bytes, Tuple2, t} from "./__type_compatibility__";
+import {Bytes, Tuple, t} from "./__type_compatibility__";
 import {
   APPLY_COST,
   PATH_LOOKUP_BASE_COST,
@@ -46,11 +46,11 @@ export function run_program(
   operator_lookup: TOperatorDict,
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
-): Tuple2<int, CLVMObject>{
+): Tuple<int, CLVMObject>{
   program = SExp.to(program);
   const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp.to) : None;
   
-  function traverse_path(sexp: SExp, env: SExp): Tuple2<int, SExp> {
+  function traverse_path(sexp: SExp, env: SExp): Tuple<int, SExp> {
     let cost = PATH_LOOKUP_BASE_COST;
     cost += PATH_LOOKUP_COST_PER_LEG;
     if(sexp.nullp()){
@@ -122,15 +122,15 @@ export function run_program(
     // # put a bunch of ops on op_stack
     if(!isCons(sexp)){
       // # sexp is an atom
-      const [cost, r] = traverse_path(sexp, args).as_array() as [int, SExp];
+      const [cost, r] = traverse_path(sexp, args) as [int, SExp];
       value_stack.push(r);
       return cost;
     }
     
     const operator = sexp.first();
     if(isCons(operator)){
-      const pair = operator.as_pair() as Tuple2<SExp, SExp>;
-      const [new_operator, must_be_nil] = pair.as_array();
+      const pair = operator.as_pair() as Tuple<SExp, SExp>;
+      const [new_operator, must_be_nil] = pair;
       if(new_operator.pair || must_be_nil.atom !== Bytes.NULL){
         throw new EvalError("in ((X)...) syntax X must be lone atom", sexp);
       }
@@ -183,7 +183,7 @@ export function run_program(
       return APPLY_COST;
     }
     
-    const [additional_cost, r] = operator_lookup(op, operand_list).as_array() as [int, CLVMObject];
+    const [additional_cost, r] = operator_lookup(op, operand_list) as [int, CLVMObject];
     value_stack.push(r as SExp);
     return additional_cost;
   }
