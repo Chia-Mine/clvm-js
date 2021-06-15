@@ -104,5 +104,5 @@ export declare type TOperatorDict<A extends str = ATOMS> = {
     unknown_op_handler: typeof default_unknown_op;
 } & ((op: Bytes, args: SExp) => Tuple2<int, CLVMObject>) & TAtomOpFunctionMap<A> & Record<TBasicAtom, Bytes>;
 export declare function OperatorDict<A extends str = ATOMS>(atom_op_function_map: TAtomOpFunctionMap<A>, quote_atom?: Bytes, apply_atom?: Bytes, unknown_op_handler?: typeof default_unknown_op): TOperatorDict<A>;
-export declare const OPERATOR_LOOKUP: TOperatorDict<"00" | "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "0a" | "0b" | "0c" | "0d" | "0e" | "10" | "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "19" | "1a" | "1b" | "1d" | "1e" | "20" | "21" | "22" | "23" | "24" | "0f" | "1c" | "1f">;
+export declare const OPERATOR_LOOKUP: TOperatorDict<"01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "0a" | "0b" | "0c" | "0d" | "0e" | "10" | "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "19" | "1a" | "1b" | "1d" | "1e" | "20" | "21" | "22" | "23" | "24" | "00" | "0f" | "1c" | "1f">;
 export {};
