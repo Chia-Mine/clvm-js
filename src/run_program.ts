@@ -47,7 +47,7 @@ export function run_program(
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
 ): Tuple2<int, CLVMObject>{
-  const _program = SExp.to(program);
+  program = SExp.to(program);
   const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp.to) : None;
   
   function traverse_path(sexp: SExp, env: SExp): Tuple2<int, SExp> {

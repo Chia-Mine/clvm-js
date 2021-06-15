@@ -1,5 +1,7 @@
-import blsLoader, {G1Element, ModuleInstance} from "bls-signatures";
+import type {G1Element, ModuleInstance} from "bls-signatures";
+import * as blsLoader from "bls-signatures";
 
+type TCreateModule = () => Promise<ModuleInstance>;
 export let BLS: ModuleInstance | undefined;
 export let loadPromise: Promise<ModuleInstance> | undefined;
 
@@ -21,7 +23,7 @@ export async function initializeBLS(): Promise<ModuleInstance> {
     }
     
     let error: unknown;
-    const instance = await blsLoader().catch(e => {
+    const instance = await ((blsLoader as unknown) as TCreateModule)().catch(e => {
       console.error("Error while loading BLS module");
       error = e;
       return;
