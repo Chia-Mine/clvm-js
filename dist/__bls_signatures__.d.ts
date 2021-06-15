@@ -1,4 +1,4 @@
-import { G1Element, ModuleInstance } from "bls-signatures";
+import type { G1Element, ModuleInstance } from "bls-signatures";
 export declare let BLS: ModuleInstance | undefined;
 export declare let loadPromise: Promise<ModuleInstance> | undefined;
 /**

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.G1Element_add = exports.assert_G1Element_valid = exports.G1Element_from_bytes = exports.getBLSModule = exports.initializeBLS = exports.loadPromise = exports.BLS = void 0;
-const bls_signatures_1 = require("bls-signatures");
+const blsLoader = require("bls-signatures");
 /**
  * Load BLS Module instance.
  * This function must be called an awaited on program start up.
@@ -29,7 +29,7 @@ function initializeBLS() {
                 return resolve(exports.BLS);
             }
             let error;
-            const instance = yield bls_signatures_1.default().catch(e => {
+            const instance = yield blsLoader().catch(e => {
                 console.error("Error while loading BLS module");
                 error = e;
                 return;

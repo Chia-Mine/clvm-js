@@ -14,9 +14,10 @@ class CLVMObject {
         // this is always a 2-tuple of an object implementing the CLVM object protocol.
         this.pair = __python_types__1.None;
         if (v instanceof CLVMObject) {
-            return v;
+            this.atom = v.atom;
+            this.pair = v.pair;
         }
-        if (v instanceof __type_compatibility__1.Tuple2) {
+        else if (v instanceof __type_compatibility__1.Tuple2) {
             this.pair = v;
             this.atom = __python_types__1.None;
         }

@@ -29,7 +29,7 @@ function msb_mask(byte) {
 }
 exports.msb_mask = msb_mask;
 function run_program(program, args, operator_lookup, max_cost = __python_types__1.None, pre_eval_f = __python_types__1.None) {
-    const _program = SExp_1.SExp.to(program);
+    program = SExp_1.SExp.to(program);
     const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp_1.SExp.to) : __python_types__1.None;
     function traverse_path(sexp, env) {
         let cost = costs_1.PATH_LOOKUP_BASE_COST;
