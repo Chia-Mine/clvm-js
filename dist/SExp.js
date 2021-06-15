@@ -232,7 +232,7 @@ class SExp extends CLVMObject_1.CLVMObject {
                         return false;
                     }
                 }
-                else if (s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom)) || !(!s1.atom && !s2.atom)) {
+                else if (s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom))) {
                     return false;
                 }
             }

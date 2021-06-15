@@ -5,7 +5,7 @@ const __type_compatibility__1 = require("./__type_compatibility__");
 // In javascript, max safe integer is 2**53-1 (53bit)
 // Surprisingly, parseInt() can parse over 32bit integer. 
 function int_from_bytes(b) {
-    if (!b) {
+    if (!b || b.length === 0) {
         return 0;
     }
     return parseInt(b.as_word().toString(), 16);
