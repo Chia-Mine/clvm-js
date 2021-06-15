@@ -273,6 +273,16 @@ function merge(obj1, obj2) {
 function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_handler) {
     const dict = Object.assign(Object.assign({}, atom_op_function_map), { quote_atom: quote_atom || atom_op_function_map.quote_atom || exports.QUOTE_ATOM, apply_atom: apply_atom || atom_op_function_map.apply_atom || exports.APPLY_ATOM, unknown_op_handler: unknown_op_handler || default_unknown_op });
     const OperatorDict = function (op, args) {
+        if (typeof op === "string") {
+            op = __type_compatibility__1.Bytes.from(op, "hex");
+        }
+        else if (typeof op === "number") {
+            op = casts_1.int_to_bytes(op);
+        }
+        else if (!(op instanceof __type_compatibility__1.Bytes)) {
+            throw new Error(`Invalid op: ${JSON.stringify(op)}`);
+        }
+        merge(dict, OperatorDict);
         const f = dict[op.toString()];
         if (typeof f !== "function") {
             return dict.unknown_op_handler(op, args);
