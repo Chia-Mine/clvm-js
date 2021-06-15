@@ -2,12 +2,18 @@
 
 Javascript implementation of CLVM (Chia Lisp VM)
 
-Still Work in progress.  
-Will be published in few days.
+Still Work in progress.(Untested)
 
-Breeding edge beta of `clvm` is available by
+## Install
 ```shell
-yarn add Chia-Mine/clvm-js#v0.0.0
+npm install clvm
 # or
-npm install Chia-Mine/clvm-js#v0.0.0
+yarn add clvm
+```
+
+Breeding edge version of `clvm` is available by
+```shell
+yarn add Chia-Mine/clvm-js#v0.0.1
+# or
+npm install Chia-Mine/clvm-js#v0.0.1
 ```
