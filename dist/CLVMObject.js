@@ -17,7 +17,7 @@ class CLVMObject {
             this.atom = v.atom;
             this.pair = v.pair;
         }
-        else if (v instanceof __type_compatibility__1.Tuple2) {
+        else if (v instanceof __type_compatibility__1.Tuple) {
             this.pair = v;
             this.atom = __python_types__1.None;
         }

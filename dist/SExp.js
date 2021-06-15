@@ -55,7 +55,7 @@ function is_valid_stack_target(s) {
     return true;
 }
 function is_valid_stack_target_pair(s) {
-    if (!(s.pair instanceof __type_compatibility__1.Tuple2)) {
+    if (!(s.pair instanceof __type_compatibility__1.Tuple)) {
         throw new Error(`Unexpected value of stack[target].pair: ${JSON.stringify(s.pair)}`);
     }
     return true;
@@ -65,15 +65,15 @@ function to_sexp_type(value) {
     const stack = [v];
     const ops = [__type_compatibility__1.t(0, __python_types__1.None)];
     while (ops.length) {
-        let [op, targetIndex] = ops.pop().as_array();
+        let [op, targetIndex] = ops.pop();
         // convert value
         if (op === op_convert) {
             if (looks_like_clvm_object(stack[stack.length - 1])) {
                 continue;
             }
             v = stack.pop();
-            if (v instanceof __type_compatibility__1.Tuple2) {
-                const [left, right] = v.as_array();
+            if (v instanceof __type_compatibility__1.Tuple) {
+                const [left, right] = v;
                 stack.push(new CLVMObject_1.CLVMObject(__type_compatibility__1.t(left, right)));
                 targetIndex = stack.length - 1;
                 if (!looks_like_clvm_object(right)) {
@@ -114,13 +114,13 @@ function to_sexp_type(value) {
         if (op === op_set_left) { // set left
             const stack_target = stack[targetIndex];
             if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)) {
-                stack[targetIndex].pair = __type_compatibility__1.t(new CLVMObject_1.CLVMObject(stack.pop()), stack_target.pair.get1());
+                stack[targetIndex].pair = __type_compatibility__1.t(new CLVMObject_1.CLVMObject(stack.pop()), stack_target.pair[1]);
             }
         }
         else if (op === op_set_right) { // set right
             const stack_target = stack[targetIndex];
             if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)) {
-                stack[targetIndex].pair = __type_compatibility__1.t(stack_target.pair.get0(), new CLVMObject_1.CLVMObject(stack.pop()));
+                stack[targetIndex].pair = __type_compatibility__1.t(stack_target.pair[0], new CLVMObject_1.CLVMObject(stack.pop()));
             }
         }
         else if (op === op_prepend_list) { // prepend list
@@ -175,7 +175,7 @@ class SExp extends CLVMObject_1.CLVMObject {
         if (pair === __python_types__1.None) {
             return pair;
         }
-        return __type_compatibility__1.t(new SExp(pair.get0()), new SExp(pair.get1()));
+        return __type_compatibility__1.t(new SExp(pair[0]), new SExp(pair[1]));
     }
     listp() {
         return this.pair !== __python_types__1.None;
@@ -197,14 +197,14 @@ class SExp extends CLVMObject_1.CLVMObject {
     first() {
         const pair = this.pair;
         if (pair) {
-            return new SExp(pair.get0());
+            return new SExp(pair[0]);
         }
         throw new EvalError_1.EvalError("first of non-cons", this);
     }
     rest() {
         const pair = this.pair;
         if (pair) {
-            return new SExp(pair.get1());
+            return new SExp(pair[1]);
         }
         throw new EvalError_1.EvalError("rest of non-cons", this);
     }
@@ -220,13 +220,13 @@ class SExp extends CLVMObject_1.CLVMObject {
             other = SExp.to(other);
             const to_compare_stack = [__type_compatibility__1.t(this, other)];
             while (to_compare_stack.length) {
-                const [s1, s2] = to_compare_stack.pop().as_array();
+                const [s1, s2] = to_compare_stack.pop();
                 const p1 = s1.as_pair();
                 if (p1) {
                     const p2 = s2.as_pair();
                     if (p2) {
-                        to_compare_stack.push(__type_compatibility__1.t(p1.get0(), p2.get0()));
-                        to_compare_stack.push(__type_compatibility__1.t(p1.get1(), p2.get1()));
+                        to_compare_stack.push(__type_compatibility__1.t(p1[0], p2[0]));
+                        to_compare_stack.push(__type_compatibility__1.t(p1[1], p2[1]));
                     }
                     else {
                         return false;
