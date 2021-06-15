@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stream = exports.isIterable = exports.t = exports.Tuple2 = exports.Bytes = exports.to_hexstr = void 0;
 const jscrypto_1 = require("jscrypto");
 const __python_types__1 = require("./__python_types__");
-function to_hexstr(i) {
-    const hex = (new jscrypto_1.Word32Array(i)).toString(jscrypto_1.Hex);
-    if (hex === "00" || hex === "ff") {
-        return hex;
+function to_hexstr(r) {
+    // # make sure the string returned is minimal
+    // # ie. no leading 00 or ff bytes that are unnecessary
+    while (r.length > 1 && (r[0] === ((r[1] === 0xFF) ? 0xFF : 0))) {
+        r = r.slice(1);
     }
-    return hex.replace(/^([0]{2})+|^([f]{2})+/, "");
+    return (new jscrypto_1.Word32Array(r)).toString();
 }
 exports.to_hexstr = to_hexstr;
 /**
@@ -16,37 +17,43 @@ exports.to_hexstr = to_hexstr;
  */
 class Bytes {
     constructor(value) {
-        if (value instanceof jscrypto_1.Word32Array) {
-            this._b = value.toUint8Array();
-        }
-        else if (value instanceof Uint8Array) {
+        if (value instanceof Uint8Array) {
             this._b = new Uint8Array(value);
         }
         else if (value instanceof Bytes) {
             this._b = value.data();
         }
-        else if (typeof value === "string") {
-            this._b = jscrypto_1.Utf8.parse(value).toUint8Array();
-        }
-        else if (Array.isArray(value)) {
-            const w = jscrypto_1.Hex.parse(value.map(v => v.toString(16).padStart(2, "0")).join(""));
-            this._b = w.toUint8Array();
-        }
         else if (!value || value === __python_types__1.None) {
             this._b = new Uint8Array();
-        }
-        else if (typeof value.serialize === "function") {
-            this._b = value.serialize();
         }
         else {
             throw new Error(`Invalid value: ${JSON.stringify(value)}`);
         }
     }
     static from(value, type) {
-        if (type === "hex" && typeof value === "string") {
-            return new Bytes([parseInt(value, 16)]);
+        if (value instanceof Uint8Array || value instanceof Bytes || value === __python_types__1.None || value === undefined) {
+            return new Bytes(value);
         }
-        return new Bytes(value);
+        else if (value instanceof jscrypto_1.Word32Array) {
+            return new Bytes(value.toUint8Array());
+        }
+        else if (typeof value === "string") {
+            if (type === "hex") {
+                value = value.replace(/^0x/, "");
+                return new Bytes(jscrypto_1.Hex.parse(value).toUint8Array());
+            }
+            else /* if(type === "utf8") */ {
+                return new Bytes(jscrypto_1.Utf8.parse(value).toUint8Array());
+            }
+        }
+        else if (type === "G1Element") {
+            if (typeof value.serialize !== "function") {
+                throw new Error("Invalid G1Element");
+            }
+            const uint8array = value.serialize();
+            return new Bytes(uint8array);
+        }
+        throw new Error(`Invalid value: ${JSON.stringify(value)}`);
     }
     get length() {
         return this._b.length;
@@ -58,7 +65,7 @@ class Bytes {
         const w1 = this.as_word();
         const w2 = b.as_word();
         const w = w1.concat(w2);
-        return new Bytes(w);
+        return Bytes.from(w);
     }
     slice(start, length) {
         const len = typeof length === "number" ? length : (this.length - start);
@@ -80,7 +87,7 @@ class Bytes {
         return to_hexstr(this._b);
     }
     equal_to(b) {
-        return this.toString() === b.toString();
+        return this.compare(b) === 0;
     }
     /**
      * Returns:

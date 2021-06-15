@@ -1,4 +1,4 @@
-import {CastableType, NULL, SExp} from "./SExp";
+import {CastableType, SExp} from "./SExp";
 import {Bytes, t, Tuple2} from "./__type_compatibility__";
 
 export type TOpStack = Array<(op_stack: TOpStack, val_stack: TValStack) => unknown>;
@@ -16,7 +16,7 @@ export function as_javascript(sexp: SExp){
   function _make_tuple(op_stack: TOpStack, val_stack: TValStack){
     const left = val_stack.pop() as SExp;
     const right = val_stack.pop() as SExp;
-    if(right.equal_to(NULL)){
+    if(right.equal_to(Bytes.NULL)){
       val_stack.push([left]);
     }
     else{

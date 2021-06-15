@@ -11,7 +11,7 @@ if(fs.existsSync(distDir)){
 }
 fs.mkdirSync(distDir);
 
-if(devMode){
+if(!devMode){
   return;
 }
 
@@ -23,12 +23,8 @@ const copyFileToPublish = (fileName) => {
   }
 };
 
-// copyFileToPublish("README.md");
-// copyFileToPublish("CHANGELOG.md");
-// copyFileToPublish("LICENSE");
+const packageJson = require("./package.json");
+packageJson.main = "./index.js";
+packageJson.typings = "./index.d.ts";
 
-/*
-if(typeof packageJson.devDependencies !== "undefined") delete packageJson.devDependencies;
-if(typeof packageJson.scripts !== "undefined") delete packageJson.scripts;
 fs.writeFileSync(path.join(distDir, "package.json"), JSON.stringify(packageJson, null, 2));
- */

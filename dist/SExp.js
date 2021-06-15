@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SExp = exports.to_sexp_type = exports.convert_atom_to_bytes = exports.looks_like_clvm_object = exports.NULL = void 0;
+exports.SExp = exports.to_sexp_type = exports.convert_atom_to_bytes = exports.looks_like_clvm_object = void 0;
 const __python_types__1 = require("./__python_types__");
 const CLVMObject_1 = require("./CLVMObject");
 const __type_compatibility__1 = require("./__type_compatibility__");
@@ -8,7 +8,6 @@ const casts_1 = require("./casts");
 const serialize_1 = require("./serialize");
 const as_javascript_1 = require("./as_javascript");
 const EvalError_1 = require("./EvalError");
-exports.NULL = __type_compatibility__1.Bytes.NULL;
 function looks_like_clvm_object(o) {
     if (!o || typeof o !== "object") {
         return false;
@@ -22,22 +21,22 @@ function convert_atom_to_bytes(v) {
         return v;
     }
     else if (typeof v === "string") {
-        return new __type_compatibility__1.Bytes(v);
+        return __type_compatibility__1.Bytes.from(v, "utf8");
     }
     else if (typeof v === "number") {
         return casts_1.int_to_bytes(v);
     }
     else if (v === __python_types__1.None || !v) {
-        return exports.NULL;
+        return __type_compatibility__1.Bytes.NULL;
     }
     else if (__type_compatibility__1.isIterable(v)) {
         if (v.length > 0) {
             throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
         }
-        return exports.NULL;
+        return __type_compatibility__1.Bytes.NULL;
     }
     else if (typeof v.serialize === "function") {
-        return new __type_compatibility__1.Bytes(v);
+        return __type_compatibility__1.Bytes.from(v, "G1Element");
     }
     throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
 }
@@ -90,10 +89,10 @@ function to_sexp_type(value) {
             }
             else if (__type_compatibility__1.isIterable(v)) {
                 if (v.length < 1) {
-                    stack.push(new CLVMObject_1.CLVMObject(exports.NULL));
+                    stack.push(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
                     continue;
                 }
-                stack.push(new CLVMObject_1.CLVMObject(exports.NULL));
+                stack.push(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
                 targetIndex = stack.length - 1;
                 for (const _ of v) {
                     stack.push(_);
@@ -233,7 +232,7 @@ class SExp extends CLVMObject_1.CLVMObject {
                         return false;
                     }
                 }
-                else if (s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom)) || !(!s1.atom && !s2.atom)) {
+                else if (s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom))) {
                     return false;
                 }
             }
@@ -258,11 +257,11 @@ class SExp extends CLVMObject_1.CLVMObject {
     toString() {
         return this.as_bin().toString();
     }
-    repl() {
-        return `${SExp}(${this})`;
+    __repl__() {
+        return `SExp(0x${this.as_bin().toString()})`;
     }
 }
 exports.SExp = SExp;
-SExp.TRUE = new SExp(new CLVMObject_1.CLVMObject(exports.NULL));
-SExp.FALSE = new SExp(new CLVMObject_1.CLVMObject(new __type_compatibility__1.Bytes([1])));
-SExp.__NULL__ = new SExp(new CLVMObject_1.CLVMObject(exports.NULL));
+SExp.TRUE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
+SExp.FALSE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.from("0x01", "hex")));
+SExp.__NULL__ = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));

@@ -192,7 +192,7 @@ exports.args_len = args_len;
 function default_unknown_op(op, args) {
     // # any opcode starting with ffff is reserved (i.e. fatal error)
     // # opcodes are not allowed to be empty
-    if (op.length === 0 || op.slice(0, 2).equal_to(new __type_compatibility__1.Bytes([0xffff]))) {
+    if (op.length === 0 || op.slice(0, 2).equal_to(__type_compatibility__1.Bytes.from("0xffff", "hex"))) {
         throw new EvalError_1.EvalError("reserved operator", SExp_1.SExp.to(op));
     }
     /*
@@ -273,6 +273,16 @@ function merge(obj1, obj2) {
 function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_handler) {
     const dict = Object.assign(Object.assign({}, atom_op_function_map), { quote_atom: quote_atom || atom_op_function_map.quote_atom || exports.QUOTE_ATOM, apply_atom: apply_atom || atom_op_function_map.apply_atom || exports.APPLY_ATOM, unknown_op_handler: unknown_op_handler || default_unknown_op });
     const OperatorDict = function (op, args) {
+        if (typeof op === "string") {
+            op = __type_compatibility__1.Bytes.from(op, "hex");
+        }
+        else if (typeof op === "number") {
+            op = casts_1.int_to_bytes(op);
+        }
+        else if (!(op instanceof __type_compatibility__1.Bytes)) {
+            throw new Error(`Invalid op: ${JSON.stringify(op)}`);
+        }
+        merge(dict, OperatorDict);
         const f = dict[op.toString()];
         if (typeof f !== "function") {
             return dict.unknown_op_handler(op, args);
