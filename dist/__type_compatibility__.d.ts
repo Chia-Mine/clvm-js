@@ -1,15 +1,16 @@
 import { Word32Array } from "jscrypto";
-import { int, None, str } from "./__python_types__";
+import { None, str } from "./__python_types__";
 import { G1Element } from "bls-signatures";
-export declare function to_hexstr(i: Uint8Array): string;
+export declare function to_hexstr(r: Uint8Array): string;
+export declare type BytesFromType = "hex" | "utf8" | "G1Element";
 /**
  * Unlike python, there is no immutable byte type in javascript.
  */
 export declare class Bytes {
     private readonly _b;
     static readonly NULL: Bytes;
-    static from(value: Word32Array | Uint8Array | Bytes | str | int[] | G1Element | None, type?: "hex"): Bytes;
-    constructor(value?: Word32Array | Uint8Array | Bytes | str | int[] | G1Element | None);
+    constructor(value?: Uint8Array | Bytes | None);
+    static from(value?: Uint8Array | Bytes | None | Word32Array | str | G1Element, type?: BytesFromType): Bytes;
     get length(): number;
     get_byte_at(i: number): number;
     concat(b: Bytes): Bytes;

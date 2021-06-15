@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.as_javascript = void 0;
-const SExp_1 = require("./SExp");
 const __type_compatibility__1 = require("./__type_compatibility__");
 function as_javascript(sexp) {
     function _roll(op_stack, val_stack) {
@@ -13,7 +12,7 @@ function as_javascript(sexp) {
     function _make_tuple(op_stack, val_stack) {
         const left = val_stack.pop();
         const right = val_stack.pop();
-        if (right.equal_to(SExp_1.NULL)) {
+        if (right.equal_to(__type_compatibility__1.Bytes.NULL)) {
             val_stack.push([left]);
         }
         else {

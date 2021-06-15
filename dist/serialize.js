@@ -26,7 +26,7 @@ function* sexp_to_byte_iterator(sexp) {
         sexp = todo_stack.pop();
         const pair = sexp.as_pair();
         if (pair) {
-            yield new __type_compatibility__1.Bytes([CONS_BOX_MARKER]);
+            yield casts_1.int_to_bytes(CONS_BOX_MARKER);
             todo_stack.push(pair.get1());
             todo_stack.push(pair.get0());
         }
@@ -39,7 +39,7 @@ exports.sexp_to_byte_iterator = sexp_to_byte_iterator;
 function* atom_to_byte_iterator(atom) {
     const size = atom ? atom.length : 0;
     if (size === 0 || !atom) {
-        yield new __type_compatibility__1.Bytes([0x80]);
+        yield __type_compatibility__1.Bytes.from("0x80", "hex");
         return;
     }
     else if (size === 1) {
@@ -48,18 +48,25 @@ function* atom_to_byte_iterator(atom) {
             return;
         }
     }
-    let size_blob;
+    let uint8array;
     if (size < 0x40) {
-        size_blob = new __type_compatibility__1.Bytes([0x80 | size]);
+        uint8array = Uint8Array.from([0x80 | size]);
     }
     else if (size < 0x2000) {
-        size_blob = new __type_compatibility__1.Bytes([0xC0 | (size >> 8), (size >> 0) & 0xFF]);
+        uint8array = Uint8Array.from([
+            0xC0 | (size >> 8),
+            (size >> 0) & 0xFF,
+        ]);
     }
     else if (size < 0x100000) {
-        size_blob = new __type_compatibility__1.Bytes([0xE0 | (size >> 16), (size >> 8) & 0xFF, (size >> 0) & 0xFF]);
+        uint8array = Uint8Array.from([
+            0xE0 | (size >> 16),
+            (size >> 8) & 0xFF,
+            (size >> 0) & 0xFF,
+        ]);
     }
     else if (size < 0x8000000) {
-        size_blob = new __type_compatibility__1.Bytes([
+        uint8array = Uint8Array.from([
             0xF0 | (size >> 24),
             (size >> 16) & 0xFF,
             (size >> 8) & 0xFF,
@@ -67,7 +74,7 @@ function* atom_to_byte_iterator(atom) {
         ]);
     }
     else if (size < 0x400000000) {
-        size_blob = new __type_compatibility__1.Bytes([
+        uint8array = Uint8Array.from([
             0xF8 | ((size / 2 ** 32) >> 0),
             ((size / 2 ** 24) >> 0) & 0xFF,
             ((size / 2 ** 16) >> 0) & 0xFF,
@@ -78,6 +85,7 @@ function* atom_to_byte_iterator(atom) {
     else {
         throw new Error(`sexp too long ${atom}`);
     }
+    const size_blob = __type_compatibility__1.Bytes.from(uint8array);
     yield size_blob;
     yield atom;
     return;
@@ -131,10 +139,10 @@ function _op_consume_sexp(f) {
 }
 function _consume_atom(f, b) {
     if (b === 0x80) {
-        return new __type_compatibility__1.Bytes([b]);
+        return casts_1.int_to_bytes(b);
     }
     else if (b <= MAX_SINGLE_BYTE) {
-        return new __type_compatibility__1.Bytes([b]);
+        return casts_1.int_to_bytes(b);
     }
     let bit_count = 0;
     let bit_mask = 0x80;
@@ -144,7 +152,7 @@ function _consume_atom(f, b) {
         ll &= 0xFF ^ bit_mask;
         bit_mask >>= 1;
     }
-    let size_blob = new __type_compatibility__1.Bytes([ll]);
+    let size_blob = casts_1.int_to_bytes(ll);
     if (bit_count > 1) {
         const ll2 = f.read(bit_count - 1);
         if (ll2.length !== bit_count - 1) {
@@ -160,7 +168,7 @@ function _consume_atom(f, b) {
     if (blob.length !== size) {
         throw new Error("bad encoding");
     }
-    return (new __type_compatibility__1.Bytes([b])).concat(size_blob.slice(1)).concat(blob);
+    return casts_1.int_to_bytes(b).concat(size_blob.slice(1)).concat(blob);
 }
 /*
 # instead of parsing the input stream, this function pulls out all the bytes
@@ -181,10 +189,10 @@ function sexp_buffer_from_stream(f) {
 exports.sexp_buffer_from_stream = sexp_buffer_from_stream;
 function _atom_from_stream(f, b, to_sexp_f) {
     if (b === 0x80) {
-        return to_sexp_f(SExp_1.NULL);
+        return to_sexp_f(__type_compatibility__1.Bytes.NULL);
     }
     else if (b <= MAX_SINGLE_BYTE) {
-        return to_sexp_f(new __type_compatibility__1.Bytes([b]));
+        return to_sexp_f(casts_1.int_to_bytes(b));
     }
     let bit_count = 0;
     let bit_mask = 0x80;
@@ -193,7 +201,7 @@ function _atom_from_stream(f, b, to_sexp_f) {
         b &= 0xFF ^ bit_mask;
         bit_mask >>= 1;
     }
-    let size_blob = new __type_compatibility__1.Bytes([b]);
+    let size_blob = casts_1.int_to_bytes(b);
     if (bit_count > 1) {
         const b = f.read(bit_count - 1);
         if (b.length !== bit_count - 1) {

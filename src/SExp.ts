@@ -18,8 +18,6 @@ export type CastableType = SExp
   | Tuple2<any, any>
   ;
 
-export const NULL = Bytes.NULL;
-
 export function looks_like_clvm_object(o: any): o is CLVMObject {
   if(!o || typeof o !== "object"){
     return false;
@@ -34,22 +32,22 @@ export function convert_atom_to_bytes(v: any): Bytes {
     return v;
   }
   else if(typeof v === "string"){
-    return new Bytes(v);
+    return Bytes.from(v, "utf8");
   }
   else if(typeof v === "number"){
     return int_to_bytes(v);
   }
   else if(v === None || !v){
-    return NULL;
+    return Bytes.NULL;
   }
   else if(isIterable(v)){
     if(v.length > 0){
       throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
     }
-    return NULL
+    return Bytes.NULL
   }
   else if(typeof v.serialize === "function"){
-    return new Bytes(v);
+    return Bytes.from(v, "G1Element");
   }
   
   throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
@@ -115,11 +113,11 @@ export function to_sexp_type(value: CastableType): CLVMObject {
       }
       else if(isIterable(v)){
         if(v.length < 1){
-          stack.push(new CLVMObject(NULL));
+          stack.push(new CLVMObject(Bytes.NULL));
           continue;
         }
         
-        stack.push(new CLVMObject(NULL));
+        stack.push(new CLVMObject(Bytes.NULL));
         targetIndex = stack.length - 1;
         
         for(const _ of v){
@@ -184,9 +182,9 @@ export function to_sexp_type(value: CastableType): CLVMObject {
  Exactly one of "atom" and "pair" must be None.
  */
 export class SExp extends CLVMObject {
-  static readonly TRUE: SExp = new SExp(new CLVMObject(NULL));
-  static readonly FALSE: SExp = new SExp(new CLVMObject(new Bytes([1])));
-  static readonly __NULL__: SExp = new SExp(new CLVMObject(NULL));
+  static readonly TRUE: SExp = new SExp(new CLVMObject(Bytes.NULL));
+  static readonly FALSE: SExp = new SExp(new CLVMObject(Bytes.from("0x01", "hex")));
+  static readonly __NULL__: SExp = new SExp(new CLVMObject(Bytes.NULL));
   
   static to(v: CastableType): SExp {
     if(v instanceof SExp){
@@ -283,7 +281,7 @@ export class SExp extends CLVMObject {
             return false;
           }
         }
-        else if(s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom)) || !(!s1.atom && !s2.atom)){
+        else if(s2.as_pair() || !(s1.atom && s2.atom && s1.atom.equal_to(s2.atom))){
           return false;
         }
       }
@@ -312,7 +310,7 @@ export class SExp extends CLVMObject {
     return this.as_bin().toString();
   }
   
-  public repl(){
-    return `${SExp}(${this})`;
+  public __repl__(){
+    return `SExp(0x${this.as_bin().toString()})`;
   }
 }
