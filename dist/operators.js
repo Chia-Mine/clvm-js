@@ -192,7 +192,7 @@ exports.args_len = args_len;
 function default_unknown_op(op, args) {
     // # any opcode starting with ffff is reserved (i.e. fatal error)
     // # opcodes are not allowed to be empty
-    if (op.length === 0 || op.slice(0, 2).equal_to(new __type_compatibility__1.Bytes([0xffff]))) {
+    if (op.length === 0 || op.slice(0, 2).equal_to(__type_compatibility__1.Bytes.from("0xffff", "hex"))) {
         throw new EvalError_1.EvalError("reserved operator", SExp_1.SExp.to(op));
     }
     /*
