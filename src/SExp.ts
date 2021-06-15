@@ -1,7 +1,7 @@
 import {G1Element} from "bls-signatures";
 import {int, None, str} from "./__python_types__";
 import {CLVMObject} from "./CLVMObject";
-import {Bytes, isIterable, Tuple2, t, Stream} from "./__type_compatibility__";
+import {Bytes, isIterable, Tuple, t, Stream} from "./__type_compatibility__";
 import {int_from_bytes, int_to_bytes} from "./casts";
 import {sexp_to_stream} from "./serialize";
 import {as_javascript} from "./as_javascript";
@@ -15,7 +15,7 @@ export type CastableType = SExp
   | None
   | G1Element
   | Array<unknown>
-  | Tuple2<any, any>
+  | Tuple<any, any>
   ;
 
 export function looks_like_clvm_object(o: any): o is CLVMObject {
@@ -59,7 +59,7 @@ const op_set_right = 2;
 const op_prepend_list = 3;
 type operations = typeof op_convert | typeof op_set_left | typeof op_set_right | typeof op_prepend_list;
 type op_target = number | None;
-type op_and_target = Tuple2<operations, op_target>;
+type op_and_target = Tuple<operations, op_target>;
 
 function is_valid_stack_target(s: any): s is CLVMObject {
   if(!s){
@@ -71,8 +71,8 @@ function is_valid_stack_target(s: any): s is CLVMObject {
   return true;
 }
 
-function is_valid_stack_target_pair(s: any): s is Tuple2<unknown, unknown> {
-  if(!(s.pair instanceof Tuple2)){
+function is_valid_stack_target_pair(s: any): s is Tuple<unknown, unknown> {
+  if(!(s.pair instanceof Tuple)){
     throw new Error(`Unexpected value of stack[target].pair: ${JSON.stringify(s.pair)}`);
   }
   return true;
@@ -85,7 +85,7 @@ export function to_sexp_type(value: CastableType): CLVMObject {
   const ops: op_and_target[] = [t(0, None)];
   
   while(ops.length){
-    let [op, targetIndex] = (ops.pop() as op_and_target).as_array();
+    let [op, targetIndex] = (ops.pop() as op_and_target);
     
     // convert value
     if(op === op_convert){
@@ -94,8 +94,8 @@ export function to_sexp_type(value: CastableType): CLVMObject {
       }
       
       v = stack.pop();
-      if(v instanceof Tuple2){
-        const [left, right] = v.as_array();
+      if(v instanceof Tuple){
+        const [left, right] = v;
         stack.push(new CLVMObject(t(left, right)));
         targetIndex = stack.length - 1;
         
@@ -142,13 +142,13 @@ export function to_sexp_type(value: CastableType): CLVMObject {
     if (op === op_set_left){ // set left
       const stack_target = stack[targetIndex];
       if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)){
-        (stack[targetIndex] as CLVMObject).pair = t(new CLVMObject(stack.pop()), stack_target.pair.get1());
+        (stack[targetIndex] as CLVMObject).pair = t(new CLVMObject(stack.pop()), stack_target.pair[1]);
       }
     }
     else if(op === op_set_right){ // set right
       const stack_target = stack[targetIndex];
       if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)){
-        (stack[targetIndex] as CLVMObject).pair = t(stack_target.pair.get0(), new CLVMObject(stack.pop()));
+        (stack[targetIndex] as CLVMObject).pair = t(stack_target.pair[0], new CLVMObject(stack.pop()));
       }
     }
     else if(op === op_prepend_list){ // prepend list
@@ -210,12 +210,12 @@ export class SExp extends CLVMObject {
     this.pair = v.pair;
   }
   
-  public as_pair(): Tuple2<SExp, SExp>|None {
+  public as_pair(): Tuple<SExp, SExp>|None {
     const pair = this.pair;
     if(pair === None){
       return pair;
     }
-    return t(new SExp(pair.get0()), new SExp(pair.get1()));
+    return t(new SExp(pair[0]), new SExp(pair[1]));
   }
   
   public listp(){
@@ -243,7 +243,7 @@ export class SExp extends CLVMObject {
   public first(){
     const pair = this.pair;
     if(pair){
-      return new SExp(pair.get0());
+      return new SExp(pair[0]);
     }
     throw new EvalError("first of non-cons", this);
   }
@@ -251,7 +251,7 @@ export class SExp extends CLVMObject {
   public rest(){
     const pair = this.pair;
     if(pair){
-      return new SExp(pair.get1());
+      return new SExp(pair[1]);
     }
     throw new EvalError("rest of non-cons", this);
   }
@@ -267,15 +267,15 @@ export class SExp extends CLVMObject {
   public equal_to(other: CastableType){
     try{
       other = SExp.to(other);
-      const to_compare_stack = [t(this, other)] as Array<Tuple2<SExp, SExp>>;
+      const to_compare_stack = [t(this, other)] as Array<Tuple<SExp, SExp>>;
       while(to_compare_stack.length){
-        const [s1, s2] = (to_compare_stack.pop() as Tuple2<SExp, SExp>).as_array();
+        const [s1, s2] = (to_compare_stack.pop() as Tuple<SExp, SExp>);
         const p1 = s1.as_pair();
         if(p1){
           const p2 = s2.as_pair();
           if(p2){
-            to_compare_stack.push(t(p1.get0(), p2.get0()));
-            to_compare_stack.push(t(p1.get1(), p2.get1()));
+            to_compare_stack.push(t(p1[0], p2[0]));
+            to_compare_stack.push(t(p1[1], p2[1]));
           }
           else{
             return false;

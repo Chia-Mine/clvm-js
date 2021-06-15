@@ -5,7 +5,9 @@ import {
   ARITH_COST_PER_ARG,
   ARITH_COST_PER_BYTE,
   ASHIFT_BASE_COST,
-  ASHIFT_COST_PER_BYTE, BOOL_BASE_COST, BOOL_COST_PER_ARG,
+  ASHIFT_COST_PER_BYTE,
+  BOOL_BASE_COST,
+  BOOL_COST_PER_ARG,
   CONCAT_BASE_COST,
   CONCAT_COST_PER_ARG,
   CONCAT_COST_PER_BYTE,
@@ -20,7 +22,8 @@ import {
   LOG_BASE_COST,
   LOG_COST_PER_ARG,
   LOG_COST_PER_BYTE,
-  LOGNOT_BASE_COST, LOGNOT_COST_PER_BYTE,
+  LOGNOT_BASE_COST,
+  LOGNOT_COST_PER_BYTE,
   LSHIFT_BASE_COST,
   LSHIFT_COST_PER_BYTE,
   MALLOC_COST_PER_BYTE,
@@ -36,13 +39,12 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, Stream, t, Tuple2} from "./__type_compatibility__";
+import {Bytes, Stream, t, Tuple} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 import {int, str} from "./__python_types__";
 import {int_from_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
 import {G1Element_add, G1Element_from_bytes, getBLSModule} from "./__bls_signatures__";
-import {TOpStack} from "./as_javascript";
 
 export function malloc_cost(cost: int, atom: SExp){
   if(!atom.atom){
@@ -91,7 +93,7 @@ export function* args_as_int32(op_name: str, args: SExp){
 }
 
 export function args_as_int_list(op_name: str, args: SExp, count: int){
-  const int_list: Array<Tuple2<number, number>> = [];
+  const int_list: Array<Tuple<number, number>> = [];
   for(const _ of args_as_ints(op_name, args)) int_list.push(_);
   
   if(int_list.length !== count){
@@ -130,7 +132,7 @@ export function op_add(args: SExp){
   let arg_size = 0;
   
   for(const ints of args_as_ints("+", args)){
-    const [r, l] = ints.as_array();
+    const [r, l] = ints;
     total += r;
     arg_size += l;
     cost += ARITH_COST_PER_ARG;
@@ -149,7 +151,7 @@ export function op_subtract(args: SExp){
   let total = 0;
   let arg_size = 0;
   for(const ints of args_as_ints("-", args)){
-    const [r, l] = ints.as_array();
+    const [r, l] = ints;
     total += sign * r;
     sign = -1;
     arg_size += l;
@@ -167,10 +169,10 @@ export function op_multiply(args: SExp){
   if(res.done){
     return malloc_cost(cost, SExp.to(1));
   }
-  let [v, vs] = res.value.as_array();
+  let [v, vs] = res.value;
   
   for(const o of operands){
-    const [r, rs] = o.as_array();
+    const [r, rs] = o;
     cost += MUL_COST_PER_OP;
     cost += (rs + vs) * MUL_LINEAR_COST_PER_BYTE;
     cost += ((rs * vs) / MUL_SQUARE_COST_PER_BYTE_DIVIDER) >> 0;
@@ -183,8 +185,8 @@ export function op_multiply(args: SExp){
 export function op_divmod(args: SExp){
   let cost = DIVMOD_BASE_COST;
   const [t1, t2] = args_as_int_list("divmod", args, 2);
-  const [i0, l0] = t1.as_array();
-  const [i1, l1] = t2.as_array();
+  const [i0, l0] = t1;
+  const [i1, l1] = t2;
   if(i1 === 0){
     throw new EvalError("divmod with 0", SExp.to(i0));
   }
@@ -200,8 +202,8 @@ export function op_divmod(args: SExp){
 export function op_div(args: SExp){
   let cost = DIV_BASE_COST;
   const [t1, t2] = args_as_int_list("/", args, 2);
-  const [i0, l0] = t1.as_array();
-  const [i1, l1] = t2.as_array();
+  const [i0, l0] = t1;
+  const [i1, l1] = t2;
   if(i1 === 0){
     throw new EvalError("div with 0", SExp.to(i0));
   }
@@ -212,8 +214,8 @@ export function op_div(args: SExp){
 
 export function op_gr(args: SExp){
   const [t1, t2] = args_as_int_list(">", args, 2);
-  const [i0, l0] = t1.as_array();
-  const [i1, l1] = t2.as_array();
+  const [i0, l0] = t1;
+  const [i1, l1] = t2;
   let cost = GR_BASE_COST;
   cost += (l0+l1)*GR_COST_PER_BYTE;
   return t(cost, i0 > i1 ? SExp.TRUE : SExp.FALSE);
@@ -320,8 +322,8 @@ export function op_concat(args: SExp){
 
 export function op_ash(args: SExp){
   const [t1, t2] = args_as_int_list("ash", args, 2);
-  const [i0, l0] = t1.as_array();
-  const [i1, l1] = t2.as_array();
+  const [i0, l0] = t1;
+  const [i1, l1] = t2;
   if(l1 > 4){
     throw new EvalError("ash requires int32 args (with no leading zeros)", args.rest().first());
   }
@@ -342,8 +344,8 @@ export function op_ash(args: SExp){
 
 export function op_lsh(args: SExp){
   const [t1, t2] = args_as_int_list("lsh", args, 2);
-  const [_, l0] = t1.as_array();
-  const [i1, l1] = t2.as_array();
+  const [_, l0] = t1;
+  const [i1, l1] = t2;
   if(l1 > 4){
     throw new EvalError("lsh requires int32 args (with no leading zeros)", args.rest().first());
   }
@@ -370,7 +372,7 @@ export function binop_reduction(op_name: str, initial_value: number, args: SExp,
   let arg_size = 0;
   let cost = LOG_BASE_COST;
   for(const t of args_as_ints(op_name, args)){
-    const [r, l] = t.as_array();
+    const [r, l] = t;
     total = op_f(total, r);
     arg_size += l;
     cost += LOG_COST_PER_ARG;
@@ -408,7 +410,7 @@ export function op_logxor(args: SExp){
 
 export function op_lognot(args: SExp){
   const t = args_as_int_list("lognot", args, 1);
-  const [i0, l0] = t[0].as_array();
+  const [i0, l0] = t[0];
   const cost = LOGNOT_BASE_COST + l0 * LOGNOT_COST_PER_BYTE;
   return malloc_cost(cost, SExp.to(~i0));
 }

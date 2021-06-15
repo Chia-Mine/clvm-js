@@ -1,8 +1,8 @@
 import {CastableType, SExp} from "./SExp";
-import {Bytes, t, Tuple2} from "./__type_compatibility__";
+import {Bytes, t, Tuple} from "./__type_compatibility__";
 
 export type TOpStack = Array<(op_stack: TOpStack, val_stack: TValStack) => unknown>;
-export type TValStack = Array<Bytes|SExp|SExp[]|Tuple2<SExp, SExp>>;
+export type TValStack = Array<Bytes|SExp|SExp[]|Tuple<SExp, SExp>>;
 export type TToSexpF = (arg: CastableType) => SExp;
 
 export function as_javascript(sexp: SExp){
@@ -35,7 +35,7 @@ export function as_javascript(sexp: SExp){
     const v = val_stack.pop() as SExp;
     const pair = v.as_pair();
     if(pair){
-      const [left, right] = pair.as_array();
+      const [left, right] = pair;
       if(right.listp()){
         op_stack.push(_extend_list);
       }
