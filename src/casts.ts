@@ -4,7 +4,7 @@ import {Bytes} from "./__type_compatibility__";
 // In javascript, max safe integer is 2**53-1 (53bit)
 // Surprisingly, parseInt() can parse over 32bit integer. 
 export function int_from_bytes(b: Bytes|None): int {
-  if(!b){
+  if(!b || b.length === 0){
     return 0;
   }
   return parseInt(b.as_word().toString(), 16);
