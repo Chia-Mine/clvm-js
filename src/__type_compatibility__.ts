@@ -129,33 +129,20 @@ export class Bytes {
   }
 }
 
-
-export class Tuple2<T1, T2> {
-  private readonly _value: [T1, T2];
-  
-  public constructor(v1: T1, v2: T2) {
-    this._value = [v1, v2];
-  }
-  
-  public get0() {
-    return this._value[0];
-  }
-  
-  public get1() {
-    return this._value[1];
-  }
-  
-  public as_array() {
-    return [this.get0(), this.get1()];
+export class Tuple<T1, T2> extends Array<any> {
+  public constructor(...items: [T1, T2]) {
+    super(...items);
+    Object.freeze(this);
+    return this;
   }
   
   public toString(){
-    return `(${this._value[0]}, ${this._value[1]})`;
+    return `(${this[0]}, ${this[1]})`;
   }
 }
 
 export function t<T1, T2>(v1: T1, v2: T2){
-  return new Tuple2(v1, v2);
+  return new Tuple(v1, v2);
 }
 
 export function isIterable(v: any): v is Array<unknown> {

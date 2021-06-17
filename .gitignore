@@ -257,4 +257,4 @@ $RECYCLE.BIN/
 .idea/
 .npmrc
 build/
-test/
+playground/

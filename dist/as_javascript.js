@@ -29,7 +29,7 @@ function as_javascript(sexp) {
         const v = val_stack.pop();
         const pair = v.as_pair();
         if (pair) {
-            const [left, right] = pair.as_array();
+            const [left, right] = pair;
             if (right.listp()) {
                 op_stack.push(_extend_list);
             }

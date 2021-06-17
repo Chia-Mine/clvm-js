@@ -27,8 +27,8 @@ function* sexp_to_byte_iterator(sexp) {
         const pair = sexp.as_pair();
         if (pair) {
             yield casts_1.int_to_bytes(CONS_BOX_MARKER);
-            todo_stack.push(pair.get1());
-            todo_stack.push(pair.get0());
+            todo_stack.push(pair[1]);
+            todo_stack.push(pair[0]);
         }
         else {
             yield* atom_to_byte_iterator(sexp.atom);
@@ -180,7 +180,7 @@ function sexp_buffer_from_stream(f) {
     let depth = 1;
     while (depth > 0) {
         depth -= 1;
-        let [buf, d] = _op_consume_sexp(f).as_array();
+        let [buf, d] = _op_consume_sexp(f);
         depth += d;
         ret = ret.concat(buf);
     }

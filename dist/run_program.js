@@ -93,14 +93,14 @@ function run_program(program, args, operator_lookup, max_cost = __python_types__
         // # put a bunch of ops on op_stack
         if (!CLVMObject_1.isCons(sexp)) {
             // # sexp is an atom
-            const [cost, r] = traverse_path(sexp, args).as_array();
+            const [cost, r] = traverse_path(sexp, args);
             value_stack.push(r);
             return cost;
         }
         const operator = sexp.first();
         if (CLVMObject_1.isCons(operator)) {
             const pair = operator.as_pair();
-            const [new_operator, must_be_nil] = pair.as_array();
+            const [new_operator, must_be_nil] = pair;
             if (new_operator.pair || must_be_nil.atom !== __type_compatibility__1.Bytes.NULL) {
                 throw new EvalError_1.EvalError("in ((X)...) syntax X must be lone atom", sexp);
             }
@@ -148,7 +148,7 @@ function run_program(program, args, operator_lookup, max_cost = __python_types__
             op_stack.push(eval_op);
             return costs_1.APPLY_COST;
         }
-        const [additional_cost, r] = operator_lookup(op, operand_list).as_array();
+        const [additional_cost, r] = operator_lookup(op, operand_list);
         value_stack.push(r);
         return additional_cost;
     }

@@ -60,11 +60,13 @@ export function G1Element_from_bytes(bytes: Uint8Array) {
     return BLS.G1Element.from_bytes(bytes);
   } catch (e) {
     // Print exception message if debug module is enabled and loaded.
-    const get_exception_message = BLS.Util.get_exception_message;
     let message = "Exception in G1Element operation";
+    /*
+    const get_exception_message = BLS.Util.get_exception_message;
     if (typeof get_exception_message === "function") {
       message = get_exception_message(e as number);
     }
+    */
     throw new Error(message);
   }
 }
@@ -99,11 +101,13 @@ export function G1Element_add(g1Element1: G1Element, g1Element2: G1Element){
     return g1Element1.add(g1Element2);
   } catch (e) {
     // Print exception message if debug module is enabled and loaded.
-    const get_exception_message = BLS.Util.get_exception_message;
     let message = "Exception in G1Element operation";
+    /*
+    const get_exception_message = BLS.Util.get_exception_message;
     if (typeof get_exception_message === "function") {
       message = get_exception_message(e as number);
     }
+    */
     throw new Error(message);
   }
 }
