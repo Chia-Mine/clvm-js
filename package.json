@@ -11,7 +11,9 @@
   "bugs": "https://github.com/Chia-Mine/clvm-js/issues",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "node ./pre_publish.js && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./build --outDir ./build",
     "build:prod": "node ./pre_publish.js --prod && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./dist --outDir ./dist"
