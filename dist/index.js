@@ -10,6 +10,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.to_sexp_f = void 0;
+const SExp_1 = require("./SExp");
 __exportStar(require("./__debug__"), exports);
 __exportStar(require("./__bls_signatures__"), exports);
 __exportStar(require("./__python_types__"), exports);
@@ -27,3 +29,4 @@ __exportStar(require("./operators"), exports);
 __exportStar(require("./run_program"), exports);
 __exportStar(require("./serialize"), exports);
 __exportStar(require("./SExp"), exports);
+exports.to_sexp_f = SExp_1.SExp.to;
