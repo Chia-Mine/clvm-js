@@ -15,7 +15,7 @@ yarn add clvm
 
 Breeding edge version of `clvm` is available by
 ```shell
-yarn add Chia-Mine/clvm-js#v0.0.4
+yarn add Chia-Mine/clvm-js#v0.0.3
 # or
-npm install Chia-Mine/clvm-js#v0.0.4
+npm install Chia-Mine/clvm-js#v0.0.3
 ```
