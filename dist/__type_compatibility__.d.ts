@@ -30,15 +30,11 @@ export declare class Bytes {
      */
     compare(other: Bytes): -1 | 0 | 1;
 }
-export declare class Tuple2<T1, T2> {
-    private readonly _value;
-    constructor(v1: T1, v2: T2);
-    get0(): T1;
-    get1(): T2;
-    as_array(): (T1 | T2)[];
+export declare class Tuple<T1, T2> extends Array<any> {
+    constructor(...items: [T1, T2]);
     toString(): string;
 }
-export declare function t<T1, T2>(v1: T1, v2: T2): Tuple2<T1, T2>;
+export declare function t<T1, T2>(v1: T1, v2: T2): Tuple<T1, T2>;
 export declare function isIterable(v: any): v is Array<unknown>;
 export declare class Stream {
     private _seek;

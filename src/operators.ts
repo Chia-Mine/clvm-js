@@ -1,7 +1,7 @@
 import {int, str} from "./__python_types__";
 import {int_from_bytes, int_to_bytes} from "./casts";
 import {SExp} from "./SExp";
-import {Bytes, Tuple2, t} from "./__type_compatibility__";
+import {Bytes, Tuple, t} from "./__type_compatibility__";
 import {CLVMObject} from "./CLVMObject";
 import {EvalError} from "./EvalError";
 import {
@@ -204,7 +204,7 @@ export function* args_len(op_name: str, args: SExp){
 # this means that unknown ops where cost_function is 1, 2, or 3, may still be
 # fatal errors if the arguments passed are not atoms.
  */
-export function default_unknown_op(op: Bytes, args: SExp): Tuple2<int, CLVMObject> {
+export function default_unknown_op(op: Bytes, args: SExp): Tuple<int, CLVMObject> {
   // # any opcode starting with ffff is reserved (i.e. fatal error)
   // # opcodes are not allowed to be empty
   if(op.length === 0 || op.slice(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
@@ -299,7 +299,7 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
 export type TOperatorDict<A extends str = ATOMS> = {
     unknown_op_handler: typeof default_unknown_op;
   }
-  & ((op: Bytes, args: SExp) => Tuple2<int, CLVMObject>)
+  & ((op: Bytes, args: SExp) => Tuple<int, CLVMObject>)
   & TAtomOpFunctionMap<A>
   & Record<TBasicAtom, Bytes>
   ;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stream = exports.isIterable = exports.t = exports.Tuple2 = exports.Bytes = exports.to_hexstr = void 0;
+exports.Stream = exports.isIterable = exports.t = exports.Tuple = exports.Bytes = exports.to_hexstr = void 0;
 const jscrypto_1 = require("jscrypto");
 const __python_types__1 = require("./__python_types__");
 function to_hexstr(r) {
@@ -113,26 +113,19 @@ class Bytes {
 }
 exports.Bytes = Bytes;
 Bytes.NULL = new Bytes();
-class Tuple2 {
-    constructor(v1, v2) {
-        this._value = [v1, v2];
-    }
-    get0() {
-        return this._value[0];
-    }
-    get1() {
-        return this._value[1];
-    }
-    as_array() {
-        return [this.get0(), this.get1()];
+class Tuple extends Array {
+    constructor(...items) {
+        super(...items);
+        Object.freeze(this);
+        return this;
     }
     toString() {
-        return `(${this._value[0]}, ${this._value[1]})`;
+        return `(${this[0]}, ${this[1]})`;
     }
 }
-exports.Tuple2 = Tuple2;
+exports.Tuple = Tuple;
 function t(v1, v2) {
-    return new Tuple2(v1, v2);
+    return new Tuple(v1, v2);
 }
 exports.t = t;
 function isIterable(v) {
