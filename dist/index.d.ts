@@ -1,3 +1,4 @@
+import { SExp } from "./SExp";
 export * from "./__debug__";
 export * from "./__bls_signatures__";
 export * from "./__python_types__";
@@ -15,3 +16,4 @@ export * from "./operators";
 export * from "./run_program";
 export * from "./serialize";
 export * from "./SExp";
+export declare const to_sexp_f: typeof SExp.to;
