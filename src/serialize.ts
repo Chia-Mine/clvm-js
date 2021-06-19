@@ -129,7 +129,9 @@ export function sexp_from_stream(f: Stream, to_sexp_f: TToSexpF){
   
   while(op_stack.length){
     const func = op_stack.pop();
-    func && func(op_stack, val_stack, f, (v: any) => new SExp(v));
+    if(func){
+      func(op_stack, val_stack, f, (v: any) => new SExp(v));
+    }
   }
   
   return to_sexp_f(val_stack.pop() as any);
@@ -195,7 +197,7 @@ export function sexp_buffer_from_stream(f: Stream){
   let depth = 1;
   while(depth > 0){
     depth -= 1;
-    let [buf, d] = _op_consume_sexp(f) as [Bytes, number];
+    const [buf, d] = _op_consume_sexp(f) as [Bytes, number];
     depth += d;
     ret = ret.concat(buf);
   }
@@ -218,11 +220,11 @@ function _atom_from_stream(f: Stream, b: number, to_sexp_f: TToSexpF): SExp {
   }
   let size_blob = int_to_bytes(b);
   if(bit_count > 1){
-    const b = f.read(bit_count - 1);
-    if(b.length !== bit_count - 1){
+    const bin = f.read(bit_count - 1);
+    if(bin.length !== bit_count - 1){
       throw new Error("bad encoding");
     }
-    size_blob = size_blob.concat(b);
+    size_blob = size_blob.concat(bin);
   }
   const size = int_from_bytes(size_blob);
   if(size >= 0x400000000){
