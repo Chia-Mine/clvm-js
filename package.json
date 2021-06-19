@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "build": "node ./pre_publish.js && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./build --outDir ./build",
-    "build:prod": "node ./pre_publish.js --prod && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./dist --outDir ./dist"
+    "build:prod": "node ./pre_publish.js --prod && tsc --project tsconfig.json --allowJS false --declaration --declarationDir ./dist --outDir ./dist",
+    "build:web": "webpack --config webpack.config.js"
   },
   "keywords": [
     "chia",
@@ -28,7 +29,7 @@
     "node": ">=12.13.0"
   },
   "dependencies": {
-    "bls-signatures": "Chia-Mine/bls-signatures#npm",
+    "@chiamine/bls-signatures": "^0.2.1-beta.0",
     "jscrypto": "^1.0.0"
   },
   "devDependencies": {
@@ -38,6 +39,11 @@
     "eslint": "^7.8.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsdoc": "^30.4.1",
-    "typescript": "^4.2.4"
+    "fork-ts-checker-webpack-plugin": "^6.2.12",
+    "terser-webpack-plugin": "^5.1.3",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.2.4",
+    "webpack": "^5.39.1",
+    "webpack-cli": "^4.7.2"
   }
 }
