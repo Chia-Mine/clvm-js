@@ -1,4 +1,6 @@
-import {Hex, Utf8, Word32Array} from "jscrypto";
+import {Hex} from "jscrypto/Hex";
+import {Utf8} from "jscrypto/Utf8";
+import {Word32Array} from "jscrypto/Word32Array";
 import {None, str} from "./__python_types__";
 import {G1Element} from "@chiamine/bls-signatures";
 

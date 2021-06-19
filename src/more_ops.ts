@@ -1,4 +1,4 @@
-import {SHA256} from "jscrypto";
+import {SHA256} from "jscrypto/SHA256";
 import {SExp} from "./SExp";
 import {
   ARITH_BASE_COST,
