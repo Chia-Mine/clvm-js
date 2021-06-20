@@ -148,8 +148,11 @@ export function t<T1, T2>(v1: T1, v2: T2){
 }
 
 export function isIterable(v: any): v is unknown[] {
-  if(Array.isArray(v)){
+  if(Array.isArray(v)){ // Including Tuple.
     return true;
+  }
+  else if(typeof v === "string"){
+    return false;
   }
   else if(typeof v[Symbol.iterator] === "function"){
     return true;

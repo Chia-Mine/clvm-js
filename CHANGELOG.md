@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.5]
+### Fixed
+- Fixed an issue where `SExp.to("any str")` falls in infinite loop.
+
 ## [0.0.4]
 ### Changed
 - Changed source of `bls-signatures` to `@chiamine/bls-signatures`
@@ -27,6 +31,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2
