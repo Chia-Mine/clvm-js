@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.7]
+### Changed
+- Made return type of `as_javascript()` explicit
+
 ## [0.0.6]
 ### Fixed
 - Fixed an issue where `SExp::as_javascript()` does not return expected value.
