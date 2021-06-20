@@ -1,13 +1,12 @@
 import {CastableType, SExp} from "./SExp";
-import {Bytes, t, Tuple} from "./__type_compatibility__";
+import {Bytes, Tuple, t} from "./__type_compatibility__";
 
 export type TOpStack = Array<(op_stack: TOpStack, val_stack: TValStack) => unknown>;
 export type TValStack = Array<Bytes|SExp|SExp[]|Tuple<SExp, SExp>>;
 export type TToSexpF = (arg: CastableType) => SExp;
 
 export function as_javascript(sexp: SExp){
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  function _roll(op_stack: Function[], val_stack: TValStack){
+  function _roll(op_stack: TOpStack, val_stack: TValStack){
     const v1 = val_stack.pop() as SExp;
     const v2 = val_stack.pop() as SExp;
     val_stack.push(v1);
@@ -26,9 +25,9 @@ export function as_javascript(sexp: SExp){
   }
   
   function _extend_list(op_stack: TOpStack, val_stack: TValStack){
-    const left = [val_stack.pop()];
+    let left = [val_stack.pop()];
     const right = val_stack.pop();
-    left.concat(right);
+    left = left.concat(right);
     val_stack.push(left as SExp[]);
   }
   

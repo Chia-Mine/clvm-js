@@ -45,12 +45,12 @@ const op_convert = 0;
 const op_set_left = 1;
 const op_set_right = 2;
 const op_prepend_list = 3;
-function is_valid_stack_target(s) {
-    if (!s) {
-        throw new Error(`stack[target] is empty: ${JSON.stringify(s)}`);
+function is_valid_stack_target(stack) {
+    if (!stack) {
+        throw new Error(`stack[target] is empty: ${JSON.stringify(stack)}`);
     }
-    else if (!looks_like_clvm_object(s)) {
-        throw new Error(`Unexpected stack[target] value: ${JSON.stringify(s)}`);
+    else if (!looks_like_clvm_object(stack)) {
+        throw new Error(`Unexpected stack[target] value: ${JSON.stringify(stack)}`);
     }
     return true;
 }
@@ -75,9 +75,12 @@ function to_sexp_type(value) {
             }
             v = stack.pop();
             if (v instanceof __type_compatibility__1.Tuple) {
+                if (v.length !== 2) {
+                    throw new Error(`can't cast tuple of size ${v.length}`);
+                }
                 const [left, right] = v;
+                targetIndex = stack.length;
                 stack.push(new CLVMObject_1.CLVMObject(__type_compatibility__1.t(left, right)));
-                targetIndex = stack.length - 1;
                 if (!looks_like_clvm_object(right)) {
                     stack.push(right);
                     ops.push(__type_compatibility__1.t(2, targetIndex)); // set right
@@ -88,14 +91,11 @@ function to_sexp_type(value) {
                     ops.push(__type_compatibility__1.t(1, targetIndex));
                     ops.push(__type_compatibility__1.t(0, __python_types__1.None));
                 }
+                continue;
             }
-            else if (__type_compatibility__1.isIterable(v)) {
-                if (v.length < 1) {
-                    stack.push(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
-                    continue;
-                }
+            else if (Array.isArray(v) /* && !(v instance of Tuple) */) {
+                targetIndex = stack.length;
                 stack.push(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
-                targetIndex = stack.length - 1;
                 for (const _ of v) {
                     stack.push(_);
                     ops.push(__type_compatibility__1.t(3, targetIndex)); // prepend list
@@ -104,10 +104,9 @@ function to_sexp_type(value) {
                         ops.push(__type_compatibility__1.t(0, __python_types__1.None)); // convert
                     }
                 }
+                continue;
             }
-            else {
-                stack.push(new CLVMObject_1.CLVMObject(convert_atom_to_bytes(v)));
-            }
+            stack.push(new CLVMObject_1.CLVMObject(convert_atom_to_bytes(v)));
             continue;
         }
         if (targetIndex === null) {
@@ -115,14 +114,14 @@ function to_sexp_type(value) {
         }
         if (op === op_set_left) { // set left
             const stack_target = stack[targetIndex];
-            if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)) {
-                stack[targetIndex].pair = __type_compatibility__1.t(new CLVMObject_1.CLVMObject(stack.pop()), stack_target.pair[1]);
+            if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)) {
+                stack[targetIndex].pair = __type_compatibility__1.t(new CLVMObject_1.CLVMObject(stack.pop()), stack[targetIndex].pair[1]);
             }
         }
         else if (op === op_set_right) { // set right
             const stack_target = stack[targetIndex];
-            if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)) {
-                stack[targetIndex].pair = __type_compatibility__1.t(stack_target.pair[0], new CLVMObject_1.CLVMObject(stack.pop()));
+            if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)) {
+                stack[targetIndex].pair = __type_compatibility__1.t(stack[targetIndex].pair[0], new CLVMObject_1.CLVMObject(stack.pop()));
             }
         }
         else if (op === op_prepend_list) { // prepend list
@@ -259,8 +258,8 @@ class SExp extends CLVMObject_1.CLVMObject {
     toString() {
         return this.as_bin().toString();
     }
-    __repl__() {
-        return `SExp(0x${this.as_bin().toString()})`;
+    __repr__() {
+        return `SExp(${this.as_bin().toString()})`;
     }
 }
 exports.SExp = SExp;

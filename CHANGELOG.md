@@ -1,8 +1,16 @@
 # Changelog
 
+## [0.0.6]
+### Fixed
+- Fixed an issue where `SExp::as_javascript()` does not return expected value.
+- Fixed an issue where `SExp.to(<tuple>)` raises unexpected Error.
+- Fixed incorrect function name `__repl__` to `__repr__`
+### Changed
+- Removed '0x' prefix from results of `SExp::__repr__()`
+
 ## [0.0.5]
 ### Fixed
-- Fixed an issue where `SExp.to("any str")` falls in infinite loop.
+- Fixed an issue where `SExp.to(<str>)` falls in infinite loop.
 
 ## [0.0.4]
 ### Changed
@@ -31,6 +39,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.6]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.2...v0.0.3

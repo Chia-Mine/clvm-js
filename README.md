@@ -15,9 +15,9 @@ yarn add clvm
 
 Breeding edge version of `clvm` is available by
 ```shell
-yarn add Chia-Mine/clvm-js#v0.0.5
+yarn add Chia-Mine/clvm-js#v0.0.7
 # or
-npm install Chia-Mine/clvm-js#v0.0.5
+npm install Chia-Mine/clvm-js#v0.0.7
 ```
 
 ## Example
@@ -28,11 +28,14 @@ async function main(){
 
   // 'clvm.initialization()' here is not required
   // if you're so sure it never calls 'pubkey_for_exp' or 'point_add' operation.
-  // When 'pubkey_for_exp' or 'point_add' operation is called without prior 'clvm.initialize()'
+  // When one of those operations is called without prior 'clvm.initialize()'
   // it will raise an Error.
-  // If it is unknown whether 'pubkey_for_exp' or 'point_add' will be called, then await 'clvm.initialize()' for safety.
-  // I know this 'await clvm.initialize()' makes code asynchronous and really impacts on code architecture.
-  // This is because 'clvm' relys on a wasm of 'bls-signatures', which requires asynchronous loading.
+  // If it is unknown whether 'pubkey_for_exp' or 'point_add' will be called, 
+  // then put 'await clvm.initialize()' for safety.
+  // I know this 'await clvm.initialize()' makes code asynchronous
+  // and really impacts on code architecture.
+  // This is because 'clvm' relys on a wasm of 'bls-signatures',
+  // which requires asynchronous loading.
   await clvm.initialize();
   
   const {SExp, OPERATOR_LOOKUP, KEYWORD_TO_ATOM} = clvm;
