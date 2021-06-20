@@ -1,9 +1,16 @@
+const fs = require("fs");
 const path = require("path");
 // const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-const isProd = false;
+function isBuildingForProd(){
+  const devDirStat = fs.statSync(path.join(__dirname, "build"));
+  const prodDirStat = fs.statSync(path.join(__dirname, "dist"));
+  return devDirStat.mtimeMs <= prodDirStat.mtimeMs;
+}
+
+const isProd = isBuildingForProd();
 
 module.exports = {
   mode: isProd ? "production" : "development",
