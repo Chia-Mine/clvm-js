@@ -1,6 +1,6 @@
-import { Word32Array } from "jscrypto";
+import { Word32Array } from "jscrypto/Word32Array";
 import { None, str } from "./__python_types__";
-import { G1Element } from "bls-signatures";
+import { G1Element } from "@chiamine/bls-signatures";
 export declare function to_hexstr(r: Uint8Array): string;
 export declare type BytesFromType = "hex" | "utf8" | "G1Element";
 /**
@@ -35,7 +35,7 @@ export declare class Tuple<T1, T2> extends Array<any> {
     toString(): string;
 }
 export declare function t<T1, T2>(v1: T1, v2: T2): Tuple<T1, T2>;
-export declare function isIterable(v: any): v is Array<unknown>;
+export declare function isIterable(v: any): v is unknown[];
 export declare class Stream {
     private _seek;
     private _bytes;

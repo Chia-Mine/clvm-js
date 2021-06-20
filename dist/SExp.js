@@ -65,7 +65,9 @@ function to_sexp_type(value) {
     const stack = [v];
     const ops = [__type_compatibility__1.t(0, __python_types__1.None)];
     while (ops.length) {
-        let [op, targetIndex] = ops.pop();
+        const item = ops.pop();
+        const op = item[0];
+        let targetIndex = item[1];
         // convert value
         if (op === op_convert) {
             if (looks_like_clvm_object(stack[stack.length - 1])) {
