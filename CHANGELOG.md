@@ -3,10 +3,11 @@
 ## [0.0.6]
 ### Fixed
 - Fixed an issue where `SExp::as_javascript()` does not return expected value.
+- Fixed an issue where `SExp.to(<tuple>)` raises unexpected Error.
 
 ## [0.0.5]
 ### Fixed
-- Fixed an issue where `SExp.to("any str")` falls in infinite loop.
+- Fixed an issue where `SExp.to(<str>)` falls in infinite loop.
 
 ## [0.0.4]
 ### Changed

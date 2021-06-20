@@ -52,17 +52,17 @@ type operations = typeof op_convert | typeof op_set_left | typeof op_set_right |
 type op_target = number | None;
 type op_and_target = Tuple<operations, op_target>;
 
-function is_valid_stack_target(s: any): s is CLVMObject {
-  if(!s){
-    throw new Error(`stack[target] is empty: ${JSON.stringify(s)}`);
+function is_valid_stack_target(stack: any): stack is CLVMObject {
+  if(!stack){
+    throw new Error(`stack[target] is empty: ${JSON.stringify(stack)}`);
   }
-  else if(!looks_like_clvm_object(s)){
-    throw new Error(`Unexpected stack[target] value: ${JSON.stringify(s)}`);
+  else if(!looks_like_clvm_object(stack)){
+    throw new Error(`Unexpected stack[target] value: ${JSON.stringify(stack)}`);
   }
   return true;
 }
 
-function is_valid_stack_target_pair(s: any): s is Tuple<unknown, unknown> {
+function is_valid_stack_target_pair(s: any): s is {pair: Tuple<any, any>} {
   if(!(s.pair instanceof Tuple)){
     throw new Error(`Unexpected value of stack[target].pair: ${JSON.stringify(s.pair)}`);
   }
@@ -88,9 +88,12 @@ export function to_sexp_type(value: CastableType): CLVMObject {
       
       v = stack.pop();
       if(v instanceof Tuple){
+        if(v.length !== 2){
+          throw new Error(`can't cast tuple of size ${v.length}`);
+        }
         const [left, right] = v;
+        targetIndex = stack.length;
         stack.push(new CLVMObject(t(left, right)));
-        targetIndex = stack.length - 1;
         
         if(!looks_like_clvm_object(right)){
           stack.push(right);
@@ -103,16 +106,13 @@ export function to_sexp_type(value: CastableType): CLVMObject {
           ops.push(t(1, targetIndex));
           ops.push(t(0, None));
         }
+        
+        continue;
       }
-      else if(isIterable(v)){
-        if(v.length < 1){
-          stack.push(new CLVMObject(Bytes.NULL));
-          continue;
-        }
-        
+      else if(Array.isArray(v) /* && !(v instance of Tuple) */){
+        targetIndex = stack.length;
         stack.push(new CLVMObject(Bytes.NULL));
-        targetIndex = stack.length - 1;
-        
+  
         for(const _ of v){
           stack.push(_ as CLVMObject);
           ops.push(t(3, targetIndex)); // prepend list
@@ -121,10 +121,10 @@ export function to_sexp_type(value: CastableType): CLVMObject {
             ops.push(t(0, None)); // convert
           }
         }
+        continue;
       }
-      else{
-        stack.push(new CLVMObject(convert_atom_to_bytes(v)));
-      }
+      
+      stack.push(new CLVMObject(convert_atom_to_bytes(v)));
       continue;
     }
   
@@ -134,14 +134,20 @@ export function to_sexp_type(value: CastableType): CLVMObject {
     
     if (op === op_set_left){ // set left
       const stack_target = stack[targetIndex];
-      if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)){
-        (stack[targetIndex] as CLVMObject).pair = t(new CLVMObject(stack.pop()), stack_target.pair[1]);
+      if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)){
+        (stack[targetIndex] as CLVMObject).pair = t(
+          new CLVMObject(stack.pop()),
+          ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[1]
+        );
       }
     }
     else if(op === op_set_right){ // set right
       const stack_target = stack[targetIndex];
-      if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target.pair)){
-        (stack[targetIndex] as CLVMObject).pair = t(stack_target.pair[0], new CLVMObject(stack.pop()));
+      if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)){
+        (stack[targetIndex] as CLVMObject).pair = t(
+          ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[0],
+          new CLVMObject(stack.pop())
+        );
       }
     }
     else if(op === op_prepend_list){ // prepend list
