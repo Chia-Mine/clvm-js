@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.as_javascript = void 0;
 const __type_compatibility__1 = require("./__type_compatibility__");
 function as_javascript(sexp) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     function _roll(op_stack, val_stack) {
         const v1 = val_stack.pop();
         const v2 = val_stack.pop();
@@ -50,7 +51,9 @@ function as_javascript(sexp) {
     const val_stack = [sexp];
     while (op_stack.length) {
         const op_f = op_stack.pop();
-        op_f && op_f(op_stack, val_stack);
+        if (op_f) {
+            op_f(op_stack, val_stack);
+        }
     }
     return val_stack[val_stack.length - 1];
 }

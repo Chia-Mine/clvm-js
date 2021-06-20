@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.G1Element_add = exports.assert_G1Element_valid = exports.G1Element_from_bytes = exports.getBLSModule = exports.initializeBLS = exports.loadPromise = exports.BLS = void 0;
-const blsLoader = require("bls-signatures");
+const blsLoader = require("@chiamine/bls-signatures");
 /**
  * Load BLS Module instance.
  * This function must be called an awaited on program start up.
@@ -23,23 +23,22 @@ function initializeBLS() {
         else if (exports.loadPromise) {
             return exports.loadPromise;
         }
-        return exports.loadPromise = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        return exports.loadPromise = new Promise((resolve, reject) => {
             if (exports.BLS) {
                 exports.loadPromise = undefined;
                 return resolve(exports.BLS);
             }
-            let error;
-            const instance = yield blsLoader().catch(e => {
+            blsLoader().then((instance) => {
+                if (!instance) {
+                    return reject();
+                }
+                exports.loadPromise = undefined;
+                return resolve(exports.BLS = instance);
+            }).catch(e => {
                 console.error("Error while loading BLS module");
-                error = e;
-                return;
+                return reject(e);
             });
-            if (error || !instance) {
-                return reject(error);
-            }
-            exports.loadPromise = undefined;
-            return resolve(exports.BLS = instance);
-        }));
+        });
     });
 }
 exports.initializeBLS = initializeBLS;
@@ -59,13 +58,13 @@ function getBLSModule() {
 exports.getBLSModule = getBLSModule;
 function G1Element_from_bytes(bytes) {
     assert_G1Element_valid(bytes);
-    const BLS = getBLSModule();
+    const BLSModule = getBLSModule();
     try {
-        return BLS.G1Element.from_bytes(bytes);
+        return BLSModule.G1Element.from_bytes(bytes);
     }
     catch (e) {
         // Print exception message if debug module is enabled and loaded.
-        let message = "Exception in G1Element operation";
+        const message = "Exception in G1Element operation";
         /*
         const get_exception_message = BLS.Util.get_exception_message;
         if (typeof get_exception_message === "function") {
@@ -77,12 +76,12 @@ function G1Element_from_bytes(bytes) {
 }
 exports.G1Element_from_bytes = G1Element_from_bytes;
 function assert_G1Element_valid(bytes) {
-    const BLS = getBLSModule();
-    const { G1Element } = BLS;
+    const BLSModule = getBLSModule();
+    const { G1Element } = BLSModule;
     if (bytes.length !== G1Element.SIZE) {
         throw new Error("G1Element: Invalid size");
     }
-    if ((bytes[0] & 0xc0) == 0xc0) { // representing infinity
+    if ((bytes[0] & 0xc0) === 0xc0) { // representing infinity
         if (bytes[0] !== 0xc0) {
             throw new Error("G1Element: Given G1 infinity element must be canonical");
         }
@@ -100,13 +99,12 @@ function assert_G1Element_valid(bytes) {
 }
 exports.assert_G1Element_valid = assert_G1Element_valid;
 function G1Element_add(g1Element1, g1Element2) {
-    const BLS = getBLSModule();
     try {
         return g1Element1.add(g1Element2);
     }
     catch (e) {
         // Print exception message if debug module is enabled and loaded.
-        let message = "Exception in G1Element operation";
+        const message = "Exception in G1Element operation";
         /*
         const get_exception_message = BLS.Util.get_exception_message;
         if (typeof get_exception_message === "function") {

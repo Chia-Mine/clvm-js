@@ -1,4 +1,4 @@
-import type { G1Element, ModuleInstance } from "bls-signatures";
+import type { G1Element as G1ElementType, ModuleInstance } from "@chiamine/bls-signatures";
 export declare let BLS: ModuleInstance | undefined;
 export declare let loadPromise: Promise<ModuleInstance> | undefined;
 /**
@@ -14,6 +14,6 @@ export declare function initializeBLS(): Promise<ModuleInstance>;
  * Within this library, this is always called to get BLS module to keep code synchronous.
  */
 export declare function getBLSModule(): ModuleInstance;
-export declare function G1Element_from_bytes(bytes: Uint8Array): G1Element;
+export declare function G1Element_from_bytes(bytes: Uint8Array): G1ElementType;
 export declare function assert_G1Element_valid(bytes: Uint8Array): void;
-export declare function G1Element_add(g1Element1: G1Element, g1Element2: G1Element): G1Element;
+export declare function G1Element_add(g1Element1: G1ElementType, g1Element2: G1ElementType): G1ElementType;
