@@ -4,7 +4,7 @@
 ### Changed
 - Changed source of `bls-signatures` to `@chiamine/bls-signatures`
   - When installing from previous `Chia-Mine/bls-signatures#npm`, the npm module version is too old or unstable.  
-    Sometimes the latest commit is installed and another time is old cache.  
+    Sometimes it installed the latest commit and another time installed old cache.  
     I decided to install the module not from GitHub branch but official npm registry for stability.
 ### Fixed
 - Fixed various eslint errors
