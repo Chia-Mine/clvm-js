@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.6]
+### Fixed
+- Fixed an issue where `SExp::as_javascript()` does not return expected value.
+
 ## [0.0.5]
 ### Fixed
 - Fixed an issue where `SExp.to("any str")` falls in infinite loop.
@@ -31,6 +35,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.6]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.2...v0.0.3
