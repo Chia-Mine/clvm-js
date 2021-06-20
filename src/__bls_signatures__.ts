@@ -1,5 +1,5 @@
-import type {G1Element, ModuleInstance} from "bls-signatures";
-import * as blsLoader from "bls-signatures";
+import type {G1Element as G1ElementType, ModuleInstance} from "@chiamine/bls-signatures";
+import * as blsLoader from "@chiamine/bls-signatures";
 
 type TCreateModule = () => Promise<ModuleInstance>;
 export let BLS: ModuleInstance | undefined;
@@ -16,25 +16,22 @@ export async function initializeBLS(): Promise<ModuleInstance> {
     return loadPromise;
   }
   
-  return loadPromise = new Promise<ModuleInstance>(async (resolve, reject) => {
+  return loadPromise = new Promise<ModuleInstance>((resolve, reject) => {
     if (BLS) {
       loadPromise = undefined;
       return resolve(BLS);
     }
     
-    let error: unknown;
-    const instance = await ((blsLoader as unknown) as TCreateModule)().catch(e => {
+    ((blsLoader as unknown) as TCreateModule)().then((instance) => {
+      if(!instance){
+        return reject();
+      }
+      loadPromise = undefined;
+      return resolve(BLS = instance);
+    }).catch(e => {
       console.error("Error while loading BLS module");
-      error = e;
-      return;
+      return reject(e);
     });
-    
-    if (error || !instance) {
-      return reject(error);
-    }
-    
-    loadPromise = undefined;
-    return resolve(BLS = instance);
   });
 }
 
@@ -55,12 +52,12 @@ export function getBLSModule() {
 
 export function G1Element_from_bytes(bytes: Uint8Array) {
   assert_G1Element_valid(bytes);
-  const BLS = getBLSModule();
+  const BLSModule = getBLSModule();
   try {
-    return BLS.G1Element.from_bytes(bytes);
+    return BLSModule.G1Element.from_bytes(bytes);
   } catch (e) {
     // Print exception message if debug module is enabled and loaded.
-    let message = "Exception in G1Element operation";
+    const message = "Exception in G1Element operation";
     /*
     const get_exception_message = BLS.Util.get_exception_message;
     if (typeof get_exception_message === "function") {
@@ -72,13 +69,13 @@ export function G1Element_from_bytes(bytes: Uint8Array) {
 }
 
 export function assert_G1Element_valid(bytes: Uint8Array){
-  const BLS = getBLSModule();
-  const {G1Element} = BLS;
+  const BLSModule = getBLSModule();
+  const {G1Element} = BLSModule;
   if(bytes.length !== G1Element.SIZE){
     throw new Error("G1Element: Invalid size");
   }
   
-  if((bytes[0] & 0xc0) == 0xc0){ // representing infinity
+  if((bytes[0] & 0xc0) === 0xc0){ // representing infinity
     if(bytes[0] !== 0xc0){
       throw new Error("G1Element: Given G1 infinity element must be canonical");
     }
@@ -95,13 +92,12 @@ export function assert_G1Element_valid(bytes: Uint8Array){
   }
 }
 
-export function G1Element_add(g1Element1: G1Element, g1Element2: G1Element){
-  const BLS = getBLSModule();
+export function G1Element_add(g1Element1: G1ElementType, g1Element2: G1ElementType){
   try {
     return g1Element1.add(g1Element2);
   } catch (e) {
     // Print exception message if debug module is enabled and loaded.
-    let message = "Exception in G1Element operation";
+    const message = "Exception in G1Element operation";
     /*
     const get_exception_message = BLS.Util.get_exception_message;
     if (typeof get_exception_message === "function") {

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.op_softfork = exports.op_all = exports.op_any = exports.op_not = exports.op_lognot = exports.op_logxor = exports.op_logior = exports.op_logand = exports.binop_reduction = exports.op_lsh = exports.op_ash = exports.op_concat = exports.op_substr = exports.op_strlen = exports.op_pubkey_for_exp = exports.op_gr_bytes = exports.op_gr = exports.op_div = exports.op_divmod = exports.op_multiply = exports.op_subtract = exports.op_add = exports.args_as_bool_list = exports.args_as_bools = exports.args_as_int_list = exports.args_as_int32 = exports.args_as_ints = exports.op_sha256 = exports.malloc_cost = void 0;
-const jscrypto_1 = require("jscrypto");
+const SHA256_1 = require("jscrypto/SHA256");
 const SExp_1 = require("./SExp");
 const costs_1 = require("./costs");
 const __type_compatibility__1 = require("./__type_compatibility__");
@@ -19,7 +19,7 @@ exports.malloc_cost = malloc_cost;
 function op_sha256(args) {
     let cost = costs_1.SHA256_BASE_COST;
     let arg_len = 0;
-    const h = new jscrypto_1.SHA256();
+    const h = new SHA256_1.SHA256();
     for (const _ of args.as_iter()) {
         const atom = _.atom;
         if (!atom) {
@@ -194,7 +194,7 @@ function op_gr_bytes(args) {
     const b1 = a1.atom;
     let cost = costs_1.GRS_BASE_COST;
     cost += (b0.length + b1.length) * costs_1.GRS_COST_PER_BYTE;
-    return __type_compatibility__1.t(cost, b0.compare(b1) > 0 /*b0 > b1*/ ? SExp_1.SExp.TRUE : SExp_1.SExp.FALSE);
+    return __type_compatibility__1.t(cost, b0.compare(b1) > 0 /* b0 > b1 */ ? SExp_1.SExp.TRUE : SExp_1.SExp.FALSE);
 }
 exports.op_gr_bytes = op_gr_bytes;
 function op_pubkey_for_exp(items) {
@@ -240,7 +240,8 @@ function op_substr(args) {
         throw new EvalError_1.EvalError("substr on list", a0);
     }
     const s0 = a0.atom;
-    let i1, i2;
+    let i1;
+    let i2;
     if (arg_count === 2) {
         i1 = args_as_int32("substr", args.rest()).next().value;
         i2 = s0.length;
@@ -299,7 +300,7 @@ function op_ash(args) {
 exports.op_ash = op_ash;
 function op_lsh(args) {
     const [t1, t2] = args_as_int_list("lsh", args, 2);
-    const [_, l0] = t1;
+    const l0 = t1[1];
     const [i1, l1] = t2;
     if (l1 > 4) {
         throw new EvalError_1.EvalError("lsh requires int32 args (with no leading zeros)", args.rest().first());
@@ -322,6 +323,7 @@ function op_lsh(args) {
     return malloc_cost(cost, SExp_1.SExp.to(r));
 }
 exports.op_lsh = op_lsh;
+// eslint-disable-next-line @typescript-eslint/ban-types
 function binop_reduction(op_name, initial_value, args, op_f) {
     let total = initial_value;
     let arg_size = 0;
@@ -387,7 +389,7 @@ function op_any(args) {
     const items = [];
     for (const _ of args_as_bools("any", args))
         items.push(_);
-    let cost = costs_1.BOOL_BASE_COST + items.length * costs_1.BOOL_COST_PER_ARG;
+    const cost = costs_1.BOOL_BASE_COST + items.length * costs_1.BOOL_COST_PER_ARG;
     let r = SExp_1.SExp.FALSE;
     for (const v of items) {
         if (!CLVMObject_1.isAtom(v)) {
@@ -405,7 +407,7 @@ function op_all(args) {
     const items = [];
     for (const _ of args_as_bools("all", args))
         items.push(_);
-    let cost = costs_1.BOOL_BASE_COST + items.length * costs_1.BOOL_COST_PER_ARG;
+    const cost = costs_1.BOOL_BASE_COST + items.length * costs_1.BOOL_COST_PER_ARG;
     let r = SExp_1.SExp.TRUE;
     for (const v of items) {
         if (!CLVMObject_1.isAtom(v)) {
@@ -427,7 +429,7 @@ function op_softfork(args) {
     if (!CLVMObject_1.isAtom(a)) {
         throw new EvalError_1.EvalError("softfork requires int args", a);
     }
-    let cost = a.as_int();
+    const cost = a.as_int();
     if (cost < 1) {
         throw new EvalError_1.EvalError("cost must be > 0", args);
     }
