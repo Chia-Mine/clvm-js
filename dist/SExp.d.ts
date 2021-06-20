@@ -26,5 +26,5 @@ export declare class SExp extends CLVMObject {
     list_len(): number;
     as_javascript(): SExp;
     toString(): string;
-    __repl__(): string;
+    __repr__(): string;
 }
