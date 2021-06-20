@@ -27,6 +27,12 @@ if(fs.existsSync(browserDir)){
 fs.mkdirSync(browserDir);
 const blsWasmSrcPath = path.join(__dirname, "node_modules", "@chiamine", "bls-signatures", "blsjs.wasm");
 const blsWasmDestPath = path.join(browserDir, "blsjs.wasm");
+if(!fs.existsSync(blsWasmSrcPath)){
+  console.error("blsjs.wasm not found at:");
+  console.error(blsWasmSrcPath);
+  console.error("Probably you haven't execute npm install yet");
+  return;
+}
 fs.copyFileSync(blsWasmSrcPath, blsWasmDestPath);
 
 
