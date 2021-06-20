@@ -1,6 +1,8 @@
-import {Hex, Utf8, Word32Array} from "jscrypto";
+import {Hex} from "jscrypto/Hex";
+import {Utf8} from "jscrypto/Utf8";
+import {Word32Array} from "jscrypto/Word32Array";
 import {None, str} from "./__python_types__";
-import {G1Element} from "bls-signatures";
+import {G1Element} from "@chiamine/bls-signatures";
 
 export function to_hexstr(r: Uint8Array) {
   // # make sure the string returned is minimal
@@ -145,7 +147,7 @@ export function t<T1, T2>(v1: T1, v2: T2){
   return new Tuple(v1, v2);
 }
 
-export function isIterable(v: any): v is Array<unknown> {
+export function isIterable(v: any): v is unknown[] {
   if(Array.isArray(v)){
     return true;
   }

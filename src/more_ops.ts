@@ -1,4 +1,4 @@
-import {SHA256} from "jscrypto";
+import {SHA256} from "jscrypto/SHA256";
 import {SExp} from "./SExp";
 import {
   ARITH_BASE_COST,
@@ -116,7 +116,7 @@ export function* args_as_bools(op_name: str, args: SExp){
 }
 
 export function args_as_bool_list(op_name: str, args: SExp, count: int){
-  const bool_list: Array<SExp> = [];
+  const bool_list: SExp[] = [];
   for(const _ of args_as_bools(op_name, args)) bool_list.push(_);
   
   if(bool_list.length !== count){
@@ -235,7 +235,7 @@ export function op_gr_bytes(args: SExp){
   const b1 = a1.atom as Bytes;
   let cost = GRS_BASE_COST;
   cost += (b0.length + b1.length) * GRS_COST_PER_BYTE;
-  return t(cost, b0.compare(b1) > 0/*b0 > b1*/ ? SExp.TRUE : SExp.FALSE);
+  return t(cost, b0.compare(b1) > 0/* b0 > b1 */ ? SExp.TRUE : SExp.FALSE);
 }
 
 export function op_pubkey_for_exp(items: SExp){
@@ -283,7 +283,8 @@ export function op_substr(args: SExp){
   }
   
   const s0 = a0.atom;
-  let i1, i2;
+  let i1;
+  let i2;
   if(arg_count === 2){
     i1 = args_as_int32("substr", args.rest()).next().value as number;
     i2 = s0.length;
@@ -344,7 +345,7 @@ export function op_ash(args: SExp){
 
 export function op_lsh(args: SExp){
   const [t1, t2] = args_as_int_list("lsh", args, 2);
-  const [_, l0] = t1;
+  const l0 = t1[1];
   const [i1, l1] = t2;
   if(l1 > 4){
     throw new EvalError("lsh requires int32 args (with no leading zeros)", args.rest().first());
@@ -367,6 +368,7 @@ export function op_lsh(args: SExp){
   return malloc_cost(cost, SExp.to(r));
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function binop_reduction(op_name: str, initial_value: number, args: SExp, op_f: Function){
   let total = initial_value;
   let arg_size = 0;
@@ -434,7 +436,7 @@ export function op_not(args: SExp){
 export function op_any(args: SExp){
   const items: SExp[] = [];
   for(const _ of args_as_bools("any", args)) items.push(_);
-  let cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
+  const cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
   let r = SExp.FALSE;
   for(const v of items){
     if(!isAtom(v)){
@@ -451,7 +453,7 @@ export function op_any(args: SExp){
 export function op_all(args: SExp){
   const items: SExp[] = [];
   for(const _ of args_as_bools("all", args)) items.push(_);
-  let cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
+  const cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
   let r = SExp.TRUE;
   for(const v of items){
     if(!isAtom(v)){
@@ -473,7 +475,7 @@ export function op_softfork(args: SExp){
   if(!isAtom(a)){
     throw new EvalError("softfork requires int args", a);
   }
-  let cost = a.as_int();
+  const cost = a.as_int();
   if(cost < 1){
     throw new EvalError("cost must be > 0", args);
   }

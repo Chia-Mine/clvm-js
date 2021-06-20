@@ -6,6 +6,7 @@ export type TValStack = Array<Bytes|SExp|SExp[]|Tuple<SExp, SExp>>;
 export type TToSexpF = (arg: CastableType) => SExp;
 
 export function as_javascript(sexp: SExp){
+  // eslint-disable-next-line @typescript-eslint/ban-types
   function _roll(op_stack: Function[], val_stack: TValStack){
     const v1 = val_stack.pop() as SExp;
     const v2 = val_stack.pop() as SExp;
@@ -57,7 +58,9 @@ export function as_javascript(sexp: SExp){
   const val_stack = [sexp];
   while(op_stack.length){
     const op_f = op_stack.pop();
-    op_f && op_f(op_stack, val_stack);
+    if(op_f){
+      op_f(op_stack, val_stack);
+    }
   }
   
   return val_stack[val_stack.length-1];

@@ -1,4 +1,4 @@
-import {G1Element} from "bls-signatures";
+import {G1Element} from "@chiamine/bls-signatures";
 import {int, None, str} from "./__python_types__";
 import {CLVMObject} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream} from "./__type_compatibility__";
@@ -7,16 +7,7 @@ import {sexp_to_stream} from "./serialize";
 import {as_javascript} from "./as_javascript";
 import {EvalError} from "./EvalError";
 
-export type CastableType = SExp
-  | CLVMObject
-  | Bytes
-  | str
-  | int
-  | None
-  | G1Element
-  | Array<unknown>
-  | Tuple<any, any>
-  ;
+export type CastableType = SExp | CLVMObject | Bytes | str | int | None | G1Element | unknown[] | Tuple<any, any>;
 
 export function looks_like_clvm_object(o: any): o is CLVMObject {
   if(!o || typeof o !== "object"){
@@ -85,7 +76,9 @@ export function to_sexp_type(value: CastableType): CLVMObject {
   const ops: op_and_target[] = [t(0, None)];
   
   while(ops.length){
-    let [op, targetIndex] = (ops.pop() as op_and_target);
+    const item = (ops.pop() as op_and_target);
+    const op = item[0];
+    let targetIndex = item[1];
     
     // convert value
     if(op === op_convert){

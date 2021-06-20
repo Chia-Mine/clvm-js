@@ -14,6 +14,6 @@ export declare type str = string;
 export declare type bool = boolean;
 export declare type True = true;
 export declare type False = false;
-export declare type None = null;
 export declare const None: null;
+export declare type None = null;
 export declare type Optional<T> = T | None;

@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stream = exports.isIterable = exports.t = exports.Tuple = exports.Bytes = exports.to_hexstr = void 0;
-const jscrypto_1 = require("jscrypto");
+const Hex_1 = require("jscrypto/Hex");
+const Utf8_1 = require("jscrypto/Utf8");
+const Word32Array_1 = require("jscrypto/Word32Array");
 const __python_types__1 = require("./__python_types__");
 function to_hexstr(r) {
     // # make sure the string returned is minimal
@@ -9,7 +11,7 @@ function to_hexstr(r) {
     while (r.length > 1 && (r[0] === ((r[1] === 0xFF) ? 0xFF : 0))) {
         r = r.slice(1);
     }
-    return (new jscrypto_1.Word32Array(r)).toString();
+    return (new Word32Array_1.Word32Array(r)).toString();
 }
 exports.to_hexstr = to_hexstr;
 /**
@@ -34,16 +36,16 @@ class Bytes {
         if (value instanceof Uint8Array || value instanceof Bytes || value === __python_types__1.None || value === undefined) {
             return new Bytes(value);
         }
-        else if (value instanceof jscrypto_1.Word32Array) {
+        else if (value instanceof Word32Array_1.Word32Array) {
             return new Bytes(value.toUint8Array());
         }
         else if (typeof value === "string") {
             if (type === "hex") {
                 value = value.replace(/^0x/, "");
-                return new Bytes(jscrypto_1.Hex.parse(value).toUint8Array());
+                return new Bytes(Hex_1.Hex.parse(value).toUint8Array());
             }
             else /* if(type === "utf8") */ {
-                return new Bytes(jscrypto_1.Utf8.parse(value).toUint8Array());
+                return new Bytes(Utf8_1.Utf8.parse(value).toUint8Array());
             }
         }
         else if (type === "G1Element") {
@@ -72,7 +74,7 @@ class Bytes {
         return new Bytes(this._b.slice(start, start + len));
     }
     as_word() {
-        return new jscrypto_1.Word32Array(this._b);
+        return new Word32Array_1.Word32Array(this._b);
     }
     data() {
         return new Uint8Array(this._b);

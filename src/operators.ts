@@ -297,11 +297,11 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
 }
 
 export type TOperatorDict<A extends str = ATOMS> = {
-    unknown_op_handler: typeof default_unknown_op;
-  }
-  & ((op: Bytes, args: SExp) => Tuple<int, CLVMObject>)
-  & TAtomOpFunctionMap<A>
-  & Record<TBasicAtom, Bytes>
+  unknown_op_handler: typeof default_unknown_op;
+}
+& ((op: Bytes, args: SExp) => Tuple<int, CLVMObject>)
+& TAtomOpFunctionMap<A>
+& Record<TBasicAtom, Bytes>
   ;
 
 export function OperatorDict<A extends str = ATOMS>(
