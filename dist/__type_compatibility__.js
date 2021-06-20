@@ -131,8 +131,11 @@ function t(v1, v2) {
 }
 exports.t = t;
 function isIterable(v) {
-    if (Array.isArray(v)) {
+    if (Array.isArray(v)) { // Including Tuple.
         return true;
+    }
+    else if (typeof v === "string") {
+        return false;
     }
     else if (typeof v[Symbol.iterator] === "function") {
         return true;
