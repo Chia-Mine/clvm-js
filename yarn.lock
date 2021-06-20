@@ -1404,10 +1404,10 @@ js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-jscrypto@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/jscrypto/-/jscrypto-1.0.0.tgz#147728c53ad2baa35dc0cc0aa672eb511f2ec7bb"
-  integrity sha512-xYrFBeFxH3Hcm7TGT5N0LfkJe6qDN4aIILn4PLBhBNWCIsN96vWVl6+3Wm6ygOlmDuFDfuvLfsTzU6auXnxgcg==
+jscrypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jscrypto/-/jscrypto-1.0.1.tgz#786f0f803b1717a4b7c6247ccfaa8a8230fe062b"
+  integrity sha512-xb+lVDVDGe3cL7i7IZqdvQV0ucMyxxD3Jt+xfrc0GedTOdLto65rBHpIlKOJ8W/X3Qg/z5nEcUva5ziDVParSQ==
 
 jsdoctypeparser@^9.0.0:
   version "9.0.0"

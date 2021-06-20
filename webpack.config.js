@@ -30,6 +30,11 @@ module.exports = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
+    fallback: {
+      "path": false,
+      "fs": false,
+      "crypto": false,
+    }
   },
   target: isProd ? ["es5"] : undefined,
   optimization: isProd ? {
@@ -48,7 +53,7 @@ module.exports = {
   entry: "./src/index.ts",
   output: {
     path: isProd ? path.resolve(__dirname, "dist", "browser") : path.resolve(__dirname, "build", "browser"),
-    filename: "[name].js",
+    filename: "index.js",
     library: ["clvm"],
     libraryTarget: "umd",
     globalObject: "this",
