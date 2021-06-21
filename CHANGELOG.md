@@ -4,6 +4,7 @@
 ### Fixed
 - Fixed an issue where `SExp::as_javascript()` does not return expected value.
 - Fixed an issue where `SExp.to(<tuple>)` raises unexpected Error.
+- Fixed incorrect function name `__repl__` to `__repr__`
 
 ## [0.0.5]
 ### Fixed
