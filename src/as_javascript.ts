@@ -4,6 +4,8 @@ import {Bytes, Tuple, t} from "./__type_compatibility__";
 export type TOpStack = Array<(op_stack: TOpStack, val_stack: TValStack) => unknown>;
 export type TValStack = Array<Bytes|SExp|SExp[]|Tuple<SExp, SExp>>;
 export type TToSexpF = (arg: CastableType) => SExp;
+export type TToJavascript = Bytes | Bytes[] | Tuple<TToJavascript, TToJavascript> | TToJavascript[];
+
 
 export function as_javascript(sexp: SExp){
   function _roll(op_stack: TOpStack, val_stack: TValStack){
@@ -62,5 +64,5 @@ export function as_javascript(sexp: SExp){
     }
   }
   
-  return val_stack[val_stack.length-1];
+  return (val_stack[val_stack.length-1] as unknown) as TToJavascript;
 }
