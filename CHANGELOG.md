@@ -3,6 +3,7 @@
 ## [0.0.8]
 ### Added
 - Added `b(<str>)` helper function which equals to `Bytes.from(<str>, "utf8")`
+- Added `isTuple`, `isList` functions.
 
 ## [0.0.7]
 ### Changed
