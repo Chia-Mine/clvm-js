@@ -151,6 +151,10 @@ export function b(utf8Str: str, type:"utf8"|"hex" = "utf8"){
   return Bytes.from(utf8Str, type);
 }
 
+export function h(hexStr: str){
+  return Bytes.from(hexStr, "hex");
+}
+
 export class Tuple<T1, T2> extends Array<any> {
   public constructor(...items: [T1, T2]) {
     super(...items);
