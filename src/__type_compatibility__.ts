@@ -104,6 +104,10 @@ export class Bytes {
     return to_hexstr(this._b);
   }
   
+  public hex(){
+    return this.toString();
+  }
+  
   public equal_to(b: Bytes){
     return this.compare(b) === 0;
   }
