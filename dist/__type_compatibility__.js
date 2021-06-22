@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stream = exports.isIterable = exports.t = exports.Tuple = exports.Bytes = exports.to_hexstr = void 0;
+exports.Stream = exports.isIterable = exports.isList = exports.isTuple = exports.t = exports.Tuple = exports.b = exports.Bytes = exports.to_hexstr = void 0;
 const Hex_1 = require("jscrypto/Hex");
 const Utf8_1 = require("jscrypto/Utf8");
 const Word32Array_1 = require("jscrypto/Word32Array");
@@ -115,6 +115,10 @@ class Bytes {
 }
 exports.Bytes = Bytes;
 Bytes.NULL = new Bytes();
+function b(utf8Str) {
+    return Bytes.from(utf8Str, "utf8");
+}
+exports.b = b;
 class Tuple extends Array {
     constructor(...items) {
         super(...items);
@@ -130,6 +134,17 @@ function t(v1, v2) {
     return new Tuple(v1, v2);
 }
 exports.t = t;
+function isTuple(v) {
+    return v instanceof Tuple;
+}
+exports.isTuple = isTuple;
+/**
+ * Check whether an argument is a list and not a tuple
+ */
+function isList(v) {
+    return Array.isArray(v) && !(v instanceof Tuple);
+}
+exports.isList = isList;
 function isIterable(v) {
     if (Array.isArray(v)) { // Including Tuple.
         return true;

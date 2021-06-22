@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.8]
+### Added
+- Added `b(<str>)` helper function which equals to `Bytes.from(<str>, "utf8")`
+- Added `isTuple`, `isList` functions.
+
 ## [0.0.7]
 ### Changed
 - Made return type of `as_javascript()` explicit
@@ -44,6 +49,8 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.8]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.7...v0.0.8
+[0.0.7]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.3...v0.0.4

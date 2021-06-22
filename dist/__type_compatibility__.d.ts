@@ -30,11 +30,17 @@ export declare class Bytes {
      */
     compare(other: Bytes): -1 | 0 | 1;
 }
+export declare function b(utf8Str: str): Bytes;
 export declare class Tuple<T1, T2> extends Array<any> {
     constructor(...items: [T1, T2]);
     toString(): string;
 }
 export declare function t<T1, T2>(v1: T1, v2: T2): Tuple<T1, T2>;
+export declare function isTuple(v: unknown): v is Tuple<unknown, unknown>;
+/**
+ * Check whether an argument is a list and not a tuple
+ */
+export declare function isList(v: unknown): v is unknown[];
 export declare function isIterable(v: any): v is unknown[];
 export declare class Stream {
     private _seek;
