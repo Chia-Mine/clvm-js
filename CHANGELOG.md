@@ -3,6 +3,7 @@
 ## [0.0.9]
 ### Added
 - Added `Bytes::hex()` which is an alias of `Bytes::toString()`
+- Added `SExpAsAtom` type and `SExpAsPair` type.
 ### Fixed
 - Fixed value of `SExp.TRUE` and `SExp.FALSE`
 
