@@ -131,6 +131,10 @@ export class Bytes {
   }
 }
 
+export function b(utf8Str: str){
+  return Bytes.from(utf8Str, "utf8");
+}
+
 export class Tuple<T1, T2> extends Array<any> {
   public constructor(...items: [T1, T2]) {
     super(...items);
