@@ -131,6 +131,10 @@ export class Bytes {
   }
 }
 
+export function b(utf8Str: str){
+  return Bytes.from(utf8Str, "utf8");
+}
+
 export class Tuple<T1, T2> extends Array<any> {
   public constructor(...items: [T1, T2]) {
     super(...items);
@@ -145,6 +149,17 @@ export class Tuple<T1, T2> extends Array<any> {
 
 export function t<T1, T2>(v1: T1, v2: T2){
   return new Tuple(v1, v2);
+}
+
+export function isTuple(v: unknown): v is Tuple<unknown, unknown> {
+  return v instanceof Tuple;
+}
+
+/**
+ * Check whether an argument is a list and not a tuple
+ */
+export function isList(v: unknown): v is unknown[] {
+  return Array.isArray(v) && !(v instanceof Tuple);
 }
 
 export function isIterable(v: any): v is unknown[] {
