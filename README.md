@@ -13,13 +13,6 @@ npm install clvm
 yarn add clvm
 ```
 
-Breeding edge version of `clvm` is available by
-```shell
-yarn add Chia-Mine/clvm-js#v0.0.7
-# or
-npm install Chia-Mine/clvm-js#v0.0.7
-```
-
 ## Example
 ```javascript
 // in nodejs context
@@ -42,7 +35,7 @@ async function main(){
   const v1 = OPERATOR_LOOKUP(KEYWORD_TO_ATOM["+"], SExp.to([3,4,5]))[1];
   const v2 = SExp.to(12);
   const ok = v1.equal_to(v2);
-  console.log(`ok: ${ok}`); // Will show 'true'
+  console.log(`ok: ${ok}`); // 'ok: true'
 }
 
 main().catch(e => console.error(e));
