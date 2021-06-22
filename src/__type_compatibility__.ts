@@ -112,6 +112,14 @@ export class Bytes {
     return Utf8.stringify(this.as_word());
   }
   
+  public startswith(b: Bytes){
+    return this.toString().startsWith(b.toString());
+  }
+  
+  public endswith(b: Bytes){
+    return this.toString().endsWith(b.toString());
+  }
+  
   public equal_to(b: Bytes){
     return this.compare(b) === 0;
   }
