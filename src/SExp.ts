@@ -1,6 +1,6 @@
 import {G1Element} from "@chiamine/bls-signatures";
 import {int, None, str} from "./__python_types__";
-import {CLVMObject} from "./CLVMObject";
+import {Atom, CLVMObject, Cons} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream} from "./__type_compatibility__";
 import {int_from_bytes, int_to_bytes} from "./casts";
 import {sexp_to_stream} from "./serialize";
@@ -176,6 +176,9 @@ export function to_sexp_type(value: CastableType): CLVMObject {
   return stack[0] as CLVMObject;
 }
 
+export type SExpAsAtom = SExp & Atom;
+export type SExpAsPair = SExp & Cons;
+
 /*
  SExp provides higher level API on top of any object implementing the CLVM
  object protocol.
@@ -190,8 +193,8 @@ export function to_sexp_type(value: CastableType): CLVMObject {
  Exactly one of "atom" and "pair" must be None.
  */
 export class SExp extends CLVMObject {
-  static readonly TRUE: SExp = new SExp(new CLVMObject(Bytes.NULL));
-  static readonly FALSE: SExp = new SExp(new CLVMObject(Bytes.from("0x01", "hex")));
+  static readonly TRUE: SExp = new SExp(new CLVMObject(Bytes.from("0x01", "hex")));
+  static readonly FALSE: SExp = new SExp(new CLVMObject(Bytes.NULL));
   static readonly __NULL__: SExp = new SExp(new CLVMObject(Bytes.NULL));
   
   static to(v: CastableType): SExp {
@@ -226,7 +229,7 @@ export class SExp extends CLVMObject {
     return t(new SExp(pair[0]), new SExp(pair[1]));
   }
   
-  public listp(){
+  public listp(): this is SExpAsPair {
     return this.pair !== None;
   }
   
