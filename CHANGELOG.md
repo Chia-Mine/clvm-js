@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.9]
+### Added
+- Added `Bytes::hex()` which is an alias of `Bytes::toString()`
+
 ## [0.0.8]
 ### Added
 - Added `b(<str>)` helper function which equals to `Bytes.from(<str>, "utf8")`
@@ -49,6 +53,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.5...v0.0.6
