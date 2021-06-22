@@ -7,7 +7,16 @@ import {sexp_to_stream} from "./serialize";
 import {as_javascript} from "./as_javascript";
 import {EvalError} from "./EvalError";
 
-export type CastableType = SExp | CLVMObject | Bytes | str | int | None | G1Element | unknown[] | Tuple<any, any>;
+export type CastableType = SExp
+| CLVMObject
+| Bytes
+| str
+| int
+| None
+| G1Element
+| CastableType[]
+| Tuple<CastableType, CastableType>
+;
 
 export function looks_like_clvm_object(o: any): o is CLVMObject {
   if(!o || typeof o !== "object"){
