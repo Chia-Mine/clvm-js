@@ -135,8 +135,8 @@ export class Bytes {
   }
 }
 
-export function b(utf8Str: str){
-  return Bytes.from(utf8Str, "utf8");
+export function b(utf8Str: str, type:"utf8"|"hex" = "utf8"){
+  return Bytes.from(utf8Str, type);
 }
 
 export class Tuple<T1, T2> extends Array<any> {
