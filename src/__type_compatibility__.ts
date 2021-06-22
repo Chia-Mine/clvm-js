@@ -151,6 +151,17 @@ export function t<T1, T2>(v1: T1, v2: T2){
   return new Tuple(v1, v2);
 }
 
+export function isTuple(v: unknown): v is Tuple<unknown, unknown> {
+  return v instanceof Tuple;
+}
+
+/**
+ * Check whether an argument is a list and not a tuple
+ */
+export function isList(v: unknown): v is unknown[] {
+  return Array.isArray(v) && !(v instanceof Tuple);
+}
+
 export function isIterable(v: any): v is unknown[] {
   if(Array.isArray(v)){ // Including Tuple.
     return true;
