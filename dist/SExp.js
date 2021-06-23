@@ -263,6 +263,6 @@ class SExp extends CLVMObject_1.CLVMObject {
     }
 }
 exports.SExp = SExp;
-SExp.TRUE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
-SExp.FALSE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.from("0x01", "hex")));
+SExp.TRUE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.from("0x01", "hex")));
+SExp.FALSE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
 SExp.__NULL__ = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
