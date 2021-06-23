@@ -108,6 +108,10 @@ export class Bytes {
     return this.toString();
   }
   
+  public decode(){
+    return Utf8.stringify(this.as_word());
+  }
+  
   public equal_to(b: Bytes){
     return this.compare(b) === 0;
   }
