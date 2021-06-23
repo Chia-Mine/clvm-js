@@ -4,6 +4,7 @@
 ### Added
 - Added `Bytes::hex()` which is an alias of `Bytes::toString()`
 - Added `SExpAsAtom` type and `SExpAsPair` type.
+- Added hex string support to `b(<str>)`. In `b("0xaa", "hex")`, `0xaa` is now parsed as hex string.
 ### Fixed
 - Fixed value of `SExp.TRUE` and `SExp.FALSE`
 
