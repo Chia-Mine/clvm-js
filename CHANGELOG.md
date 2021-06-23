@@ -1,10 +1,18 @@
 # Changelog
 
+## [0.0.10]
+### Added
+- Added `h(<str>)` helper function which equals to `Bytes.from(<str>, "hex")`
+### Fixed
+- Removed type-guard from `SExp::listp()`
+- Removed `SExpAsAtom` type and `SExpAsPair` type as they seem not working.
+
+
 ## [0.0.9]
 ### Added
 - Added `Bytes::hex()` which is an alias of `Bytes::toString()`
-- Added `Bytes.decode()`
-- Added `Bytes.startswith()` and `Bytes.endswith()`
+- Added `Bytes::decode()`
+- Added `Bytes::startswith()` and `Bytes::endswith()`
 - Added `SExpAsAtom` type and `SExpAsPair` type.
 - Added hex string support to `b(<str>)`. In `b("0xaa", "hex")`, `0xaa` is now parsed as hex string.
 ### Fixed
@@ -59,6 +67,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.10]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.6...v0.0.7
