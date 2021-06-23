@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stream = exports.isIterable = exports.isList = exports.isTuple = exports.t = exports.Tuple = exports.b = exports.Bytes = exports.to_hexstr = void 0;
+exports.Stream = exports.isIterable = exports.isList = exports.isTuple = exports.t = exports.Tuple = exports.h = exports.b = exports.Bytes = exports.to_hexstr = void 0;
 const Hex_1 = require("jscrypto/Hex");
 const Utf8_1 = require("jscrypto/Utf8");
 const Word32Array_1 = require("jscrypto/Word32Array");
@@ -131,6 +131,10 @@ function b(utf8Str, type = "utf8") {
     return Bytes.from(utf8Str, type);
 }
 exports.b = b;
+function h(hexStr) {
+    return Bytes.from(hexStr, "hex");
+}
+exports.h = h;
 class Tuple extends Array {
     constructor(...items) {
         super(...items);
