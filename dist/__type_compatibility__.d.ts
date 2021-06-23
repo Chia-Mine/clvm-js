@@ -35,6 +35,7 @@ export declare class Bytes {
     compare(other: Bytes): -1 | 0 | 1;
 }
 export declare function b(utf8Str: str, type?: "utf8" | "hex"): Bytes;
+export declare function h(hexStr: str): Bytes;
 export declare class Tuple<T1, T2> extends Array<any> {
     constructor(...items: [T1, T2]);
     toString(): string;
