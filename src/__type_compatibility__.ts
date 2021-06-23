@@ -104,6 +104,22 @@ export class Bytes {
     return to_hexstr(this._b);
   }
   
+  public hex(){
+    return this.toString();
+  }
+  
+  public decode(){
+    return Utf8.stringify(this.as_word());
+  }
+  
+  public startswith(b: Bytes){
+    return this.toString().startsWith(b.toString());
+  }
+  
+  public endswith(b: Bytes){
+    return this.toString().endsWith(b.toString());
+  }
+  
   public equal_to(b: Bytes){
     return this.compare(b) === 0;
   }
@@ -131,8 +147,8 @@ export class Bytes {
   }
 }
 
-export function b(utf8Str: str){
-  return Bytes.from(utf8Str, "utf8");
+export function b(utf8Str: str, type:"utf8"|"hex" = "utf8"){
+  return Bytes.from(utf8Str, type);
 }
 
 export class Tuple<T1, T2> extends Array<any> {

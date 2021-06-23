@@ -88,6 +88,18 @@ class Bytes {
     toString() {
         return to_hexstr(this._b);
     }
+    hex() {
+        return this.toString();
+    }
+    decode() {
+        return Utf8_1.Utf8.stringify(this.as_word());
+    }
+    startswith(b) {
+        return this.toString().startsWith(b.toString());
+    }
+    endswith(b) {
+        return this.toString().endsWith(b.toString());
+    }
     equal_to(b) {
         return this.compare(b) === 0;
     }
@@ -115,8 +127,8 @@ class Bytes {
 }
 exports.Bytes = Bytes;
 Bytes.NULL = new Bytes();
-function b(utf8Str) {
-    return Bytes.from(utf8Str, "utf8");
+function b(utf8Str, type = "utf8") {
+    return Bytes.from(utf8Str, type);
 }
 exports.b = b;
 class Tuple extends Array {

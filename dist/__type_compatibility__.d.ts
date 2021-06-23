@@ -20,6 +20,10 @@ export declare class Bytes {
     raw(): Uint8Array;
     clone(): Bytes;
     toString(): string;
+    hex(): string;
+    decode(): string;
+    startswith(b: Bytes): boolean;
+    endswith(b: Bytes): boolean;
     equal_to(b: Bytes): boolean;
     /**
      * Returns:
@@ -30,7 +34,7 @@ export declare class Bytes {
      */
     compare(other: Bytes): -1 | 0 | 1;
 }
-export declare function b(utf8Str: str): Bytes;
+export declare function b(utf8Str: str, type?: "utf8" | "hex"): Bytes;
 export declare class Tuple<T1, T2> extends Array<any> {
     constructor(...items: [T1, T2]);
     toString(): string;
