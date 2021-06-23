@@ -3,6 +3,8 @@
 ## [0.0.9]
 ### Added
 - Added `Bytes::hex()` which is an alias of `Bytes::toString()`
+### Fixed
+- Fixed value of `SExp.TRUE` and `SExp.FALSE`
 
 ## [0.0.8]
 ### Added
