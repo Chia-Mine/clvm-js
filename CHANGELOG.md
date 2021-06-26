@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.12]
+### Changed
+- Don't remove leading '00' or 'ff' when serializing SExp to hex string.
+
 ## [0.0.11]
 ### Changed
 - Made `EvalError::_sexp` public.
@@ -71,6 +75,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.12]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.11...v0.0.12
 [0.0.11]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.8...v0.0.9
