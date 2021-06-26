@@ -115,7 +115,10 @@ export class Bytes {
     return this.toString().endsWith(b.toString());
   }
   
-  public equal_to(b: Bytes){
+  public equal_to(b: Bytes|None){
+    if(!b){
+      return false;
+    }
     return this.compare(b) === 0;
   }
   
