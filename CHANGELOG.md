@@ -1,8 +1,9 @@
 # Changelog
 
 ## [0.0.12]
-### Changed
+### Fixed
 - Don't remove leading '00' or 'ff' when serializing SExp to hex string.
+- Fixed an issue where `SExp.to(0)` is converted to `SExp(0x00)` where `SExp(0x80)` is expected.
 
 ## [0.0.11]
 ### Changed

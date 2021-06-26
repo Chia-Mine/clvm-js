@@ -14,7 +14,10 @@ export function int_to_bytes(v: int): Bytes {
   if(v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER){
     throw new Error(`int value go over ${v > 0 ? "MAX_SAFE_INTEGER" : "MIN_SAFE_INTEGER"}: ${v}`);
   }
-  if(v >= 0){
+  if(v === 0){
+    return Bytes.NULL;
+  }
+  else if(v > 0){
     let hexStr = v.toString(16);
     hexStr = hexStr.length % 2 ? "0" + hexStr : hexStr;
     return Bytes.from(hexStr, "hex");
