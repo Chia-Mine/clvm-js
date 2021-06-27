@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.13]
+### Fixed
+- Fixed a minor issue
+
 ## [0.0.12]
 ### Fixed
 - Don't remove leading '00' or 'ff' when serializing SExp to hex string.
@@ -78,6 +82,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.13]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.12...v0.0.13
 [0.0.12]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.11...v0.0.12
 [0.0.11]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.9...v0.0.10
