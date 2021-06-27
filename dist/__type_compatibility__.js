@@ -6,11 +6,6 @@ const Utf8_1 = require("jscrypto/Utf8");
 const Word32Array_1 = require("jscrypto/Word32Array");
 const __python_types__1 = require("./__python_types__");
 function to_hexstr(r) {
-    // # make sure the string returned is minimal
-    // # ie. no leading 00 or ff bytes that are unnecessary
-    while (r.length > 1 && (r[0] === ((r[1] === 0xFF) ? 0xFF : 0))) {
-        r = r.slice(1);
-    }
     return (new Word32Array_1.Word32Array(r)).toString();
 }
 exports.to_hexstr = to_hexstr;
@@ -101,6 +96,9 @@ class Bytes {
         return this.toString().endsWith(b.toString());
     }
     equal_to(b) {
+        if (!b) {
+            return false;
+        }
         return this.compare(b) === 0;
     }
     /**

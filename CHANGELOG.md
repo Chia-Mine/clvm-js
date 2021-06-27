@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.12]
+### Fixed
+- Don't remove leading '00' or 'ff' when serializing SExp to hex string.
+- Fixed an issue where `SExp.to(0)` is converted to `SExp(0x00)` where `SExp(0x80)` is expected.
+- Fixed an issue where it raises an Error when executing `Bytes::equal_to(None)`.
+- Fixed a minor issue
+
 ## [0.0.11]
 ### Changed
 - Made `EvalError::_sexp` public.
@@ -71,6 +78,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.12]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.11...v0.0.12
 [0.0.11]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.8...v0.0.9

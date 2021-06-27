@@ -5,11 +5,6 @@ import {None, str} from "./__python_types__";
 import {G1Element} from "@chiamine/bls-signatures";
 
 export function to_hexstr(r: Uint8Array) {
-  // # make sure the string returned is minimal
-  // # ie. no leading 00 or ff bytes that are unnecessary
-  while(r.length > 1 && (r[0] === ((r[1] === 0xFF) ? 0xFF : 0))){
-    r = r.slice(1);
-  }
   return (new Word32Array(r)).toString();
 }
 
@@ -120,7 +115,10 @@ export class Bytes {
     return this.toString().endsWith(b.toString());
   }
   
-  public equal_to(b: Bytes){
+  public equal_to(b: Bytes|None){
+    if(!b){
+      return false;
+    }
     return this.compare(b) === 0;
   }
   

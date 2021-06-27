@@ -131,7 +131,7 @@ export function run_program(
     if(isCons(operator)){
       const pair = operator.as_pair() as Tuple<SExp, SExp>;
       const [new_operator, must_be_nil] = pair;
-      if(new_operator.pair || must_be_nil.atom !== Bytes.NULL){
+      if(new_operator.pair || !Bytes.NULL.equal_to(must_be_nil.atom)){
         throw new EvalError("in ((X)...) syntax X must be lone atom", sexp);
       }
       const new_operand_list = sexp.rest();
@@ -140,7 +140,6 @@ export function run_program(
       op_stack.push(apply_op);
       return APPLY_COST;
     }
-    
     const op = operator.atom as Bytes;
     let operand_list = sexp.rest();
     // op === operator_lookup.quote_atom

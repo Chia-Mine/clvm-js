@@ -24,7 +24,7 @@ export declare class Bytes {
     decode(): string;
     startswith(b: Bytes): boolean;
     endswith(b: Bytes): boolean;
-    equal_to(b: Bytes): boolean;
+    equal_to(b: Bytes | None): boolean;
     /**
      * Returns:
      *   +1 if argument is smaller
