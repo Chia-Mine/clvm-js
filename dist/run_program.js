@@ -101,7 +101,7 @@ function run_program(program, args, operator_lookup, max_cost = __python_types__
         if (CLVMObject_1.isCons(operator)) {
             const pair = operator.as_pair();
             const [new_operator, must_be_nil] = pair;
-            if (new_operator.pair || must_be_nil.atom !== __type_compatibility__1.Bytes.NULL) {
+            if (new_operator.pair || !__type_compatibility__1.Bytes.NULL.equal_to(must_be_nil.atom)) {
                 throw new EvalError_1.EvalError("in ((X)...) syntax X must be lone atom", sexp);
             }
             const new_operand_list = sexp.rest();
