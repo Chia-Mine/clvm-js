@@ -32,9 +32,15 @@ export class Bytes {
     }
   }
   
-  public static from(value?: Uint8Array|Bytes|None|Word32Array|str|G1Element, type?: BytesFromType){
+  public static from(value?: Uint8Array|Bytes|number[]|Word32Array|str|G1Element|None, type?: BytesFromType){
     if(value instanceof Uint8Array || value instanceof Bytes || value === None || value === undefined){
       return new Bytes(value);
+    }
+    else if(Array.isArray(value) && value.every(v => typeof v === "number")){
+      if(value.some(v => (v < 0 || v > 255))){
+        throw new Error("Bytes must be in range [0, 256)");
+      }
+      return new Bytes(Uint8Array.from(value));
     }
     else if(value instanceof Word32Array){
       return new Bytes(value.toUint8Array());
