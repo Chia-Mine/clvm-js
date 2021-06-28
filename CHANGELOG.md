@@ -1,6 +1,8 @@
 # Changelog
 
 ## [0.0.13]
+### Changed
+- `Bytes.from()` now accepts an array of number.
 ### Fixed
 - Fixed an issue where `int_to_bytes` returns value incompatible with clvm in python.
 - Fixed a minor issue
