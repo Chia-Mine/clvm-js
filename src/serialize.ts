@@ -29,7 +29,7 @@ export function* sexp_to_byte_iterator(sexp: SExp){
     sexp = todo_stack.pop() as SExp;
     const pair = sexp.as_pair();
     if(pair){
-      yield int_to_bytes(CONS_BOX_MARKER);
+      yield Bytes.from([CONS_BOX_MARKER]);
       todo_stack.push(pair[1]);
       todo_stack.push(pair[0]);
     }

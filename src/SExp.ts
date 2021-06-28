@@ -61,23 +61,6 @@ type operations = typeof op_convert | typeof op_set_left | typeof op_set_right |
 type op_target = number | None;
 type op_and_target = Tuple<operations, op_target>;
 
-function is_valid_stack_target(stack: any): stack is CLVMObject {
-  if(!stack){
-    throw new Error(`stack[target] is empty: ${JSON.stringify(stack)}`);
-  }
-  else if(!looks_like_clvm_object(stack)){
-    throw new Error(`Unexpected stack[target] value: ${JSON.stringify(stack)}`);
-  }
-  return true;
-}
-
-function is_valid_stack_target_pair(s: any): s is {pair: Tuple<any, any>} {
-  if(!(s.pair instanceof Tuple)){
-    throw new Error(`Unexpected value of stack[target].pair: ${JSON.stringify(s.pair)}`);
-  }
-  return true;
-}
-
 export function to_sexp_type(value: CastableType): CLVMObject {
   let v: CastableType|undefined = value;
   const stack = [v];
@@ -142,28 +125,19 @@ export function to_sexp_type(value: CastableType): CLVMObject {
     }
     
     if (op === op_set_left){ // set left
-      const stack_target = stack[targetIndex];
-      if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)){
-        (stack[targetIndex] as CLVMObject).pair = t(
-          new CLVMObject(stack.pop()),
-          ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[1]
-        );
-      }
+      (stack[targetIndex] as CLVMObject).pair = t(
+        new CLVMObject(stack.pop()),
+        ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[1]
+      );
     }
     else if(op === op_set_right){ // set right
-      const stack_target = stack[targetIndex];
-      if(is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)){
-        (stack[targetIndex] as CLVMObject).pair = t(
-          ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[0],
-          new CLVMObject(stack.pop())
-        );
-      }
+      (stack[targetIndex] as CLVMObject).pair = t(
+        ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[0],
+        new CLVMObject(stack.pop())
+      );
     }
     else if(op === op_prepend_list){ // prepend list
-      const stack_target = stack[targetIndex];
-      if(is_valid_stack_target(stack_target)){
-        stack[targetIndex] = new CLVMObject(t(stack.pop(), stack_target));
-      }
+      stack[targetIndex] = new CLVMObject(t(stack.pop(), stack[targetIndex]));
     }
   }
   
