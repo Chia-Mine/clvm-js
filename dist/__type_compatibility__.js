@@ -31,6 +31,12 @@ class Bytes {
         if (value instanceof Uint8Array || value instanceof Bytes || value === __python_types__1.None || value === undefined) {
             return new Bytes(value);
         }
+        else if (Array.isArray(value) && value.every(v => typeof v === "number")) {
+            if (value.some(v => (v < 0 || v > 255))) {
+                throw new Error("Bytes must be in range [0, 256)");
+            }
+            return new Bytes(Uint8Array.from(value));
+        }
         else if (value instanceof Word32Array_1.Word32Array) {
             return new Bytes(value.toUint8Array());
         }
