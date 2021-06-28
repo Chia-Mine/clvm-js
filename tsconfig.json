@@ -14,7 +14,8 @@
     "sourceMap": false,
     "skipLibCheck": true,
     "noImplicitAny": true,
-    "declaration": true
+    "declaration": true,
+    "newLine": "lf"
   },
   "include": [
     "src/**/*"
