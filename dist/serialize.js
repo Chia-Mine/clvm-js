@@ -26,7 +26,7 @@ function* sexp_to_byte_iterator(sexp) {
         sexp = todo_stack.pop();
         const pair = sexp.as_pair();
         if (pair) {
-            yield casts_1.int_to_bytes(CONS_BOX_MARKER);
+            yield __type_compatibility__1.Bytes.from([CONS_BOX_MARKER]);
             todo_stack.push(pair[1]);
             todo_stack.push(pair[0]);
         }

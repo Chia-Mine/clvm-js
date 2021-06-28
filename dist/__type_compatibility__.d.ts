@@ -10,7 +10,7 @@ export declare class Bytes {
     private readonly _b;
     static readonly NULL: Bytes;
     constructor(value?: Uint8Array | Bytes | None);
-    static from(value?: Uint8Array | Bytes | None | Word32Array | str | G1Element, type?: BytesFromType): Bytes;
+    static from(value?: Uint8Array | Bytes | number[] | Word32Array | str | G1Element | None, type?: BytesFromType): Bytes;
     get length(): number;
     get_byte_at(i: number): number;
     concat(b: Bytes): Bytes;

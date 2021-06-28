@@ -45,21 +45,6 @@ const op_convert = 0;
 const op_set_left = 1;
 const op_set_right = 2;
 const op_prepend_list = 3;
-function is_valid_stack_target(stack) {
-    if (!stack) {
-        throw new Error(`stack[target] is empty: ${JSON.stringify(stack)}`);
-    }
-    else if (!looks_like_clvm_object(stack)) {
-        throw new Error(`Unexpected stack[target] value: ${JSON.stringify(stack)}`);
-    }
-    return true;
-}
-function is_valid_stack_target_pair(s) {
-    if (!(s.pair instanceof __type_compatibility__1.Tuple)) {
-        throw new Error(`Unexpected value of stack[target].pair: ${JSON.stringify(s.pair)}`);
-    }
-    return true;
-}
 function to_sexp_type(value) {
     let v = value;
     const stack = [v];
@@ -113,22 +98,13 @@ function to_sexp_type(value) {
             throw new Error("Invalid target. target is null");
         }
         if (op === op_set_left) { // set left
-            const stack_target = stack[targetIndex];
-            if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)) {
-                stack[targetIndex].pair = __type_compatibility__1.t(new CLVMObject_1.CLVMObject(stack.pop()), stack[targetIndex].pair[1]);
-            }
+            stack[targetIndex].pair = __type_compatibility__1.t(new CLVMObject_1.CLVMObject(stack.pop()), stack[targetIndex].pair[1]);
         }
         else if (op === op_set_right) { // set right
-            const stack_target = stack[targetIndex];
-            if (is_valid_stack_target(stack_target) && is_valid_stack_target_pair(stack_target)) {
-                stack[targetIndex].pair = __type_compatibility__1.t(stack[targetIndex].pair[0], new CLVMObject_1.CLVMObject(stack.pop()));
-            }
+            stack[targetIndex].pair = __type_compatibility__1.t(stack[targetIndex].pair[0], new CLVMObject_1.CLVMObject(stack.pop()));
         }
         else if (op === op_prepend_list) { // prepend list
-            const stack_target = stack[targetIndex];
-            if (is_valid_stack_target(stack_target)) {
-                stack[targetIndex] = new CLVMObject_1.CLVMObject(__type_compatibility__1.t(stack.pop(), stack_target));
-            }
+            stack[targetIndex] = new CLVMObject_1.CLVMObject(__type_compatibility__1.t(stack.pop(), stack[targetIndex]));
         }
     }
     // there's exactly one item left at this point
