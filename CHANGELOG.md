@@ -5,6 +5,8 @@
 - Changed new line style for files in `dist/` from windows-style(CR) to linux-style(LF).
 ### Removed
 - Removed `WordArray32` from possible argument of `Bytes.from`.
+### Added
+- Added `Bytes.SHA256()`.
 
 ## [0.0.13]
 ### Changed
