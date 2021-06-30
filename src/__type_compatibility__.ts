@@ -1,6 +1,7 @@
 import {Hex} from "jscrypto/Hex";
 import {Utf8} from "jscrypto/Utf8";
 import {Word32Array} from "jscrypto/Word32Array";
+import {SHA256} from "jscrypto/SHA256";
 import {None, str} from "./__python_types__";
 import {G1Element} from "@chiamine/bls-signatures";
 
@@ -60,6 +61,26 @@ export class Bytes {
     }
     
     throw new Error(`Invalid value: ${JSON.stringify(value)}`);
+  }
+  
+  public static SHA256(value: str|Bytes|Uint8Array){
+    let w;
+    if(typeof value === "string"){
+      w = SHA256.hash(value);
+    }
+    else if(value instanceof Uint8Array){
+      w = new Word32Array(value);
+      w = SHA256.hash(w);
+    }
+    else if(value instanceof Bytes){
+      w = value.as_word();
+      w = SHA256.hash(w);
+    }
+    else{
+      throw new Error("Invalid argument");
+    }
+    
+    return new Bytes(w.toUint8Array());
   }
   
   public get length(){
