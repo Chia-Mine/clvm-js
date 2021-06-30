@@ -32,7 +32,7 @@ export class Bytes {
     }
   }
   
-  public static from(value?: Uint8Array|Bytes|number[]|Word32Array|str|G1Element|None, type?: BytesFromType){
+  public static from(value?: Uint8Array|Bytes|number[]|str|G1Element|None, type?: BytesFromType){
     if(value instanceof Uint8Array || value instanceof Bytes || value === None || value === undefined){
       return new Bytes(value);
     }
@@ -41,9 +41,6 @@ export class Bytes {
         throw new Error("Bytes must be in range [0, 256)");
       }
       return new Bytes(Uint8Array.from(value));
-    }
-    else if(value instanceof Word32Array){
-      return new Bytes(value.toUint8Array());
     }
     else if(typeof value === "string"){
       if(type === "hex"){
@@ -77,7 +74,7 @@ export class Bytes {
     const w1 = this.as_word();
     const w2 = b.as_word();
     const w = w1.concat(w2);
-    return Bytes.from(w);
+    return Bytes.from(w.toUint8Array());
   }
   
   public slice(start: number, length?: number){
