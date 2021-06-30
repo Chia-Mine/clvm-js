@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.14]
+### Changed
+- Changed new line style for files in `dist/` from windows-style(CR) to linux-style(LF).
+### Removed
+- Removed `WordArray32` from possible argument of `Bytes.from`.
+### Added
+- Added `Bytes.SHA256()`.
+
 ## [0.0.13]
 ### Changed
 - `Bytes.from()` now accepts an array of number.
@@ -85,6 +93,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.14]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.13...v0.0.14
 [0.0.13]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.12...v0.0.13
 [0.0.12]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.11...v0.0.12
 [0.0.11]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.10...v0.0.11

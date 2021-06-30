@@ -1,6 +1,7 @@
 import {Hex} from "jscrypto/Hex";
 import {Utf8} from "jscrypto/Utf8";
 import {Word32Array} from "jscrypto/Word32Array";
+import {SHA256} from "jscrypto/SHA256";
 import {None, str} from "./__python_types__";
 import {G1Element} from "@chiamine/bls-signatures";
 
@@ -32,7 +33,7 @@ export class Bytes {
     }
   }
   
-  public static from(value?: Uint8Array|Bytes|number[]|Word32Array|str|G1Element|None, type?: BytesFromType){
+  public static from(value?: Uint8Array|Bytes|number[]|str|G1Element|None, type?: BytesFromType){
     if(value instanceof Uint8Array || value instanceof Bytes || value === None || value === undefined){
       return new Bytes(value);
     }
@@ -41,9 +42,6 @@ export class Bytes {
         throw new Error("Bytes must be in range [0, 256)");
       }
       return new Bytes(Uint8Array.from(value));
-    }
-    else if(value instanceof Word32Array){
-      return new Bytes(value.toUint8Array());
     }
     else if(typeof value === "string"){
       if(type === "hex"){
@@ -65,6 +63,26 @@ export class Bytes {
     throw new Error(`Invalid value: ${JSON.stringify(value)}`);
   }
   
+  public static SHA256(value: str|Bytes|Uint8Array){
+    let w;
+    if(typeof value === "string"){
+      w = SHA256.hash(value);
+    }
+    else if(value instanceof Uint8Array){
+      w = new Word32Array(value);
+      w = SHA256.hash(w);
+    }
+    else if(value instanceof Bytes){
+      w = value.as_word();
+      w = SHA256.hash(w);
+    }
+    else{
+      throw new Error("Invalid argument");
+    }
+    
+    return new Bytes(w.toUint8Array());
+  }
+  
   public get length(){
     return this._b.length;
   }
@@ -77,7 +95,7 @@ export class Bytes {
     const w1 = this.as_word();
     const w2 = b.as_word();
     const w = w1.concat(w2);
-    return Bytes.from(w);
+    return Bytes.from(w.toUint8Array());
   }
   
   public slice(start: number, length?: number){

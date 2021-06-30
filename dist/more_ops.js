@@ -30,7 +30,7 @@ function op_sha256(args) {
         h.update(atom.as_word());
     }
     cost += arg_len * costs_1.SHA256_COST_PER_BYTE;
-    return malloc_cost(cost, SExp_1.SExp.to(__type_compatibility__1.Bytes.from(h.finalize())));
+    return malloc_cost(cost, SExp_1.SExp.to(__type_compatibility__1.Bytes.from(h.finalize().toUint8Array())));
 }
 exports.op_sha256 = op_sha256;
 function* args_as_ints(op_name, args) {

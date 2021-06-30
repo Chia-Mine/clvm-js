@@ -4,6 +4,7 @@ exports.Stream = exports.isIterable = exports.isList = exports.isTuple = exports
 const Hex_1 = require("jscrypto/Hex");
 const Utf8_1 = require("jscrypto/Utf8");
 const Word32Array_1 = require("jscrypto/Word32Array");
+const SHA256_1 = require("jscrypto/SHA256");
 const __python_types__1 = require("./__python_types__");
 function to_hexstr(r) {
     return (new Word32Array_1.Word32Array(r)).toString();
@@ -37,9 +38,6 @@ class Bytes {
             }
             return new Bytes(Uint8Array.from(value));
         }
-        else if (value instanceof Word32Array_1.Word32Array) {
-            return new Bytes(value.toUint8Array());
-        }
         else if (typeof value === "string") {
             if (type === "hex") {
                 value = value.replace(/^0x/, "");
@@ -58,6 +56,24 @@ class Bytes {
         }
         throw new Error(`Invalid value: ${JSON.stringify(value)}`);
     }
+    static SHA256(value) {
+        let w;
+        if (typeof value === "string") {
+            w = SHA256_1.SHA256.hash(value);
+        }
+        else if (value instanceof Uint8Array) {
+            w = new Word32Array_1.Word32Array(value);
+            w = SHA256_1.SHA256.hash(w);
+        }
+        else if (value instanceof Bytes) {
+            w = value.as_word();
+            w = SHA256_1.SHA256.hash(w);
+        }
+        else {
+            throw new Error("Invalid argument");
+        }
+        return new Bytes(w.toUint8Array());
+    }
     get length() {
         return this._b.length;
     }
@@ -68,7 +84,7 @@ class Bytes {
         const w1 = this.as_word();
         const w2 = b.as_word();
         const w = w1.concat(w2);
-        return Bytes.from(w);
+        return Bytes.from(w.toUint8Array());
     }
     slice(start, length) {
         const len = typeof length === "number" ? length : (this.length - start);
