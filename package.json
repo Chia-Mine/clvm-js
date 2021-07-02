@@ -15,7 +15,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "node pre_build.js && tsc --project tsconfig.json --declarationDir ./build --outDir ./build && webpack --config webpack.config.js",
+    "build": "node pre_build.js && tsc --project tsconfig.json --declarationDir ./build --outDir ./build --sourcemap && webpack --config webpack.config.js",
     "build:prod": "node pre_build.js --prod && tsc --project tsconfig.json --declarationDir ./dist --outDir ./dist && webpack --config webpack.config.js"
   },
   "keywords": [

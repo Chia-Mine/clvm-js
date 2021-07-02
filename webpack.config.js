@@ -5,8 +5,16 @@ const TerserPlugin = require("terser-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 function isBuildingForProd(){
-  const devDirStat = fs.statSync(path.join(__dirname, "build"));
-  const prodDirStat = fs.statSync(path.join(__dirname, "dist"));
+  const buildDirPath = path.join(__dirname, "build");
+  const distDirPath = path.join(__dirname, "dist");
+  if(!fs.existsSync(buildDirPath)){
+    return true;
+  }
+  if(!fs.existsSync(distDirPath)){
+    return false;
+  }
+  const devDirStat = fs.statSync(buildDirPath);
+  const prodDirStat = fs.statSync(distDirPath);
   return devDirStat.mtimeMs <= prodDirStat.mtimeMs;
 }
 
