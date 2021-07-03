@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.16]
+### Added
+- Added license information to README.md
+
 ## [0.0.15]
 ### Fixed
 - Fixed a bug in `pre_build.js`
@@ -97,6 +101,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.16]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.15...v0.0.16
 [0.0.15]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.14...v0.0.15
 [0.0.14]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.13...v0.0.14
 [0.0.13]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.12...v0.0.13
