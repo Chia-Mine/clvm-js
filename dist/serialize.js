@@ -1,23 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sexp_buffer_from_stream = exports.sexp_from_stream = exports.sexp_to_stream = exports.atom_to_byte_iterator = exports.sexp_to_byte_iterator = void 0;
-/*
-# decoding:
-# read a byte
-# if it's 0xfe, it's nil (which might be same as 0)
-# if it's 0xff, it's a cons box. Read two items, build cons
-# otherwise, number of leading set bits is length in bytes to read size
-# 0-0x7f are literal one byte values
-# leading bits is the count of bytes to read of size
-# 0x80-0xbf is a size of one byte (perform logical and of first byte with 0x3f to get size)
-# 0xc0-0xdf is a size of two bytes (perform logical and of first byte with 0x1f)
-# 0xe0-0xef is 3 bytes ((perform logical and of first byte with 0xf))
-# 0xf0-0xf7 is 4 bytes ((perform logical and of first byte with 0x7))
-# 0xf7-0xfb is 5 bytes ((perform logical and of first byte with 0x3))
- */
-const SExp_1 = require("./SExp");
 const __type_compatibility__1 = require("./__type_compatibility__");
 const casts_1 = require("./casts");
+const CLVMObject_1 = require("./CLVMObject");
 const MAX_SINGLE_BYTE = 0x7F;
 const CONS_BOX_MARKER = 0xFF;
 function* sexp_to_byte_iterator(sexp) {
@@ -122,7 +108,7 @@ function sexp_from_stream(f, to_sexp_f) {
     while (op_stack.length) {
         const func = op_stack.pop();
         if (func) {
-            func(op_stack, val_stack, f, (v) => new SExp_1.SExp(v));
+            func(op_stack, val_stack, f, ((v) => new CLVMObject_1.CLVMObject(v)));
         }
     }
     return to_sexp_f(val_stack.pop());
@@ -141,10 +127,10 @@ function _op_consume_sexp(f) {
 }
 function _consume_atom(f, b) {
     if (b === 0x80) {
-        return casts_1.int_to_bytes(b);
+        return __type_compatibility__1.Bytes.from([b]);
     }
     else if (b <= MAX_SINGLE_BYTE) {
-        return casts_1.int_to_bytes(b);
+        return __type_compatibility__1.Bytes.from([b]);
     }
     let bit_count = 0;
     let bit_mask = 0x80;
@@ -154,7 +140,7 @@ function _consume_atom(f, b) {
         ll &= 0xFF ^ bit_mask;
         bit_mask >>= 1;
     }
-    let size_blob = casts_1.int_to_bytes(ll);
+    let size_blob = __type_compatibility__1.Bytes.from([ll]);
     if (bit_count > 1) {
         const ll2 = f.read(bit_count - 1);
         if (ll2.length !== bit_count - 1) {
@@ -170,7 +156,7 @@ function _consume_atom(f, b) {
     if (blob.length !== size) {
         throw new Error("bad encoding");
     }
-    return casts_1.int_to_bytes(b).concat(size_blob.slice(1)).concat(blob);
+    return __type_compatibility__1.Bytes.from([b]).concat(size_blob.slice(1)).concat(blob);
 }
 /*
 # instead of parsing the input stream, this function pulls out all the bytes
@@ -194,7 +180,7 @@ function _atom_from_stream(f, b, to_sexp_f) {
         return to_sexp_f(__type_compatibility__1.Bytes.NULL);
     }
     else if (b <= MAX_SINGLE_BYTE) {
-        return to_sexp_f(casts_1.int_to_bytes(b));
+        return to_sexp_f(__type_compatibility__1.Bytes.from([b]));
     }
     let bit_count = 0;
     let bit_mask = 0x80;
@@ -203,7 +189,7 @@ function _atom_from_stream(f, b, to_sexp_f) {
         b &= 0xFF ^ bit_mask;
         bit_mask >>= 1;
     }
-    let size_blob = casts_1.int_to_bytes(b);
+    let size_blob = __type_compatibility__1.Bytes.from([b]);
     if (bit_count > 1) {
         const bin = f.read(bit_count - 1);
         if (bin.length !== bit_count - 1) {
