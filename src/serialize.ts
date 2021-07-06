@@ -16,7 +16,8 @@ import {SExp} from "./SExp";
 import {Bytes, Stream, t} from "./__type_compatibility__";
 import {None} from "./__python_types__";
 import {TToSexpF, TValStack} from "./as_javascript";
-import {int_from_bytes, int_to_bytes} from "./casts";
+import {int_from_bytes} from "./casts";
+import {CLVMObject} from "./CLVMObject";
 
 const MAX_SINGLE_BYTE = 0x7F;
 const CONS_BOX_MARKER = 0xFF;
@@ -130,7 +131,7 @@ export function sexp_from_stream(f: Stream, to_sexp_f: TToSexpF){
   while(op_stack.length){
     const func = op_stack.pop();
     if(func){
-      func(op_stack, val_stack, f, (v: any) => new SExp(v));
+      func(op_stack, val_stack, f, ((v: any) => new CLVMObject(v)) as TToSexpF);
     }
   }
   
@@ -151,10 +152,10 @@ function _op_consume_sexp(f: Stream){
 
 function _consume_atom(f: Stream, b: number){
   if(b === 0x80){
-    return int_to_bytes(b);
+    return Bytes.from([b]);
   }
   else if(b <= MAX_SINGLE_BYTE){
-    return int_to_bytes(b);
+    return Bytes.from([b]);
   }
   
   let bit_count = 0;
@@ -167,7 +168,7 @@ function _consume_atom(f: Stream, b: number){
     bit_mask >>= 1;
   }
   
-  let size_blob = int_to_bytes(ll);
+  let size_blob = Bytes.from([ll]);
   if(bit_count > 1){
     const ll2 = f.read(bit_count-1);
     if(ll2.length !== bit_count-1){
@@ -184,7 +185,7 @@ function _consume_atom(f: Stream, b: number){
   if(blob.length !== size){
     throw new Error("bad encoding");
   }
-  return int_to_bytes(b).concat(size_blob.slice(1)).concat(blob);
+  return Bytes.from([b]).concat(size_blob.slice(1)).concat(blob);
 }
 
 /*
@@ -209,7 +210,7 @@ function _atom_from_stream(f: Stream, b: number, to_sexp_f: TToSexpF): SExp {
     return to_sexp_f(Bytes.NULL);
   }
   else if(b <= MAX_SINGLE_BYTE){
-    return to_sexp_f(int_to_bytes(b));
+    return to_sexp_f(Bytes.from([b]));
   }
   let bit_count = 0;
   let bit_mask = 0x80;
@@ -218,7 +219,7 @@ function _atom_from_stream(f: Stream, b: number, to_sexp_f: TToSexpF): SExp {
     b &= 0xFF ^ bit_mask;
     bit_mask >>= 1;
   }
-  let size_blob = int_to_bytes(b);
+  let size_blob = Bytes.from([b]);
   if(bit_count > 1){
     const bin = f.read(bit_count - 1);
     if(bin.length !== bit_count - 1){

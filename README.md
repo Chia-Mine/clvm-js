@@ -54,3 +54,17 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 **Note1**: Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
 **Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
 If so, you can make your code fully synchronous.
+
+
+
+## clvm license
+`clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the
+[Apache license 2.0](https://github.com/Chia-Network/clvm/blob/main/LICENSE)
+
+## bls-signatures license
+[bls-signatures](https://github.com/Chia-Network/bls-signatures) is used under the
+[Apache license 2.0](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
+
+## jscrypto license
+[jscrypto](https://github.com/Hinaser/jscrypto) is used under the
+[MIT license](https://github.com/Hinaser/jscrypto/blob/master/LICENSE)

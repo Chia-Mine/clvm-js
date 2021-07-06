@@ -277,7 +277,7 @@ function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_h
             op = __type_compatibility__1.Bytes.from(op, "hex");
         }
         else if (typeof op === "number") {
-            op = casts_1.int_to_bytes(op);
+            op = __type_compatibility__1.Bytes.from([op]);
         }
         else if (!(op instanceof __type_compatibility__1.Bytes)) {
             throw new Error(`Invalid op: ${JSON.stringify(op)}`);
