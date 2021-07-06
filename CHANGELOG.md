@@ -3,6 +3,9 @@
 ## [0.0.16]
 ### Added
 - Added license information to README.md
+### Fixed
+- Fixed a bug in `sexp_from_stream`
+- Fixed incorrect use of `int_to_bytes`
 
 ## [0.0.15]
 ### Fixed

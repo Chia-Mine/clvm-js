@@ -1,5 +1,5 @@
 import {int, str} from "./__python_types__";
-import {int_from_bytes, int_to_bytes} from "./casts";
+import {int_from_bytes} from "./casts";
 import {SExp} from "./SExp";
 import {Bytes, Tuple, t} from "./__type_compatibility__";
 import {CLVMObject} from "./CLVMObject";
@@ -322,7 +322,7 @@ export function OperatorDict<A extends str = ATOMS>(
       op = Bytes.from(op, "hex");
     }
     else if(typeof (op as unknown) === "number"){
-      op = int_to_bytes((op as unknown) as number);
+      op = Bytes.from([(op as unknown) as number]);
     }
     else if(!((op as unknown) instanceof Bytes)){
       throw new Error(`Invalid op: ${JSON.stringify(op)}`);
