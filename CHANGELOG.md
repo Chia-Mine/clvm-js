@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.17]
+### Changed
+- Updated `jscrypto` version to 1.0.2
+
 ## [0.0.16]
 ### Added
 - Added license information to README.md
@@ -104,6 +108,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.17]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.16...v0.0.17
 [0.0.16]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.15...v0.0.16
 [0.0.15]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.14...v0.0.15
 [0.0.14]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.13...v0.0.14
