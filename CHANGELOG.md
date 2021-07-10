@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.18]
+### Changed
+- Fixed an issue where `int_to_bytes` did not work as expected if the argument is a negative number.
+
 ## [0.0.17]
 ### Changed
 - Updated `jscrypto` version to 1.0.2
@@ -108,6 +112,7 @@
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[0.0.18]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.17...v0.0.18
 [0.0.17]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.16...v0.0.17
 [0.0.16]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.15...v0.0.16
 [0.0.15]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.14...v0.0.15
