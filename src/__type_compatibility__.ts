@@ -9,6 +9,58 @@ export function to_hexstr(r: Uint8Array) {
   return (new Word32Array(r)).toString();
 }
 
+/**
+ * Get python's bytes.__repr__ style string.
+ * @see https://github.com/python/cpython/blob/main/Objects/bytesobject.c#L1337
+ * @param {Uint8Array} r - byteArray to stringify
+ */
+export function PyBytes_Repr(r: Uint8Array) {
+  let squotes = 0;
+  let dquotes = 0;
+  for(let i=0;i<r.length;i++){
+    const b = r[i];
+    const c = String.fromCodePoint(b);
+    switch(c){
+      case "'": squotes++; break;
+      case "\"": dquotes++; break;
+    }
+  }
+  let quote = "'";
+  if(squotes && !dquotes){
+    quote = "\"";
+  }
+  
+  let s = "b" + quote;
+  
+  for(let i=0;i<r.length;i++){
+    const b = r[i];
+    const c = String.fromCodePoint(b);
+    if(c === quote || c === "\\"){
+      s += "\\" + c;
+    }
+    else if(c === "\t"){
+      s += "\\t";
+    }
+    else if(c === "\n"){
+      s += "\\n";
+    }
+    else if(c === "\r"){
+      s += "\\r";
+    }
+    else if(c < " " || b >= 0x7f){
+      s += "\\x";
+      s += b.toString(16).padStart(2, "0");
+    }
+    else{
+      s += c;
+    }
+  }
+  
+  s += quote;
+  
+  return s;
+}
+
 export type BytesFromType = "hex"|"utf8"|"G1Element";
 
 /**
@@ -120,11 +172,11 @@ export class Bytes {
   }
   
   public toString(){
-    return to_hexstr(this._b);
+    return PyBytes_Repr(this._b);
   }
   
   public hex(){
-    return this.toString();
+    return to_hexstr(this._b);
   }
   
   public decode(){
@@ -132,11 +184,11 @@ export class Bytes {
   }
   
   public startswith(b: Bytes){
-    return this.toString().startsWith(b.toString());
+    return this.hex().startsWith(b.hex());
   }
   
   public endswith(b: Bytes){
-    return this.toString().endsWith(b.toString());
+    return this.hex().endsWith(b.hex());
   }
   
   public equal_to(b: Bytes|None){

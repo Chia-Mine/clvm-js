@@ -289,10 +289,10 @@ export class SExp extends CLVMObject {
   }
   
   public toString(){
-    return this.as_bin().toString();
+    return this.as_bin().hex();
   }
   
   public __repr__(){
-    return `SExp(${this.as_bin().toString()})`;
+    return `SExp(${this.as_bin().hex()})`;
   }
 }

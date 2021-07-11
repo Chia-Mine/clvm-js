@@ -3,6 +3,7 @@
 ## [0.0.18]
 ### Changed
 - Fixed an issue where `int_to_bytes` did not work as expected if the argument is a negative number.
+- Changed `Bytes::toString()` to return python's `bytes.__repr__` style string.
 
 ## [0.0.17]
 ### Changed
