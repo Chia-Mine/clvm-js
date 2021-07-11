@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stream = exports.isIterable = exports.isList = exports.isTuple = exports.t = exports.Tuple = exports.h = exports.b = exports.Bytes = exports.to_hexstr = void 0;
+exports.Stream = exports.isIterable = exports.isList = exports.isTuple = exports.t = exports.Tuple = exports.h = exports.b = exports.Bytes = exports.PyBytes_Repr = exports.to_hexstr = void 0;
 const Hex_1 = require("jscrypto/Hex");
 const Utf8_1 = require("jscrypto/Utf8");
 const Word32Array_1 = require("jscrypto/Word32Array");
@@ -10,6 +10,58 @@ function to_hexstr(r) {
     return (new Word32Array_1.Word32Array(r)).toString();
 }
 exports.to_hexstr = to_hexstr;
+/**
+ * Get python's bytes.__repr__ style string.
+ * @see https://github.com/python/cpython/blob/main/Objects/bytesobject.c#L1337
+ * @param {Uint8Array} r - byteArray to stringify
+ */
+function PyBytes_Repr(r) {
+    let squotes = 0;
+    let dquotes = 0;
+    for (let i = 0; i < r.length; i++) {
+        const b = r[i];
+        const c = String.fromCodePoint(b);
+        switch (c) {
+            case "'":
+                squotes++;
+                break;
+            case "\"":
+                dquotes++;
+                break;
+        }
+    }
+    let quote = "'";
+    if (squotes && !dquotes) {
+        quote = "\"";
+    }
+    let s = "b" + quote;
+    for (let i = 0; i < r.length; i++) {
+        const b = r[i];
+        const c = String.fromCodePoint(b);
+        if (c === quote || c === "\\") {
+            s += "\\" + c;
+        }
+        else if (c === "\t") {
+            s += "\\t";
+        }
+        else if (c === "\n") {
+            s += "\\n";
+        }
+        else if (c === "\r") {
+            s += "\\r";
+        }
+        else if (c < " " || b >= 0x7f) {
+            s += "\\x";
+            s += b.toString(16).padStart(2, "0");
+        }
+        else {
+            s += c;
+        }
+    }
+    s += quote;
+    return s;
+}
+exports.PyBytes_Repr = PyBytes_Repr;
 /**
  * Unlike python, there is no immutable byte type in javascript.
  */
@@ -103,19 +155,19 @@ class Bytes {
         return new Bytes(this._b);
     }
     toString() {
-        return to_hexstr(this._b);
+        return PyBytes_Repr(this._b);
     }
     hex() {
-        return this.toString();
+        return to_hexstr(this._b);
     }
     decode() {
         return Utf8_1.Utf8.stringify(this.as_word());
     }
     startswith(b) {
-        return this.toString().startsWith(b.toString());
+        return this.hex().startsWith(b.hex());
     }
     endswith(b) {
-        return this.toString().endsWith(b.toString());
+        return this.hex().endsWith(b.hex());
     }
     equal_to(b) {
         if (!b) {

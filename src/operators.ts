@@ -330,7 +330,7 @@ export function OperatorDict<A extends str = ATOMS>(
     
     merge(dict, OperatorDict as any);
     
-    const f = (dict as Record<string, unknown>)[op.toString()];
+    const f = (dict as Record<string, unknown>)[op.hex()];
     if(typeof f !== "function"){
       return dict.unknown_op_handler(op, args);
     }
