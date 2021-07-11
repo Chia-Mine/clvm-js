@@ -232,10 +232,10 @@ class SExp extends CLVMObject_1.CLVMObject {
         return as_javascript_1.as_javascript(this);
     }
     toString() {
-        return this.as_bin().toString();
+        return this.as_bin().hex();
     }
     __repr__() {
-        return `SExp(${this.as_bin().toString()})`;
+        return `SExp(${this.as_bin().hex()})`;
     }
 }
 exports.SExp = SExp;

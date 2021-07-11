@@ -2,6 +2,12 @@ import { Word32Array } from "jscrypto/Word32Array";
 import { None, str } from "./__python_types__";
 import { G1Element } from "@chiamine/bls-signatures";
 export declare function to_hexstr(r: Uint8Array): string;
+/**
+ * Get python's bytes.__repr__ style string.
+ * @see https://github.com/python/cpython/blob/main/Objects/bytesobject.c#L1337
+ * @param {Uint8Array} r - byteArray to stringify
+ */
+export declare function PyBytes_Repr(r: Uint8Array): string;
 export declare type BytesFromType = "hex" | "utf8" | "G1Element";
 /**
  * Unlike python, there is no immutable byte type in javascript.

@@ -283,7 +283,7 @@ function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_h
             throw new Error(`Invalid op: ${JSON.stringify(op)}`);
         }
         merge(dict, OperatorDict);
-        const f = dict[op.toString()];
+        const f = dict[op.hex()];
         if (typeof f !== "function") {
             return dict.unknown_op_handler(op, args);
         }
