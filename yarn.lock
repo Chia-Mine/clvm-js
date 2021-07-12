@@ -44,10 +44,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@chiamine/bls-signatures@^0.2.1-beta.0":
-  version "0.2.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@chiamine/bls-signatures/-/bls-signatures-0.2.1-beta.0.tgz#2a5b484122cef6cf03f2c8a3880caf096a829517"
-  integrity sha512-Y0FmVXx18YElrwUYN9gVczOMxC7/H2M1GT7bmH7SQFy2ZUeuce5/wlUVfX4UrgDvYj+ukHotQ97ZGSqRx5SPqg==
+"@chiamine/bls-signatures@^0.2.1-beta.1":
+  version "0.2.1-beta.1"
+  resolved "https://registry.yarnpkg.com/@chiamine/bls-signatures/-/bls-signatures-0.2.1-beta.1.tgz#9dc1e71a03c55b2b3a5a8c41b2293e045804dadb"
+  integrity sha512-Ojtoo8z1C4G2p7WRUIndws06bphou/leQlsEE9HP9JaIds96MCzfX+knP04sht01O9CR/bY8ak60nxAs72apAg==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.3"
