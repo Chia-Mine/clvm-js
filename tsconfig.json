@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./build",
+    "outDir": "./.dist/npm",
     "module": "CommonJS",
     "target": "es2016",
     "allowJs": false,
@@ -11,7 +11,7 @@
     ],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
     "declaration": true,
