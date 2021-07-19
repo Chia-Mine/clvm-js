@@ -249,7 +249,7 @@ export class SExp extends CLVMObject {
     }
   }
   
-  public equal_to(other: CastableType){
+  public equal_to(other: any/* CastableType */): boolean {
     try{
       other = SExp.to(other);
       const to_compare_stack = [t(this, other)] as Array<Tuple<SExp, SExp>>;
