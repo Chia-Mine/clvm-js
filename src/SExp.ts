@@ -37,6 +37,9 @@ export function convert_atom_to_bytes(v: any): Bytes {
   else if(typeof v === "number"){
     return int_to_bytes(v);
   }
+  else if(typeof v === "boolean"){ // Tips. In Python, isinstance(True, int) == True. 
+    return int_to_bytes(v ? 1 : 0);
+  }
   else if(v === None || !v){
     return Bytes.NULL;
   }
