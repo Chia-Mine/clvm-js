@@ -5,3 +5,4 @@ webpack.*.js
 tests/
 bin/
 pre_build.js
+jest.config.js

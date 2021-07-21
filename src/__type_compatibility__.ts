@@ -191,11 +191,17 @@ export class Bytes {
     return this.hex().endsWith(b.hex());
   }
   
-  public equal_to(b: Bytes|None){
-    if(!b){
+  public equal_to(b: Bytes|None|any){
+    if(b === None){
       return false;
     }
-    return this.compare(b) === 0;
+    else if(typeof b.length === "number" && typeof b.get_byte_at === "function"/* b instanceof Bytes */){
+      return this.compare(b) === 0;
+    }
+    else if(typeof b.equal_to === "function"){
+      return b.equal_to(this) as boolean;
+    }
+    return false;
   }
   
   /**

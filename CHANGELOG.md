@@ -4,6 +4,10 @@
 ### Changed
 - Reorganized dist folder
 - Updated bls-signatures version to 0.2.1-beta.1
+- Changed parameter type of `SExp::equal_to` from `CastableType` to `any`
+### Fixed
+- Fixed an issue where `SExp.to(<boolean>)` did not work the same as python's clvm.
+- Fixed an issue where Bytes-SExp comparison like `b('aaa').equal_to(SExp.null())` did not work.
 
 ## [0.0.18]
 ### Changed
