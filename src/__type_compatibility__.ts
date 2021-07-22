@@ -74,7 +74,7 @@ export class Bytes {
     if(value instanceof Uint8Array){
       this._b = new Uint8Array(value);
     }
-    else if(value instanceof Bytes){
+    else if(isBytes(value)){
       this._b = value.data();
     }
     else if(!value || value === None){
@@ -86,7 +86,7 @@ export class Bytes {
   }
   
   public static from(value?: Uint8Array|Bytes|number[]|str|G1Element|None, type?: BytesFromType){
-    if(value instanceof Uint8Array || value instanceof Bytes || value === None || value === undefined){
+    if(value instanceof Uint8Array || isBytes(value) || value === None || value === undefined){
       return new Bytes(value);
     }
     else if(Array.isArray(value) && value.every(v => typeof v === "number")){
@@ -124,7 +124,7 @@ export class Bytes {
       w = new Word32Array(value);
       w = SHA256.hash(w);
     }
-    else if(value instanceof Bytes){
+    else if(isBytes(value)){
       w = value.as_word();
       w = SHA256.hash(w);
     }
@@ -195,7 +195,7 @@ export class Bytes {
     if(b === None){
       return false;
     }
-    else if(typeof b.length === "number" && typeof b.get_byte_at === "function"/* b instanceof Bytes */){
+    else if(typeof b.length === "number" && isBytes(b)){
       return this.compare(b) === 0;
     }
     else if(typeof b.equal_to === "function"){
@@ -260,14 +260,14 @@ export function t<T1, T2>(v1: T1, v2: T2){
 }
 
 export function isTuple(v: unknown): v is Tuple<unknown, unknown> {
-  return v instanceof Tuple;
+  return v instanceof Array && Object.isFrozen(v) && v.length === 2;
 }
 
 /**
  * Check whether an argument is a list and not a tuple
  */
 export function isList(v: unknown): v is unknown[] {
-  return Array.isArray(v) && !(v instanceof Tuple);
+  return Array.isArray(v) && !isTuple(v);
 }
 
 export function isIterable(v: any): v is unknown[] {
@@ -281,6 +281,18 @@ export function isIterable(v: any): v is unknown[] {
     return true;
   }
   return false;
+}
+
+export function isBytes(v: any): v is Bytes {
+  return typeof v.length === "number"
+    && typeof v.get_byte_at === "function"
+    && typeof v.raw === "function"
+    && typeof v.data === "function"
+    && typeof v.hex === "function"
+    && typeof v.decode === "function"
+    && typeof v.equal_to === "function"
+    && typeof v.compare === "function"
+  ;
 }
 
 export class Stream {

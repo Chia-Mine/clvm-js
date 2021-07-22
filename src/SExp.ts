@@ -1,7 +1,7 @@
 import {G1Element} from "@chiamine/bls-signatures";
 import {int, None, Optional, str} from "./__python_types__";
 import {CLVMObject, CLVMType} from "./CLVMObject";
-import {Bytes, isIterable, Tuple, t, Stream} from "./__type_compatibility__";
+import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";
 import {int_from_bytes, int_to_bytes} from "./casts";
 import {sexp_to_stream} from "./serialize";
 import {as_javascript} from "./as_javascript";
@@ -28,7 +28,7 @@ export function looks_like_clvm_object(o: any): o is CLVMObject {
 
 // this function recognizes some common types and turns them into plain bytes
 export function convert_atom_to_bytes(v: any): Bytes {
-  if(v instanceof Bytes){
+  if(isBytes(v)){
     return v;
   }
   else if(typeof v === "string"){
@@ -82,7 +82,7 @@ export function to_sexp_type(value: CastableType): CLVMObject {
       }
       
       v = stack.pop();
-      if(v instanceof Tuple){
+      if(isTuple(v)){
         if(v.length !== 2){
           throw new Error(`can't cast tuple of size ${v.length}`);
         }
@@ -176,7 +176,7 @@ export class SExp implements CLVMType {
   static readonly __NULL__: SExp = new SExp(new CLVMObject(Bytes.NULL));
   
   static to(v: CastableType): SExp {
-    if(v instanceof SExp){
+    if(isSExp(v)){
       return v;
     }
     
@@ -300,4 +300,13 @@ export class SExp implements CLVMType {
   public __repr__(){
     return `SExp(${this.as_bin().hex()})`;
   }
+}
+
+export function isSExp(v: any): v is SExp {
+  return typeof v.atom !== "undefined"
+    && typeof v.pair !== "undefined"
+    && typeof v.first === "function"
+    && typeof v.rest === "function"
+    && typeof v.cons === "function"
+  ;
 }
