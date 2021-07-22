@@ -8,6 +8,8 @@
 ### Fixed
 - Fixed an issue where `SExp.to(<boolean>)` did not work the same as python's clvm.
 - Fixed an issue where Bytes-SExp comparison like `b('aaa').equal_to(SExp.null())` did not work.
+### Added
+- Added `list()` function working similar to Python's `list()`.
 
 ## [0.0.18]
 ### Changed

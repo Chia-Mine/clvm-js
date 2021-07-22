@@ -235,6 +235,14 @@ export function h(hexStr: str){
   return Bytes.from(hexStr, "hex");
 }
 
+export function list<T = unknown>(iterable: Iterable<T>){
+  const arr: T[] = [];
+  for(const item of iterable){
+    arr.push(item);
+  }
+  return arr;
+}
+
 export class Tuple<T1, T2> extends Array<any> {
   public constructor(...items: [T1, T2]) {
     super(...items);

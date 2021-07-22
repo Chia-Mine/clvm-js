@@ -1,10 +1,9 @@
-import {SExp, t, h, b, Bytes, getBLSModule, initialize, None, Tuple} from "../src";
+import {SExp, t, h, b, Bytes, getBLSModule, initialize, None, Tuple, list} from "../src";
 import {CLVMObject} from "../src/CLVMObject";
 import {EvalError} from "../src/EvalError";
 import type {ModuleInstance} from "@chiamine/bls-signatures";
 
 let BLS: ModuleInstance;
-
 
 class dummy_class {
   i: number;
@@ -204,10 +203,7 @@ test("test_invalid_type", () => {
   expect(() => {
     const s = SExp.to(dummy_class as any);
     // conversions are deferred, this is where it will fail:
-    let b = [];
-    for(const _ of s.as_iter()){
-      b.push(_);
-    }
+    const b = list(s.as_iter());
     console.log(b);
   }).toThrowError(Error);
 });
@@ -216,10 +212,7 @@ test("test_invalid_tuple", () => {
   expect(() => {
     const s = SExp.to(t(dummy_class, dummy_class));
     // conversions are deferred, this is where it will fail:
-    let b = [];
-    for(const _ of s.as_iter()){
-      b.push(_);
-    }
+    const b = list(s.as_iter());
   }).toThrowError(Error);
   
   expect(() => {
@@ -248,30 +241,24 @@ test("test_rest", () => {
 });
 
 test("test_as_iter", () => {
-  let val = [];
-  for(const item of SExp.to(t(1, t(2, t(3, t(4, b("")))))).as_iter()){
-    val.push(item);
+  function assertArrayEqual(subject: any[], expected: any[]){
+    expect(subject.length).toBe(expected.length);
+    expect(subject.every((v, i) => v.equal_to(expected[i]))).toBeTruthy();
   }
-  expect(val.every((v,i) => v.equal_to([1,2,3,4][i]))).toBeTruthy();
   
-  val = [];
-  for(const item of SExp.to(b("")).as_iter()){
-    val.push(item);
-  }
-  expect(val.every((v,i) => v.equal_to([][i]))).toBeTruthy();
+  let val = list(SExp.to(t(1, t(2, t(3, t(4, b("")))))).as_iter());
+  assertArrayEqual(val, [1,2,3,4]);
   
-  val = [];
-  for(const item of SExp.to(t(1, b(""))).as_iter()){
-    val.push(item);
-  }
-  expect(val.every((v,i) => v.equal_to([1][i]))).toBeTruthy();
+  val = list(SExp.to(b("")).as_iter());
+  assertArrayEqual(val, []);
+  
+  val = list(SExp.to(t(1, b(""))).as_iter());
+  assertArrayEqual(val, [1]);
   
   // these fail because the lists are not null-terminated
+  expect(() => list(SExp.to(1).as_iter())).toThrowError(EvalError);
   expect(() => {
-    for(const _ of SExp.to(1).as_iter()){}
-  }).toThrowError(EvalError);
-  expect(() => {
-    for(const _ of SExp.to(t(1, t(2, t(3, t(4, 5))))).as_iter()){}
+    list(SExp.to(t(1, t(2, t(3, t(4, 5))))).as_iter());
   }).toThrowError(EvalError);
 });
 
