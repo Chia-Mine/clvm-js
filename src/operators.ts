@@ -312,10 +312,17 @@ export function OperatorDict<A extends str = ATOMS>(
 ): TOperatorDict<A> {
   const dict = {
     ...atom_op_function_map,
-    quote_atom: quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom || QUOTE_ATOM,
-    apply_atom: apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom || APPLY_ATOM,
+    quote_atom: quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom,
+    apply_atom: apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom,
     unknown_op_handler: unknown_op_handler || default_unknown_op,
   };
+  
+  if(!dict.quote_atom){
+    throw new Error("object has not attribute 'quote_atom'");
+  }
+  else if(!dict.apply_atom){
+    throw new Error("object has not attribute 'apply_atom'");
+  }
   
   const OperatorDict = function(op: Bytes, args: SExp){
     if(typeof (op as unknown) === "string"){
