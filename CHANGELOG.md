@@ -1,11 +1,18 @@
 # Changelog
 
 ## [0.0.19]
+
+**There is a breaking change.**  
+Past: `OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_handler)`  
+New: `OperatorDict(atom_op_function_map, option)`  
+where `option` is `{quote_atom: Bytes, apply_atom: Bytes, unknown_op_handler: typeof default_unknown_op}`
+
 ### Changed
 - Reorganized dist folder
 - Updated bls-signatures version to 0.2.1-beta.1
 - Changed parameter type of `SExp::equal_to` from `CastableType` to `any`
 - Replaced use of `instanceof` operator for non-native types.
+- Changed `OperatorDict` arguments format.
 ### Fixed
 - Fixed an issue where `SExp.to(<boolean>)` did not work the same as python's clvm.
 - Fixed an issue where Bytes-SExp comparison like `b('aaa').equal_to(SExp.null())` did not work.

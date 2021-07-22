@@ -16,7 +16,7 @@ test("test_unknown_op", () => {
   expect(() => {
     OPERATOR_LOOKUP(h("0xffff").concat(b("1337")), SExp.to(1337))
   }).toThrowError(EvalError);
-  const od = OperatorDict(OPERATOR_LOOKUP, undefined, undefined, (name, args) => unknown_handler(name, args));
+  const od = OperatorDict(OPERATOR_LOOKUP, {unknown_op_handler: (name, args) => unknown_handler(name, args)});
   const [cost, ret] = od(h("0xffff").concat(b("1337")), SExp.to(1337));
   expect(handler_called).toBeTruthy();
   expect(cost).toBe(42);

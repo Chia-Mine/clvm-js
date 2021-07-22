@@ -302,19 +302,23 @@ export type TOperatorDict<A extends str = ATOMS> = {
 & ((op: Bytes|string|number, args: SExp) => Tuple<int, CLVMObject>)
 & TAtomOpFunctionMap<A>
 & Record<TBasicAtom, Bytes>
-  ;
+;
+
+export type TOperatorDictOption = {
+  quote_atom: Bytes;
+  apply_atom: Bytes;
+  unknown_op_handler: typeof default_unknown_op;
+};
 
 export function OperatorDict<A extends str = ATOMS>(
   atom_op_function_map: TAtomOpFunctionMap<A>|TOperatorDict,
-  quote_atom?: Bytes,
-  apply_atom?: Bytes,
-  unknown_op_handler?: typeof default_unknown_op,
+  option: Partial<TOperatorDictOption> = {},
 ): TOperatorDict<A> {
   const dict = {
     ...atom_op_function_map,
-    quote_atom: quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom,
-    apply_atom: apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom,
-    unknown_op_handler: unknown_op_handler || default_unknown_op,
+    quote_atom: option.quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom,
+    apply_atom: option.apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom,
+    unknown_op_handler: option.unknown_op_handler || default_unknown_op,
   };
   
   if(!dict.quote_atom){
@@ -353,8 +357,10 @@ export function OperatorDict<A extends str = ATOMS>(
 
 const _OPERATOR_LOOKUP = OperatorDict(
   operators_for_module(KEYWORD_TO_ATOM, core_ops, OP_REWRITE),
-  QUOTE_ATOM,
-  APPLY_ATOM,
+  {
+    quote_atom: QUOTE_ATOM,
+    apply_atom: APPLY_ATOM,
+  },
 );
 
 merge(_OPERATOR_LOOKUP as any, operators_for_module(KEYWORD_TO_ATOM, more_ops, OP_REWRITE));

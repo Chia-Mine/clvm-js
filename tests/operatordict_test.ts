@@ -8,9 +8,9 @@ test("test_operatordict_constructor", () => {
    */
   const d = {1: "hello", 2: "goodbye"};
   expect(() => OperatorDict(d as any)).toThrow();
-  expect(() => OperatorDict(d as any, undefined, 1 as any)).toThrow(); // apply_atom = 1
-  expect(() => OperatorDict(d as any, 1 as any)).toThrow(); // quote_atom = 1
-  const o = OperatorDict(d as any, 2 as any, 1 as any); // apply_atom: 1, quote_atom: 2
+  expect(() => OperatorDict(d as any, {apply_atom: 1 as any})).toThrow();
+  expect(() => OperatorDict(d as any, {quote_atom: 1 as any})).toThrow();
+  const o = OperatorDict(d as any, {apply_atom: 1 as any, quote_atom: 2 as any});
   console.log(o);
   
   // Why does the constructed Operator dict contain entries for "apply":1 and "quote":2 ?
