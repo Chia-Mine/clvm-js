@@ -303,7 +303,7 @@ export class SExp implements CLVMType {
 }
 
 export function isSExp(v: any): v is SExp {
-  return typeof v.atom !== "undefined"
+  return v && typeof v.atom !== "undefined"
     && typeof v.pair !== "undefined"
     && typeof v.first === "function"
     && typeof v.rest === "function"

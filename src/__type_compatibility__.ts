@@ -284,7 +284,7 @@ export function isIterable(v: any): v is unknown[] {
 }
 
 export function isBytes(v: any): v is Bytes {
-  return typeof v.length === "number"
+  return v && typeof v.length === "number"
     && typeof v.get_byte_at === "function"
     && typeof v.raw === "function"
     && typeof v.data === "function"

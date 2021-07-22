@@ -1,7 +1,7 @@
 import {int, str} from "./__python_types__";
 import {int_from_bytes} from "./casts";
 import {SExp} from "./SExp";
-import {Bytes, Tuple, t} from "./__type_compatibility__";
+import {Bytes, Tuple, t, isBytes} from "./__type_compatibility__";
 import {CLVMObject} from "./CLVMObject";
 import {EvalError} from "./EvalError";
 import {
@@ -299,13 +299,13 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
 export type TOperatorDict<A extends str = ATOMS> = {
   unknown_op_handler: typeof default_unknown_op;
 }
-& ((op: Bytes, args: SExp) => Tuple<int, CLVMObject>)
+& ((op: Bytes|string|number, args: SExp) => Tuple<int, CLVMObject>)
 & TAtomOpFunctionMap<A>
 & Record<TBasicAtom, Bytes>
   ;
 
 export function OperatorDict<A extends str = ATOMS>(
-  atom_op_function_map: TAtomOpFunctionMap<A>,
+  atom_op_function_map: TAtomOpFunctionMap<A>|TOperatorDict,
   quote_atom?: Bytes,
   apply_atom?: Bytes,
   unknown_op_handler?: typeof default_unknown_op,
@@ -324,14 +324,14 @@ export function OperatorDict<A extends str = ATOMS>(
     throw new Error("object has not attribute 'apply_atom'");
   }
   
-  const OperatorDict = function(op: Bytes, args: SExp){
-    if(typeof (op as unknown) === "string"){
+  const OperatorDict = function(op: Bytes|string|number, args: SExp){
+    if(typeof op === "string"){
       op = Bytes.from(op, "hex");
     }
-    else if(typeof (op as unknown) === "number"){
+    else if(typeof op === "number"){
       op = Bytes.from([(op as unknown) as number]);
     }
-    else if(!((op as unknown) instanceof Bytes)){
+    else if(!isBytes(op)){
       throw new Error(`Invalid op: ${JSON.stringify(op)}`);
     }
     
