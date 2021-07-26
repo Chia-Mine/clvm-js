@@ -13,12 +13,14 @@ where `option` is `{quote_atom: Bytes, apply_atom: Bytes, unknown_op_handler: ty
 - Changed parameter type of `SExp::equal_to` from `CastableType` to `any`
 - Replaced use of `instanceof` operator for non-native types.
 - Changed `OperatorDict` arguments format.
+- Improved `Bytes::concat` performance.
 ### Fixed
 - Fixed an issue where `SExp.to(<boolean>)` did not work the same as python's clvm.
 - Fixed an issue where Bytes-SExp comparison like `b('aaa').equal_to(SExp.null())` did not work.
 - Fixed an issue where `OperatorDict` did not throw Error when either `quote` or `apply` is not specified.
 ### Added
 - Added `list()` function working similar to Python's `list()`.
+- Added `Bytes::repeat` function.
 
 ## [0.0.18]
 ### Changed

@@ -144,10 +144,31 @@ export class Bytes {
   }
   
   public concat(b: Bytes){
-    const w1 = this.as_word();
-    const w2 = b.as_word();
-    const w = w1.concat(w2);
-    return Bytes.from(w.toUint8Array());
+    const thisBin = this._b;
+    const thatBin = b.raw();
+    const concatBin = new Uint8Array(thisBin.length + thatBin.length);
+    for(let i=0;i<thisBin.length;i++){
+      concatBin[i] = thisBin[i];
+    }
+    for(let i=0;i<thatBin.length;i++){
+      concatBin[i+thisBin.length] = thatBin[i];
+    }
+    return new Bytes(concatBin);
+  }
+  
+  public repeat(n: number){
+    const ret = new Uint8Array(this.length*n);
+    if(typeof ret.copyWithin === "function"){
+      for(let i=0;i<this.length;i++){
+        ret.copyWithin(this.length*i, 0, ret.length);
+      }
+    }
+    else{
+      for(let i=0;i<ret.length;i++){
+        ret[i] = this.get_byte_at(i);
+      }
+    }
+    return new Bytes(ret);
   }
   
   public slice(start: number, length?: number){
