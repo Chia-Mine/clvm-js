@@ -4,7 +4,7 @@ import {
   sexp_buffer_from_stream,
   atom_to_byte_iterator,
 } from "../src/serialize";
-import {Bytes, h, b, Stream} from "../src/__type_compatibility__";
+import {Bytes, h, b, t, Stream} from "../src/__type_compatibility__";
 
 const TEXT = b("the quick brown fox jumps over the lazy dogs");
 
@@ -22,7 +22,7 @@ class InfiniteStream extends Stream {
       this._buf = this._buf.slice(1);
       n -= 1;
     }
-    ret = ret.concat(b(" ".repeat(n)));
+    ret = ret.concat(b(" ").repeat(n));
     return ret;
   }
 }
@@ -99,25 +99,78 @@ test("test_blob_limit", () =>{
 });
 
 test("test_very_long_blobs", () => {
+  for(const size of [0x40, 0x2000, 0x100000, 0x8000000]){
+    const count = (size / TEXT.length) | 0;
+    let text = TEXT.repeat(count);
+    expect(text.length).toBeLessThan(size);
+    check_serde(text);
+    text = TEXT.repeat(count+1);
+    expect(text.length).toBeGreaterThan(size);
+    check_serde(text);
+  }
   
 });
 
 test("test_very_deep_tree", () => {
-  
+  const blob = b("a");
+  for(const depth of [10, 100, 1000, 10000, 100000]){
+    let s = to_sexp_f(blob);
+    for(let _=0;_<depth;_++){
+      s = to_sexp_f(t(s, blob));
+    }
+    check_serde(s);
+  }
 });
 
 test("test_deserialize_empty", () => {
+  const bytes_in = b("");
+  expect(() => {
+    sexp_from_stream(new Stream(bytes_in), to_sexp_f);
+  }).toThrow();
   
+  expect(() => {
+    sexp_buffer_from_stream(new Stream(bytes_in));
+  }).toThrow();
 });
 
 test("test_deserialize_truncated_size", () => {
+  // fe means the total number of bytes in the length-prefix is 7
+  // one for each bit set. 5 bytes is too few
+  const bytes_in = h("0xfe").concat(b("    "));
+  expect(() => {
+    sexp_from_stream(new Stream(bytes_in), to_sexp_f);
+  }).toThrow();
   
+  expect(() => {
+    sexp_buffer_from_stream(new Stream(bytes_in));
+  }).toThrow();
 });
 
 test("test_deserialize_truncated_blob", () => {
+  // this is a complete length prefix. The blob is supposed to be 63 bytes
+  // the blob itself is truncated though, it's less than 63 bytes
+  const bytes_in = h("0xbf").concat(b("   "));
+  expect(() => {
+    sexp_from_stream(new Stream(bytes_in), to_sexp_f);
+  }).toThrow();
   
+  expect(() => {
+    sexp_buffer_from_stream(new Stream(bytes_in));
+  }).toThrow();
 });
 
 test("test_deserialize_large_blob", () => {
+  // this length prefix is 7 bytes long, the last 6 bytes specifies the
+  // length of the blob, which is 0xffffffffffff, or (2^48 - 1)
+  // we don't support blobs this large, and we should fail immediately when
+  // exceeding the max blob size, rather than trying to read this many
+  // bytes from the stream
+  const bytes_in = h("0xfe").concat(h("0xff").repeat(6));
+  expect(() => {
+    sexp_from_stream(new InfiniteStream(bytes_in), to_sexp_f);
+  }).toThrow();
   
+  expect(() => {
+    sexp_buffer_from_stream(new InfiniteStream(bytes_in));
+  }).toThrow();
 });
