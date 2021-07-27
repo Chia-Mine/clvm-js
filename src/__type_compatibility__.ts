@@ -147,26 +147,15 @@ export class Bytes {
     const thisBin = this._b;
     const thatBin = b.raw();
     const concatBin = new Uint8Array(thisBin.length + thatBin.length);
-    for(let i=0;i<thisBin.length;i++){
-      concatBin[i] = thisBin[i];
-    }
-    for(let i=0;i<thatBin.length;i++){
-      concatBin[i+thisBin.length] = thatBin[i];
-    }
+    concatBin.set(thisBin, 0);
+    concatBin.set(thatBin, thisBin.length);
     return new Bytes(concatBin);
   }
   
   public repeat(n: number){
     const ret = new Uint8Array(this.length*n);
-    if(typeof ret.copyWithin === "function"){
-      for(let i=0;i<this.length;i++){
-        ret.copyWithin(this.length*i, 0, ret.length);
-      }
-    }
-    else{
-      for(let i=0;i<ret.length;i++){
-        ret[i] = this.get_byte_at(i);
-      }
+    for(let i=0;i<n;i++){
+      ret.set(this._b, i*this.length);
     }
     return new Bytes(ret);
   }

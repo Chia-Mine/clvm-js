@@ -7,6 +7,9 @@ Past: `OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_han
 New: `OperatorDict(atom_op_function_map, option)`  
 where `option` is `{quote_atom: Bytes, apply_atom: Bytes, unknown_op_handler: typeof default_unknown_op}`
 
+**There is a deep tree performance issue**  
+Try `yarn test serialize_test --testNamePattern=test_very_deep_tree` and you'll see.
+
 ### Changed
 - Reorganized dist folder
 - Updated bls-signatures version to 0.2.1-beta.1
