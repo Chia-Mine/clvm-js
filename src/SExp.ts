@@ -8,7 +8,7 @@ import {as_javascript} from "./as_javascript";
 import {EvalError} from "./EvalError";
 
 export type CastableType = SExp
-| CLVMObject
+| CLVMType
 | Bytes
 | str
 | int
