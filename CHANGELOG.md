@@ -2,13 +2,20 @@
 
 ## [0.0.19]
 
-**There is a breaking change.**  
+**There are 2 breaking changes.**  
+- Changed `OperatorDict` arguments format.  
 Past: `OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_handler)`  
 New: `OperatorDict(atom_op_function_map, option)`  
 where `option` is `{quote_atom: Bytes, apply_atom: Bytes, unknown_op_handler: typeof default_unknown_op}`
 
+- When you initialize `Bytes` using constructor like `new Byte(data)`, `data` is not copied but just stored and keeps reference of `data`, for performance enhancement.  
+In javascript, byte copy by `TypedArray` constructor is not sufficiently fast.  
+So I left user an option how to initialize `Bytes` instance. Data copy, or Store reference.  
+If you want to copy data and cut reference apart, then please initialize with `Bytes.from` factory function.  
+
 **There is a deep tree performance issue**  
-Try `yarn test serialize_test --testNamePattern=test_very_deep_tree` and you'll see.
+Try `yarn test serialize_test --testNamePattern=test_very_deep_tree` and you'll see.  
+I've managed to improve test complete time to `79s` -> `28s`
 
 ### Changed
 - Reorganized dist folder
@@ -17,6 +24,7 @@ Try `yarn test serialize_test --testNamePattern=test_very_deep_tree` and you'll 
 - Replaced use of `instanceof` operator for non-native types.
 - Changed `OperatorDict` arguments format.
 - Improved `Bytes::concat` performance.
+- When you initialize `Bytes` using constructor like `new Byte(data)`, `data` is not copied but just stored and keeps reference of `data`, for performance enhancement.
 ### Fixed
 - Fixed an issue where `SExp.to(<boolean>)` did not work the same as python's clvm.
 - Fixed an issue where Bytes-SExp comparison like `b('aaa').equal_to(SExp.null())` did not work.

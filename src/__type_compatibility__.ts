@@ -72,10 +72,10 @@ export class Bytes {
   
   public constructor(value?: Uint8Array|Bytes|None) {
     if(value instanceof Uint8Array){
-      this._b = new Uint8Array(value);
+      this._b = value;
     }
     else if(isBytes(value)){
-      this._b = value.data();
+      this._b = value.raw();
     }
     else if(!value || value === None){
       this._b = new Uint8Array();
@@ -86,8 +86,14 @@ export class Bytes {
   }
   
   public static from(value?: Uint8Array|Bytes|number[]|str|G1Element|None, type?: BytesFromType){
-    if(value instanceof Uint8Array || isBytes(value) || value === None || value === undefined){
+    if(value === None || value === undefined){
       return new Bytes(value);
+    }
+    else if(value instanceof Uint8Array){
+      return new Bytes(value.slice());
+    }
+    else if(isBytes(value)){
+      return new Bytes(value.data());
     }
     else if(Array.isArray(value) && value.every(v => typeof v === "number")){
       if(value.some(v => (v < 0 || v > 255))){
@@ -335,25 +341,21 @@ export class Stream {
   }
   
   public write(b: Bytes){
-    const ui1 = this._bytes.data();
-    const ui2 = b.data();
+    const ui1 = this._bytes.raw();
+    const ui2 = b.raw();
     const finalLength = Math.max(ui1.length, ui2.length + this._seek);
     const uint8Array = new Uint8Array(finalLength);
     const offset = this.seek;
     
-    for(let i=0;i<offset;i++){
-      uint8Array[i] = ui1[i];
-    }
-    for(let i=offset;i<finalLength;i++){
-      uint8Array[i] = ui2[i-offset] | 0;
-    }
+    uint8Array.set(ui1, 0);
+    uint8Array.set(ui2, offset);
     
     this._bytes = new Bytes(uint8Array);
     this.seek = offset + ui2.length;
     return b.length;
   }
   
-  public read(size: number){
+  public read(size: number): Bytes {
     if(this.seek > this._bytes.length-1){
       return new Bytes(); // Return empty byte
     }
