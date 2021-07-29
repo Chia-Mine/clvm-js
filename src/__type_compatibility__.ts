@@ -184,7 +184,7 @@ export class Bytes {
   }
   
   public clone(){
-    return new Bytes(this._b);
+    return new Bytes(this._b.slice());
   }
   
   public toString(){

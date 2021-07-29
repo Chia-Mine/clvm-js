@@ -30,7 +30,8 @@ export function* sexp_to_byte_iterator(sexp: SExp){
     sexp = todo_stack.pop() as SExp;
     const pair = sexp.as_pair();
     if(pair){
-      yield Bytes.from([CONS_BOX_MARKER]);
+      // yield Bytes.from([CONS_BOX_MARKER]);
+      yield new Bytes(new Uint8Array([CONS_BOX_MARKER]));
       todo_stack.push(pair[1]);
       todo_stack.push(pair[0]);
     }
@@ -43,7 +44,8 @@ export function* sexp_to_byte_iterator(sexp: SExp){
 export function* atom_to_byte_iterator(atom: Bytes|None){
   const size = atom ? atom.length : 0;
   if(size === 0 || !atom){
-    yield Bytes.from("0x80", "hex");
+    // yield Bytes.from("0x80", "hex");
+    yield new Bytes(new Uint8Array([0x80]));
     return;
   }
   else if(size === 1){
@@ -90,7 +92,7 @@ export function* atom_to_byte_iterator(atom: Bytes|None){
   else{
     throw new Error(`sexp too long ${atom}`);
   }
-  const size_blob = Bytes.from(uint8array);
+  const size_blob = new Bytes(uint8array);
   
   yield size_blob;
   yield atom;

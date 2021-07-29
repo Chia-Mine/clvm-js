@@ -15,7 +15,7 @@ If you want to copy data and cut reference apart, then please initialize with `B
 
 **There is a deep tree performance issue**  
 Try `yarn test serialize_test --testNamePattern=test_very_deep_tree` and you'll see.  
-I've managed to improve test complete time to `79s` -> `28s`
+I've managed to improve test complete time to `79s` -> `22s`
 
 ### Changed
 - Reorganized dist folder
