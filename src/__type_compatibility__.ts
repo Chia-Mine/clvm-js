@@ -231,14 +231,26 @@ export class Bytes {
     if(this.length !== other.length){
       return this.length > other.length ? 1 : -1;
     }
-    for(let i=0;i<this.length;i++){
-      const self_i = this.get_byte_at(i);
-      const other_i = other.get_byte_at(i);
-      if(self_i === other_i){
-        continue;
+    const dv_self = new DataView(this.raw().buffer);
+    const dv_other = new DataView(other.raw().buffer);
+  
+    const ui32MaxCount = (this.length / 4) | 0;
+    for(let i=0;i<ui32MaxCount;i++){
+      const ui32_self = dv_self.getUint32(i*4);
+      const ui32_other = dv_other.getUint32(i*4);
+      if(ui32_self !== ui32_other){
+        return ui32_self > ui32_other ? 1 : -1;
       }
-      return self_i > other_i ? 1 : -1;
     }
+  
+    for(let i=ui32MaxCount;i<this.length;i++){
+      const ui8_self = dv_self.getUint8(i);
+      const ui8_other = dv_other.getUint8(i);
+      if(ui8_self !== ui8_other){
+        return ui8_self > ui8_other ? 1 : -1;
+      }
+    }
+  
     return 0;
   }
 }

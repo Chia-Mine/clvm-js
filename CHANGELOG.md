@@ -20,7 +20,8 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 ### Changed
 - Changed `OperatorDict` arguments format.
 - When you initialize `Bytes` using constructor like `new Byte(data)`, `data` is not copied but just stored and keeps reference of `data`, for performance enhancement.
-- Greatly improve overall performance by pre-allocating buffer memory on `Stream` instance.
+- Greatly improved overall performance by pre-allocating buffer memory on `Stream` instance.
+- Improved performance of `Bytes::equal_to`.
 - Changed parameter type of `SExp::equal_to` from `CastableType` to `any`
 - Replaced use of `instanceof` operator for non-native types.
 - Updated bls-signatures version to 0.2.1-beta.1
