@@ -195,16 +195,16 @@ function _consume_atom(f: Stream, b: number){
 # that represent on S-expression tree, and returns them. This is more efficient
 # than parsing and returning a python S-expression tree.
  */
-export function sexp_buffer_from_stream(f: Stream){
-  let ret = new Bytes();
+export function sexp_buffer_from_stream(f: Stream): Bytes {
+  const buffer = new Stream();
   let depth = 1;
   while(depth > 0){
     depth -= 1;
     const [buf, d] = _op_consume_sexp(f) as [Bytes, number];
     depth += d;
-    ret = ret.concat(buf);
+    buffer.write(buf);
   }
-  return ret;
+  return buffer.getValue();
 }
 
 function _atom_from_stream(f: Stream, b: number, to_sexp_f: TToSexpF): SExp {

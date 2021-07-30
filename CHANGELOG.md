@@ -11,20 +11,21 @@ where `option` is `{quote_atom: Bytes, apply_atom: Bytes, unknown_op_handler: ty
 - When you initialize `Bytes` using constructor like `new Byte(data)`, `data` is not copied but just stored and keeps reference of `data`, for performance enhancement.  
 In javascript, byte copy by `TypedArray` constructor is not sufficiently fast.  
 So I left user an option how to initialize `Bytes` instance. Data copy, or Store reference.  
-If you want to copy data and cut reference apart, then please initialize with `Bytes.from` factory function.  
+If you want to copy data and cut reference apart, then please get `Bytes` instance by `Bytes.from` factory function.  
 
-**There is a deep tree performance issue**  
-Try `yarn test serialize_test --testNamePattern=test_very_deep_tree` and you'll see.  
-I've managed to improve test complete time to `79s` -> `22s`
+**Resolved a deep tree performance issue**  
+Before this version, `yarn test serialize_test --testNamePattern=test_very_deep_tree` was really slow. It took around 80 seconds to complete test.  
+At this version, I've managed to improve test complete time to `79s` -> `2s` by pre-allocating buffer memory on `Stream` instance.
 
 ### Changed
-- Reorganized dist folder
-- Updated bls-signatures version to 0.2.1-beta.1
+- Changed `OperatorDict` arguments format.
+- When you initialize `Bytes` using constructor like `new Byte(data)`, `data` is not copied but just stored and keeps reference of `data`, for performance enhancement.
+- Greatly improve overall performance by pre-allocating buffer memory on `Stream` instance.
 - Changed parameter type of `SExp::equal_to` from `CastableType` to `any`
 - Replaced use of `instanceof` operator for non-native types.
-- Changed `OperatorDict` arguments format.
+- Updated bls-signatures version to 0.2.1-beta.1
 - Improved `Bytes::concat` performance.
-- When you initialize `Bytes` using constructor like `new Byte(data)`, `data` is not copied but just stored and keeps reference of `data`, for performance enhancement.
+- Reorganized dist folder
 ### Fixed
 - Fixed an issue where `SExp.to(<boolean>)` did not work the same as python's clvm.
 - Fixed an issue where Bytes-SExp comparison like `b('aaa').equal_to(SExp.null())` did not work.

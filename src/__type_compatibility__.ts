@@ -312,12 +312,30 @@ export function isBytes(v: any): v is Bytes {
 }
 
 export class Stream {
+  public static readonly INITIAL_BUFFER_SIZE = 64*1024;
   private _seek: number;
-  private _bytes: Bytes;
+  private _length: number;
+  private _buffer: Uint8Array;
+  private _bufAllocMultiplier = 4;
   
   public constructor(b?: Bytes) {
-    this._bytes = b ? new Bytes(b) : new Bytes();
     this._seek = 0;
+    
+    if(b){
+      if(b.length > Stream.INITIAL_BUFFER_SIZE){
+        this._buffer = new Uint8Array(b.length*2);
+      }
+      else{
+        this._buffer = new Uint8Array(Stream.INITIAL_BUFFER_SIZE);
+      }
+      
+      this._buffer.set(b.raw());
+      this._length = b.length;
+    }
+    else{
+      this._buffer = new Uint8Array(Stream.INITIAL_BUFFER_SIZE);
+      this._length = 0;
+    }
   }
   
   public get seek(){
@@ -326,10 +344,10 @@ export class Stream {
   
   public set seek(value){
     if(value < 0){
-      this._seek = this._bytes.length - 1;
+      this._seek = this.length - 1;
     }
-    else if(value > this._bytes.length - 1){
-      this._seek = this._bytes.length;
+    else if(value > this.length - 1){
+      this._seek = this.length;
     }
     else{
       this._seek = value;
@@ -337,35 +355,54 @@ export class Stream {
   }
   
   public get length(){
-    return this._bytes.length;
+    return this._length;
+  }
+  
+  protected reAllocate(size?: number){
+    let s = typeof size === "number" ? size : this._buffer.length * this._bufAllocMultiplier;
+    /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Invalid_array_length
+     */
+    if(s > 4294967295){ // 4294967295 = 2**32 - 1
+      s = 4294967295;
+    }
+    const buf = new Uint8Array(s);
+    buf.set(this._buffer);
+    this._buffer = buf;
   }
   
   public write(b: Bytes){
-    const ui1 = this._bytes.raw();
-    const ui2 = b.raw();
-    const finalLength = Math.max(ui1.length, ui2.length + this._seek);
-    const uint8Array = new Uint8Array(finalLength);
+    const newLength = Math.max(this.length, b.length + this._seek);
+    if(newLength > this._buffer.length){
+      this.reAllocate(newLength * this._bufAllocMultiplier);
+    }
+    
     const offset = this.seek;
+    this._buffer.set(b.raw(), offset);
     
-    uint8Array.set(ui1, 0);
-    uint8Array.set(ui2, offset);
-    
-    this._bytes = new Bytes(uint8Array);
-    this.seek = offset + ui2.length;
+    this._length = newLength;
+    this.seek += b.length; // Don't move this line prior to `this._length = newLength`!
     return b.length;
   }
   
   public read(size: number): Bytes {
-    if(this.seek > this._bytes.length-1){
+    if(this.seek > this.length-1){
       return new Bytes(); // Return empty byte
     }
     
-    const bytes = this._bytes.slice(this.seek, size);
+    if(this.seek + size <= this.length){
+      const u8 = this._buffer.slice(this.seek, this.seek + size);
+      this.seek += size;
+      return new Bytes(u8);
+    }
+    
+    const u8 = new Uint8Array(this.length - this.seek);
+    u8.set(this._buffer.subarray(this.seek, this.length));
     this.seek += size;
-    return bytes;
+    return new Bytes(u8);
   }
   
-  public getValue(){
-    return this._bytes;
+  public getValue(): Bytes {
+    return new Bytes(this._buffer.subarray(0, this.length));
   }
 }
