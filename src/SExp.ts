@@ -1,14 +1,14 @@
 import {G1Element} from "@chiamine/bls-signatures";
-import {int, None, str} from "./__python_types__";
-import {CLVMObject} from "./CLVMObject";
-import {Bytes, isIterable, Tuple, t, Stream} from "./__type_compatibility__";
+import {int, None, Optional, str} from "./__python_types__";
+import {CLVMObject, CLVMType} from "./CLVMObject";
+import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";
 import {int_from_bytes, int_to_bytes} from "./casts";
 import {sexp_to_stream} from "./serialize";
 import {as_javascript} from "./as_javascript";
 import {EvalError} from "./EvalError";
 
 export type CastableType = SExp
-| CLVMObject
+| CLVMType
 | Bytes
 | str
 | int
@@ -28,7 +28,7 @@ export function looks_like_clvm_object(o: any): o is CLVMObject {
 
 // this function recognizes some common types and turns them into plain bytes
 export function convert_atom_to_bytes(v: any): Bytes {
-  if(v instanceof Bytes){
+  if(isBytes(v)){
     return v;
   }
   else if(typeof v === "string"){
@@ -36,6 +36,9 @@ export function convert_atom_to_bytes(v: any): Bytes {
   }
   else if(typeof v === "number"){
     return int_to_bytes(v);
+  }
+  else if(typeof v === "boolean"){ // Tips. In Python, isinstance(True, int) == True. 
+    return int_to_bytes(v ? 1 : 0);
   }
   else if(v === None || !v){
     return Bytes.NULL;
@@ -79,7 +82,7 @@ export function to_sexp_type(value: CastableType): CLVMObject {
       }
       
       v = stack.pop();
-      if(v instanceof Tuple){
+      if(isTuple(v)){
         if(v.length !== 2){
           throw new Error(`can't cast tuple of size ${v.length}`);
         }
@@ -163,13 +166,17 @@ export function to_sexp_type(value: CastableType): CLVMObject {
  elements implementing the CLVM object protocol.
  Exactly one of "atom" and "pair" must be None.
  */
-export class SExp extends CLVMObject {
+export class SExp implements CLVMType {
+  atom: Optional<Bytes> = None;
+  // this is always a 2-tuple of an object implementing the CLVM object protocol.
+  pair: Optional<Tuple<any, any>> = None;
+  
   static readonly TRUE: SExp = new SExp(new CLVMObject(Bytes.from("0x01", "hex")));
   static readonly FALSE: SExp = new SExp(new CLVMObject(Bytes.NULL));
   static readonly __NULL__: SExp = new SExp(new CLVMObject(Bytes.NULL));
   
   static to(v: CastableType): SExp {
-    if(v instanceof SExp){
+    if(isSExp(v)){
       return v;
     }
     
@@ -186,8 +193,6 @@ export class SExp extends CLVMObject {
   }
   
   public constructor(v: CLVMObject) {
-    super(v);
-    
     this.atom = v.atom;
     this.pair = v.pair;
   }
@@ -246,7 +251,7 @@ export class SExp extends CLVMObject {
     }
   }
   
-  public equal_to(other: CastableType){
+  public equal_to(other: any/* CastableType */): boolean {
     try{
       other = SExp.to(other);
       const to_compare_stack = [t(this, other)] as Array<Tuple<SExp, SExp>>;
@@ -295,4 +300,13 @@ export class SExp extends CLVMObject {
   public __repr__(){
     return `SExp(${this.as_bin().hex()})`;
   }
+}
+
+export function isSExp(v: any): v is SExp {
+  return v && typeof v.atom !== "undefined"
+    && typeof v.pair !== "undefined"
+    && typeof v.first === "function"
+    && typeof v.rest === "function"
+    && typeof v.cons === "function"
+  ;
 }

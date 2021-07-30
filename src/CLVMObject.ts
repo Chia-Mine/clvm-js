@@ -1,5 +1,5 @@
 import {None, Optional} from "./__python_types__";
-import {Bytes, Tuple} from "./__type_compatibility__";
+import {Bytes, isTuple, Tuple} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 
 export type CLVMType = {
@@ -25,11 +25,11 @@ export class CLVMObject implements CLVMType {
   pair: Optional<Tuple<any, any>> = None;
   
   public constructor(v: any) {
-    if(v instanceof CLVMObject){
+    if(isCLVMObject(v)){
       this.atom = v.atom;
       this.pair = v.pair;
     }
-    else if(v instanceof Tuple){
+    else if(isTuple(v)){
       this.pair = v;
       this.atom = None;
     }
@@ -54,4 +54,8 @@ export function isCons(obj: CLVMType): obj is Cons {
   }
   
   return Boolean((!obj.atom && obj.pair));
+}
+
+export function isCLVMObject(v: any): v is CLVMObject {
+  return v && typeof v.atom !== "undefined" && typeof v.pair !== "undefined";
 }

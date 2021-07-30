@@ -72,10 +72,10 @@ export class Bytes {
   
   public constructor(value?: Uint8Array|Bytes|None) {
     if(value instanceof Uint8Array){
-      this._b = new Uint8Array(value);
+      this._b = value;
     }
-    else if(value instanceof Bytes){
-      this._b = value.data();
+    else if(isBytes(value)){
+      this._b = value.raw();
     }
     else if(!value || value === None){
       this._b = new Uint8Array();
@@ -86,8 +86,14 @@ export class Bytes {
   }
   
   public static from(value?: Uint8Array|Bytes|number[]|str|G1Element|None, type?: BytesFromType){
-    if(value instanceof Uint8Array || value instanceof Bytes || value === None || value === undefined){
+    if(value === None || value === undefined){
       return new Bytes(value);
+    }
+    else if(value instanceof Uint8Array){
+      return new Bytes(value.slice());
+    }
+    else if(isBytes(value)){
+      return new Bytes(value.data());
     }
     else if(Array.isArray(value) && value.every(v => typeof v === "number")){
       if(value.some(v => (v < 0 || v > 255))){
@@ -124,7 +130,7 @@ export class Bytes {
       w = new Word32Array(value);
       w = SHA256.hash(w);
     }
-    else if(value instanceof Bytes){
+    else if(isBytes(value)){
       w = value.as_word();
       w = SHA256.hash(w);
     }
@@ -144,10 +150,20 @@ export class Bytes {
   }
   
   public concat(b: Bytes){
-    const w1 = this.as_word();
-    const w2 = b.as_word();
-    const w = w1.concat(w2);
-    return Bytes.from(w.toUint8Array());
+    const thisBin = this._b;
+    const thatBin = b.raw();
+    const concatBin = new Uint8Array(thisBin.length + thatBin.length);
+    concatBin.set(thisBin, 0);
+    concatBin.set(thatBin, thisBin.length);
+    return new Bytes(concatBin);
+  }
+  
+  public repeat(n: number){
+    const ret = new Uint8Array(this.length*n);
+    for(let i=0;i<n;i++){
+      ret.set(this._b, i*this.length);
+    }
+    return new Bytes(ret);
   }
   
   public slice(start: number, length?: number){
@@ -168,7 +184,7 @@ export class Bytes {
   }
   
   public clone(){
-    return new Bytes(this._b);
+    return new Bytes(this._b.slice());
   }
   
   public toString(){
@@ -191,11 +207,17 @@ export class Bytes {
     return this.hex().endsWith(b.hex());
   }
   
-  public equal_to(b: Bytes|None){
-    if(!b){
+  public equal_to(b: Bytes|None|any){
+    if(b === None){
       return false;
     }
-    return this.compare(b) === 0;
+    else if(typeof b.length === "number" && isBytes(b)){
+      return this.compare(b) === 0;
+    }
+    else if(typeof b.equal_to === "function"){
+      return b.equal_to(this) as boolean;
+    }
+    return false;
   }
   
   /**
@@ -209,14 +231,27 @@ export class Bytes {
     if(this.length !== other.length){
       return this.length > other.length ? 1 : -1;
     }
-    for(let i=0;i<this.length;i++){
-      const self_i = this.get_byte_at(i);
-      const other_i = other.get_byte_at(i);
-      if(self_i === other_i){
-        continue;
+    const dv_self = new DataView(this.raw().buffer);
+    const dv_other = new DataView(other.raw().buffer);
+  
+    const ui32MaxCount = (this.length / 4) | 0;
+    for(let i=0;i<ui32MaxCount;i++){
+      const ui32_self = dv_self.getUint32(i*4);
+      const ui32_other = dv_other.getUint32(i*4);
+      if(ui32_self !== ui32_other){
+        return ui32_self > ui32_other ? 1 : -1;
       }
-      return self_i > other_i ? 1 : -1;
     }
+  
+    const offset = ui32MaxCount*4;
+    for(let i=offset;i<this.length;i++){
+      const ui8_self = dv_self.getUint8(i);
+      const ui8_other = dv_other.getUint8(i);
+      if(ui8_self !== ui8_other){
+        return ui8_self > ui8_other ? 1 : -1;
+      }
+    }
+  
     return 0;
   }
 }
@@ -227,6 +262,14 @@ export function b(utf8Str: str, type:"utf8"|"hex" = "utf8"){
 
 export function h(hexStr: str){
   return Bytes.from(hexStr, "hex");
+}
+
+export function list<T = unknown>(iterable: Iterable<T>){
+  const arr: T[] = [];
+  for(const item of iterable){
+    arr.push(item);
+  }
+  return arr;
 }
 
 export class Tuple<T1, T2> extends Array<any> {
@@ -246,14 +289,14 @@ export function t<T1, T2>(v1: T1, v2: T2){
 }
 
 export function isTuple(v: unknown): v is Tuple<unknown, unknown> {
-  return v instanceof Tuple;
+  return v instanceof Array && Object.isFrozen(v) && v.length === 2;
 }
 
 /**
  * Check whether an argument is a list and not a tuple
  */
 export function isList(v: unknown): v is unknown[] {
-  return Array.isArray(v) && !(v instanceof Tuple);
+  return Array.isArray(v) && !isTuple(v);
 }
 
 export function isIterable(v: any): v is unknown[] {
@@ -269,13 +312,43 @@ export function isIterable(v: any): v is unknown[] {
   return false;
 }
 
+export function isBytes(v: any): v is Bytes {
+  return v && typeof v.length === "number"
+    && typeof v.get_byte_at === "function"
+    && typeof v.raw === "function"
+    && typeof v.data === "function"
+    && typeof v.hex === "function"
+    && typeof v.decode === "function"
+    && typeof v.equal_to === "function"
+    && typeof v.compare === "function"
+  ;
+}
+
 export class Stream {
+  public static readonly INITIAL_BUFFER_SIZE = 64*1024;
   private _seek: number;
-  private _bytes: Bytes;
+  private _length: number;
+  private _buffer: Uint8Array;
+  private _bufAllocMultiplier = 4;
   
   public constructor(b?: Bytes) {
-    this._bytes = b ? new Bytes(b) : new Bytes();
     this._seek = 0;
+    
+    if(b){
+      if(b.length > Stream.INITIAL_BUFFER_SIZE){
+        this._buffer = new Uint8Array(b.length*2);
+      }
+      else{
+        this._buffer = new Uint8Array(Stream.INITIAL_BUFFER_SIZE);
+      }
+      
+      this._buffer.set(b.raw());
+      this._length = b.length;
+    }
+    else{
+      this._buffer = new Uint8Array(Stream.INITIAL_BUFFER_SIZE);
+      this._length = 0;
+    }
   }
   
   public get seek(){
@@ -284,10 +357,10 @@ export class Stream {
   
   public set seek(value){
     if(value < 0){
-      this._seek = this._bytes.length - 1;
+      this._seek = this.length - 1;
     }
-    else if(value > this._bytes.length - 1){
-      this._seek = this._bytes.length;
+    else if(value > this.length - 1){
+      this._seek = this.length;
     }
     else{
       this._seek = value;
@@ -295,39 +368,54 @@ export class Stream {
   }
   
   public get length(){
-    return this._bytes.length;
+    return this._length;
+  }
+  
+  protected reAllocate(size?: number){
+    let s = typeof size === "number" ? size : this._buffer.length * this._bufAllocMultiplier;
+    /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Invalid_array_length
+     */
+    if(s > 4294967295){ // 4294967295 = 2**32 - 1
+      s = 4294967295;
+    }
+    const buf = new Uint8Array(s);
+    buf.set(this._buffer);
+    this._buffer = buf;
   }
   
   public write(b: Bytes){
-    const ui1 = this._bytes.data();
-    const ui2 = b.data();
-    const finalLength = Math.max(ui1.length, ui2.length + this._seek);
-    const uint8Array = new Uint8Array(finalLength);
+    const newLength = Math.max(this.length, b.length + this._seek);
+    if(newLength > this._buffer.length){
+      this.reAllocate(newLength * this._bufAllocMultiplier);
+    }
+    
     const offset = this.seek;
+    this._buffer.set(b.raw(), offset);
     
-    for(let i=0;i<offset;i++){
-      uint8Array[i] = ui1[i];
-    }
-    for(let i=offset;i<finalLength;i++){
-      uint8Array[i] = ui2[i-offset] | 0;
-    }
-    
-    this._bytes = new Bytes(uint8Array);
-    this.seek = offset + ui2.length;
+    this._length = newLength;
+    this.seek += b.length; // Don't move this line prior to `this._length = newLength`!
     return b.length;
   }
   
-  public read(size: number){
-    if(this.seek > this._bytes.length-1){
+  public read(size: number): Bytes {
+    if(this.seek > this.length-1){
       return new Bytes(); // Return empty byte
     }
     
-    const bytes = this._bytes.slice(this.seek, size);
+    if(this.seek + size <= this.length){
+      const u8 = this._buffer.slice(this.seek, this.seek + size);
+      this.seek += size;
+      return new Bytes(u8);
+    }
+    
+    const u8 = new Uint8Array(this.length - this.seek);
+    u8.set(this._buffer.subarray(this.seek, this.length));
     this.seek += size;
-    return bytes;
+    return new Bytes(u8);
   }
   
-  public getValue(){
-    return this._bytes;
+  public getValue(): Bytes {
+    return new Bytes(this._buffer.subarray(0, this.length));
   }
 }

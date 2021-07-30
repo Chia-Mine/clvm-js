@@ -1,7 +1,7 @@
 import {int, str} from "./__python_types__";
 import {int_from_bytes} from "./casts";
 import {SExp} from "./SExp";
-import {Bytes, Tuple, t} from "./__type_compatibility__";
+import {Bytes, Tuple, t, isBytes} from "./__type_compatibility__";
 import {CLVMObject} from "./CLVMObject";
 import {EvalError} from "./EvalError";
 import {
@@ -299,32 +299,43 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
 export type TOperatorDict<A extends str = ATOMS> = {
   unknown_op_handler: typeof default_unknown_op;
 }
-& ((op: Bytes, args: SExp) => Tuple<int, CLVMObject>)
+& ((op: Bytes|string|number, args: SExp) => Tuple<int, CLVMObject>)
 & TAtomOpFunctionMap<A>
 & Record<TBasicAtom, Bytes>
-  ;
+;
+
+export type TOperatorDictOption = {
+  quote_atom: Bytes;
+  apply_atom: Bytes;
+  unknown_op_handler: typeof default_unknown_op;
+};
 
 export function OperatorDict<A extends str = ATOMS>(
-  atom_op_function_map: TAtomOpFunctionMap<A>,
-  quote_atom?: Bytes,
-  apply_atom?: Bytes,
-  unknown_op_handler?: typeof default_unknown_op,
+  atom_op_function_map: TAtomOpFunctionMap<A>|TOperatorDict,
+  option: Partial<TOperatorDictOption> = {},
 ): TOperatorDict<A> {
   const dict = {
     ...atom_op_function_map,
-    quote_atom: quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom || QUOTE_ATOM,
-    apply_atom: apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom || APPLY_ATOM,
-    unknown_op_handler: unknown_op_handler || default_unknown_op,
+    quote_atom: option.quote_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).quote_atom,
+    apply_atom: option.apply_atom || (atom_op_function_map as Record<TBasicAtom, Bytes>).apply_atom,
+    unknown_op_handler: option.unknown_op_handler || default_unknown_op,
   };
   
-  const OperatorDict = function(op: Bytes, args: SExp){
-    if(typeof (op as unknown) === "string"){
+  if(!dict.quote_atom){
+    throw new Error("object has not attribute 'quote_atom'");
+  }
+  else if(!dict.apply_atom){
+    throw new Error("object has not attribute 'apply_atom'");
+  }
+  
+  const OperatorDict = function(op: Bytes|string|number, args: SExp){
+    if(typeof op === "string"){
       op = Bytes.from(op, "hex");
     }
-    else if(typeof (op as unknown) === "number"){
+    else if(typeof op === "number"){
       op = Bytes.from([(op as unknown) as number]);
     }
-    else if(!((op as unknown) instanceof Bytes)){
+    else if(!isBytes(op)){
       throw new Error(`Invalid op: ${JSON.stringify(op)}`);
     }
     
@@ -346,8 +357,10 @@ export function OperatorDict<A extends str = ATOMS>(
 
 const _OPERATOR_LOOKUP = OperatorDict(
   operators_for_module(KEYWORD_TO_ATOM, core_ops, OP_REWRITE),
-  QUOTE_ATOM,
-  APPLY_ATOM,
+  {
+    quote_atom: QUOTE_ATOM,
+    apply_atom: APPLY_ATOM,
+  },
 );
 
 merge(_OPERATOR_LOOKUP as any, operators_for_module(KEYWORD_TO_ATOM, more_ops, OP_REWRITE));

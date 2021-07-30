@@ -21,6 +21,7 @@ export declare class Bytes {
     get length(): number;
     get_byte_at(i: number): number;
     concat(b: Bytes): Bytes;
+    repeat(n: number): Bytes;
     slice(start: number, length?: number): Bytes;
     as_word(): Word32Array;
     data(): Uint8Array;
@@ -31,7 +32,7 @@ export declare class Bytes {
     decode(): string;
     startswith(b: Bytes): boolean;
     endswith(b: Bytes): boolean;
-    equal_to(b: Bytes | None): boolean;
+    equal_to(b: Bytes | None | any): boolean;
     /**
      * Returns:
      *   +1 if argument is smaller
@@ -43,6 +44,7 @@ export declare class Bytes {
 }
 export declare function b(utf8Str: str, type?: "utf8" | "hex"): Bytes;
 export declare function h(hexStr: str): Bytes;
+export declare function list<T = unknown>(iterable: Iterable<T>): T[];
 export declare class Tuple<T1, T2> extends Array<any> {
     constructor(...items: [T1, T2]);
     toString(): string;
@@ -54,13 +56,18 @@ export declare function isTuple(v: unknown): v is Tuple<unknown, unknown>;
  */
 export declare function isList(v: unknown): v is unknown[];
 export declare function isIterable(v: any): v is unknown[];
+export declare function isBytes(v: any): v is Bytes;
 export declare class Stream {
+    static readonly INITIAL_BUFFER_SIZE: number;
     private _seek;
-    private _bytes;
+    private _length;
+    private _buffer;
+    private _bufAllocMultiplier;
     constructor(b?: Bytes);
     get seek(): number;
     set seek(value: number);
     get length(): number;
+    protected reAllocate(size?: number): void;
     write(b: Bytes): number;
     read(size: number): Bytes;
     getValue(): Bytes;

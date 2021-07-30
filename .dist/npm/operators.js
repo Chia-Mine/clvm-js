@@ -270,8 +270,14 @@ function merge(obj1, obj2) {
         obj1[key] = obj2[key];
     });
 }
-function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_handler) {
-    const dict = Object.assign(Object.assign({}, atom_op_function_map), { quote_atom: quote_atom || atom_op_function_map.quote_atom || exports.QUOTE_ATOM, apply_atom: apply_atom || atom_op_function_map.apply_atom || exports.APPLY_ATOM, unknown_op_handler: unknown_op_handler || default_unknown_op });
+function OperatorDict(atom_op_function_map, option = {}) {
+    const dict = Object.assign(Object.assign({}, atom_op_function_map), { quote_atom: option.quote_atom || atom_op_function_map.quote_atom, apply_atom: option.apply_atom || atom_op_function_map.apply_atom, unknown_op_handler: option.unknown_op_handler || default_unknown_op });
+    if (!dict.quote_atom) {
+        throw new Error("object has not attribute 'quote_atom'");
+    }
+    else if (!dict.apply_atom) {
+        throw new Error("object has not attribute 'apply_atom'");
+    }
     const OperatorDict = function (op, args) {
         if (typeof op === "string") {
             op = __type_compatibility__1.Bytes.from(op, "hex");
@@ -279,7 +285,7 @@ function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_h
         else if (typeof op === "number") {
             op = __type_compatibility__1.Bytes.from([op]);
         }
-        else if (!(op instanceof __type_compatibility__1.Bytes)) {
+        else if (!__type_compatibility__1.isBytes(op)) {
             throw new Error(`Invalid op: ${JSON.stringify(op)}`);
         }
         merge(dict, OperatorDict);
@@ -295,6 +301,9 @@ function OperatorDict(atom_op_function_map, quote_atom, apply_atom, unknown_op_h
     return OperatorDict;
 }
 exports.OperatorDict = OperatorDict;
-const _OPERATOR_LOOKUP = OperatorDict(op_utils_1.operators_for_module(exports.KEYWORD_TO_ATOM, core_ops, exports.OP_REWRITE), exports.QUOTE_ATOM, exports.APPLY_ATOM);
+const _OPERATOR_LOOKUP = OperatorDict(op_utils_1.operators_for_module(exports.KEYWORD_TO_ATOM, core_ops, exports.OP_REWRITE), {
+    quote_atom: exports.QUOTE_ATOM,
+    apply_atom: exports.APPLY_ATOM,
+});
 merge(_OPERATOR_LOOKUP, op_utils_1.operators_for_module(exports.KEYWORD_TO_ATOM, more_ops, exports.OP_REWRITE));
 exports.OPERATOR_LOOKUP = _OPERATOR_LOOKUP;
