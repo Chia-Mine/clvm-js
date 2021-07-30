@@ -12,7 +12,8 @@ function* sexp_to_byte_iterator(sexp) {
         sexp = todo_stack.pop();
         const pair = sexp.as_pair();
         if (pair) {
-            yield __type_compatibility__1.Bytes.from([CONS_BOX_MARKER]);
+            // yield Bytes.from([CONS_BOX_MARKER]);
+            yield new __type_compatibility__1.Bytes(new Uint8Array([CONS_BOX_MARKER]));
             todo_stack.push(pair[1]);
             todo_stack.push(pair[0]);
         }
@@ -25,7 +26,8 @@ exports.sexp_to_byte_iterator = sexp_to_byte_iterator;
 function* atom_to_byte_iterator(atom) {
     const size = atom ? atom.length : 0;
     if (size === 0 || !atom) {
-        yield __type_compatibility__1.Bytes.from("0x80", "hex");
+        // yield Bytes.from("0x80", "hex");
+        yield new __type_compatibility__1.Bytes(new Uint8Array([0x80]));
         return;
     }
     else if (size === 1) {
@@ -71,7 +73,7 @@ function* atom_to_byte_iterator(atom) {
     else {
         throw new Error(`sexp too long ${atom}`);
     }
-    const size_blob = __type_compatibility__1.Bytes.from(uint8array);
+    const size_blob = new __type_compatibility__1.Bytes(uint8array);
     yield size_blob;
     yield atom;
     return;
@@ -164,15 +166,15 @@ function _consume_atom(f, b) {
 # than parsing and returning a python S-expression tree.
  */
 function sexp_buffer_from_stream(f) {
-    let ret = new __type_compatibility__1.Bytes();
+    const buffer = new __type_compatibility__1.Stream();
     let depth = 1;
     while (depth > 0) {
         depth -= 1;
         const [buf, d] = _op_consume_sexp(f);
         depth += d;
-        ret = ret.concat(buf);
+        buffer.write(buf);
     }
-    return ret;
+    return buffer.getValue();
 }
 exports.sexp_buffer_from_stream = sexp_buffer_from_stream;
 function _atom_from_stream(f, b, to_sexp_f) {

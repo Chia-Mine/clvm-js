@@ -19,3 +19,4 @@ export declare class CLVMObject implements CLVMType {
 }
 export declare function isAtom(obj: CLVMType): obj is Atom;
 export declare function isCons(obj: CLVMType): obj is Cons;
+export declare function isCLVMObject(v: any): v is CLVMObject;

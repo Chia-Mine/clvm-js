@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SExp = exports.to_sexp_type = exports.convert_atom_to_bytes = exports.looks_like_clvm_object = void 0;
+exports.isSExp = exports.SExp = exports.to_sexp_type = exports.convert_atom_to_bytes = exports.looks_like_clvm_object = void 0;
 const __python_types__1 = require("./__python_types__");
 const CLVMObject_1 = require("./CLVMObject");
 const __type_compatibility__1 = require("./__type_compatibility__");
@@ -17,7 +17,7 @@ function looks_like_clvm_object(o) {
 exports.looks_like_clvm_object = looks_like_clvm_object;
 // this function recognizes some common types and turns them into plain bytes
 function convert_atom_to_bytes(v) {
-    if (v instanceof __type_compatibility__1.Bytes) {
+    if (__type_compatibility__1.isBytes(v)) {
         return v;
     }
     else if (typeof v === "string") {
@@ -25,6 +25,9 @@ function convert_atom_to_bytes(v) {
     }
     else if (typeof v === "number") {
         return casts_1.int_to_bytes(v);
+    }
+    else if (typeof v === "boolean") { // Tips. In Python, isinstance(True, int) == True. 
+        return casts_1.int_to_bytes(v ? 1 : 0);
     }
     else if (v === __python_types__1.None || !v) {
         return __type_compatibility__1.Bytes.NULL;
@@ -59,7 +62,7 @@ function to_sexp_type(value) {
                 continue;
             }
             v = stack.pop();
-            if (v instanceof __type_compatibility__1.Tuple) {
+            if (__type_compatibility__1.isTuple(v)) {
                 if (v.length !== 2) {
                     throw new Error(`can't cast tuple of size ${v.length}`);
                 }
@@ -128,14 +131,16 @@ exports.to_sexp_type = to_sexp_type;
  elements implementing the CLVM object protocol.
  Exactly one of "atom" and "pair" must be None.
  */
-class SExp extends CLVMObject_1.CLVMObject {
+class SExp {
     constructor(v) {
-        super(v);
+        this.atom = __python_types__1.None;
+        // this is always a 2-tuple of an object implementing the CLVM object protocol.
+        this.pair = __python_types__1.None;
         this.atom = v.atom;
         this.pair = v.pair;
     }
     static to(v) {
-        if (v instanceof SExp) {
+        if (isSExp(v)) {
             return v;
         }
         if (looks_like_clvm_object(v)) {
@@ -192,7 +197,7 @@ class SExp extends CLVMObject_1.CLVMObject {
             v = v.rest();
         }
     }
-    equal_to(other) {
+    equal_to(other /* CastableType */) {
         try {
             other = SExp.to(other);
             const to_compare_stack = [__type_compatibility__1.t(this, other)];
@@ -242,3 +247,11 @@ exports.SExp = SExp;
 SExp.TRUE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.from("0x01", "hex")));
 SExp.FALSE = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
 SExp.__NULL__ = new SExp(new CLVMObject_1.CLVMObject(__type_compatibility__1.Bytes.NULL));
+function isSExp(v) {
+    return v && typeof v.atom !== "undefined"
+        && typeof v.pair !== "undefined"
+        && typeof v.first === "function"
+        && typeof v.rest === "function"
+        && typeof v.cons === "function";
+}
+exports.isSExp = isSExp;
