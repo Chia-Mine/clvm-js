@@ -82,7 +82,7 @@ test("test_short_list", () =>{
 
 test("test_long_blobs", () =>{
   let text = b("");
-  for(let i=0;i<300;i++) { text = text.concat(TEXT); }
+  text = text.repeat(300);
   
   for(let _=0;_<text.length;_++){
     const t1 = text.slice(0, _);

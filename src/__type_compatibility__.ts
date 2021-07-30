@@ -243,7 +243,8 @@ export class Bytes {
       }
     }
   
-    for(let i=ui32MaxCount;i<this.length;i++){
+    const offset = ui32MaxCount*4;
+    for(let i=offset;i<this.length;i++){
       const ui8_self = dv_self.getUint8(i);
       const ui8_other = dv_other.getUint8(i);
       if(ui8_self !== ui8_other){
