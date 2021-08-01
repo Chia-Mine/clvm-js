@@ -6,6 +6,7 @@
   - This folder made it harder to check diffs between versions.
 ### Added
 - Added GitHub Action
+- Added `str()`, `repr()` utility functions.
 ### Changed
 - Updated README.md
 - Changed method name `Bytes::get_byte_at` to `Bytes::at` (Breaking change)

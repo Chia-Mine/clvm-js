@@ -2,7 +2,7 @@ import {Hex} from "jscrypto/Hex";
 import {Utf8} from "jscrypto/Utf8";
 import {Word32Array} from "jscrypto/Word32Array";
 import {SHA256} from "jscrypto/SHA256";
-import {None, str} from "./__python_types__";
+import {None} from "./__python_types__";
 import {G1Element} from "@chiamine/bls-signatures";
 
 export function to_hexstr(r: Uint8Array) {
@@ -85,7 +85,7 @@ export class Bytes {
     }
   }
   
-  public static from(value?: Uint8Array|Bytes|number[]|str|G1Element|None, type?: BytesFromType){
+  public static from(value?: Uint8Array|Bytes|number[]|string|G1Element|None, type?: BytesFromType){
     if(value === None || value === undefined){
       return new Bytes(value);
     }
@@ -121,7 +121,7 @@ export class Bytes {
     throw new Error(`Invalid value: ${JSON.stringify(value)}`);
   }
   
-  public static SHA256(value: str|Bytes|Uint8Array){
+  public static SHA256(value: string|Bytes|Uint8Array){
     let w;
     if(typeof value === "string"){
       w = SHA256.hash(value);
@@ -256,11 +256,11 @@ export class Bytes {
   }
 }
 
-export function b(utf8Str: str, type:"utf8"|"hex" = "utf8"){
+export function b(utf8Str: string, type:"utf8"|"hex" = "utf8"){
   return Bytes.from(utf8Str, type);
 }
 
-export function h(hexStr: str){
+export function h(hexStr: string){
   return Bytes.from(hexStr, "hex");
 }
 
@@ -270,6 +270,20 @@ export function list<T = unknown>(iterable: Iterable<T>){
     arr.push(item);
   }
   return arr;
+}
+
+export function str(x: any){
+  if(typeof x.toString === "function"){
+    return x.toString();
+  }
+  return `${x}`;
+}
+
+export function repr(x: any){
+  if(typeof x.__repr__ === "function"){
+    return x.__repr__();
+  }
+  return str(x);
 }
 
 export class Tuple<T1, T2> extends Array<any> {
