@@ -108,7 +108,6 @@ test("test_very_long_blobs", () => {
     expect(text.length).toBeGreaterThan(size);
     check_serde(text);
   }
-  
 });
 
 test("test_very_deep_tree", () => {
