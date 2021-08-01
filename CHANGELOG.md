@@ -1,6 +1,8 @@
 # Changelog
 
 ## [1.0.0]
+This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+
 ### Removed
 - Removed `.dist` folder from git.  
   - This folder made it harder to check diffs between versions.
