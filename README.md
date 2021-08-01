@@ -1,10 +1,6 @@
 # clvm
 
 Javascript implementation of CLVM (Chia Lisp VM)  
-Still Work in progress.(Untested)  
-
-**v0.x.x is test purpose only!**  
-Please report bugs to https://github.com/Chia-Mine/clvm-js/issues
 
 ## Install
 ```shell
@@ -12,6 +8,11 @@ npm install clvm
 # or
 yarn add clvm
 ```
+
+## Compatibility
+This code is compatible with:
+- [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/1a5cb17895d8707f784a85180bc97d3c6ebe71a0...main)
 
 ## Example
 ```javascript
