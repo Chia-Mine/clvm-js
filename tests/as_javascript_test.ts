@@ -1,4 +1,4 @@
-import {SExp, t, h, b, Bytes, getBLSModule, initialize, None, Tuple, list} from "../src";
+import {SExp, t, h, b, Bytes, getBLSModule, initialize, None, Tuple, list, str, repr} from "../src";
 import {CLVMObject} from "../src/CLVMObject";
 import {EvalError} from "../src/EvalError";
 import type {ModuleInstance} from "@chiamine/bls-signatures";
@@ -287,17 +287,17 @@ test("test_eq_tree", () => {
 });
 
 test("test_str", () => {
-  expect(SExp.to(1).toString()).toBe("01");
-  expect(SExp.to(1337).toString()).toBe("820539");
-  expect(SExp.to(-1).toString()).toBe("81ff");
-  expect(SExp.to(gen_tree(1)).toString()).toBe("ff820539820539");
-  expect(SExp.to(gen_tree(2)).toString()).toBe("ffff820539820539ff820539820539");
+  expect(str(SExp.to(1))).toBe("01");
+  expect(str(SExp.to(1337))).toBe("820539");
+  expect(str(SExp.to(-1))).toBe("81ff");
+  expect(str(SExp.to(gen_tree(1)))).toBe("ff820539820539");
+  expect(str(SExp.to(gen_tree(2)))).toBe("ffff820539820539ff820539820539");
 });
 
 test("test_repr", () => {
-  expect(SExp.to(1).__repr__()).toBe("SExp(01)");
-  expect(SExp.to(1337).__repr__()).toBe("SExp(820539)");
-  expect(SExp.to(-1).__repr__()).toBe("SExp(81ff)");
-  expect(SExp.to(gen_tree(1)).__repr__()).toBe("SExp(ff820539820539)");
-  expect(SExp.to(gen_tree(2)).__repr__()).toBe("SExp(ffff820539820539ff820539820539)");
+  expect(repr(SExp.to(1))).toBe("SExp(01)");
+  expect(repr(SExp.to(1337))).toBe("SExp(820539)");
+  expect(repr(SExp.to(-1))).toBe("SExp(81ff)");
+  expect(repr(SExp.to(gen_tree(1)))).toBe("SExp(ff820539820539)");
+  expect(repr(SExp.to(gen_tree(2)))).toBe("SExp(ffff820539820539ff820539820539)");
 });
