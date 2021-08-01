@@ -1,4 +1,3 @@
-import {int, str} from "./__python_types__";
 import {int_from_bytes} from "./casts";
 import {SExp} from "./SExp";
 import {Bytes, Tuple, t, isBytes} from "./__type_compatibility__";
@@ -45,13 +44,13 @@ export const KEYWORDS = [
 ].join("").trim().split(/\s/);
 export const KEYWORD_FROM_ATOM = Object
   .entries(KEYWORDS)
-  .reduce<Record<str, str>>((acc, v) => {
+  .reduce<Record<string, string>>((acc, v) => {
     acc[int_to_bytes(+v[0]).toString()] = v[1];
     return acc;
   }, {});
 export const KEYWORD_TO_ATOM = Object
   .entries(KEYWORD_FROM_ATOM)
-  .reduce<Record<str, str>>((acc, v) => {
+  .reduce<Record<string, string>>((acc, v) => {
     acc[v[1]] = v[0];
     return acc;
   }, {});
@@ -167,7 +166,7 @@ export const OP_REWRITE = {
 export type ATOMS = keyof typeof KEYWORD_FROM_ATOM;
 export type KEYWORDS = keyof typeof KEYWORD_TO_ATOM;
 
-export function* args_len(op_name: str, args: SExp){
+export function* args_len(op_name: string, args: SExp){
   for(const arg of args.as_iter()){
     if(arg.pair){
       throw new EvalError(`${op_name} requires int args"`, arg);
@@ -204,7 +203,7 @@ export function* args_len(op_name: str, args: SExp){
 # this means that unknown ops where cost_function is 1, 2, or 3, may still be
 # fatal errors if the arguments passed are not atoms.
  */
-export function default_unknown_op(op: Bytes, args: SExp): Tuple<int, CLVMObject> {
+export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObject> {
   // # any opcode starting with ffff is reserved (i.e. fatal error)
   // # opcodes are not allowed to be empty
   if(op.length === 0 || op.slice(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
@@ -288,7 +287,7 @@ export const APPLY_ATOM = Bytes.from(KEYWORD_TO_ATOM["a"], "hex");
 
 type TOpFunc<R = unknown> = (args: SExp) => R;
 type TBasicAtom = "quote_atom"|"apply_atom";
-type TAtomOpFunctionMap<A extends str = ATOMS> = Record<A, TOpFunc> & Partial<Record<TBasicAtom, Bytes>>;
+type TAtomOpFunctionMap<A extends string = ATOMS> = Record<A, TOpFunc> & Partial<Record<TBasicAtom, Bytes>>;
 
 function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
   Object.keys(obj2).forEach(key => {
@@ -296,10 +295,10 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
   });
 }
 
-export type TOperatorDict<A extends str = ATOMS> = {
+export type TOperatorDict<A extends string = ATOMS> = {
   unknown_op_handler: typeof default_unknown_op;
 }
-& ((op: Bytes|string|number, args: SExp) => Tuple<int, CLVMObject>)
+& ((op: Bytes|string|number, args: SExp) => Tuple<number, CLVMObject>)
 & TAtomOpFunctionMap<A>
 & Record<TBasicAtom, Bytes>
 ;
@@ -310,7 +309,7 @@ export type TOperatorDictOption = {
   unknown_op_handler: typeof default_unknown_op;
 };
 
-export function OperatorDict<A extends str = ATOMS>(
+export function OperatorDict<A extends string = ATOMS>(
   atom_op_function_map: TAtomOpFunctionMap<A>|TOperatorDict,
   option: Partial<TOperatorDictOption> = {},
 ): TOperatorDict<A> {
