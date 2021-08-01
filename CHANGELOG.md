@@ -6,6 +6,8 @@
   - This folder made it harder to check diffs between versions.
 ### Added
 - Added GitHub Action
+### Changed
+- Updated README.md
 
 ## [0.0.19]
 
