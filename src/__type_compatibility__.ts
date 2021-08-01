@@ -432,8 +432,7 @@ export class Stream {
       return new Bytes(u8);
     }
     
-    const u8 = new Uint8Array(this.length - this.seek);
-    u8.set(this._buffer.subarray(this.seek, this.length));
+    const u8 = this._buffer.subarray(this.seek, this.length);
     this.seek += size;
     return new Bytes(u8);
   }
