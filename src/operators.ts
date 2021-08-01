@@ -216,7 +216,7 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<int, CLVMObject
     # the cost of the no-ops is determined by the opcode number, except the
     # 6 least significant bits.
    */
-  const cost_function = (op.get_byte_at(op.length-1) & 0b11000000) >> 6;
+  const cost_function = (op.at(op.length-1) & 0b11000000) >> 6;
   // # the multiplier cannot be 0. it starts at 1
   
   if(op.length > 5){

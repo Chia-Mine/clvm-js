@@ -9,7 +9,7 @@ export function int_from_bytes(b: Bytes|None): int {
   }
   const unsigned32 = parseInt(b.hex(), 16);
   // If the first bit is 1, it is recognized as a negative number.
-  if(b.get_byte_at(0) & 0x80){
+  if(b.at(0) & 0x80){
     return unsigned32 - (1 << (b.length*8));
   }
   return unsigned32;

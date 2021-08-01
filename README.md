@@ -126,13 +126,13 @@ b1 = Bytes.from(uint8);
 b1.equal_to(b("abc")); // true
 // Initializing by Bytes.from copies value and cut reference apart.
 uint8[0] = 0;
-b1.get_byte_at(0); // 97
+b1.at(0); // 97
 // Initializing by new Bytes() just stores value and keep reference, for better performance
 uint8 = new Uint8Array([97, 98, 99]);
 b2 = new Bytes(uint8);
 b2.equal_to(b("abc")); // true
 uint8[0] = 0;
-b2.get_byte_at(0); // 0
+b2.at(0); // 0
 ```
 
 ### Python's `str(x)` is `x.toString()` in Javascript

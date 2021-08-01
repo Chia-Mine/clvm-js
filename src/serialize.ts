@@ -49,7 +49,7 @@ export function* atom_to_byte_iterator(atom: Bytes|None){
     return;
   }
   else if(size === 1){
-    if(atom.get_byte_at(0) <= MAX_SINGLE_BYTE){
+    if(atom.at(0) <= MAX_SINGLE_BYTE){
       yield atom;
       return;
     }
@@ -110,7 +110,7 @@ function _op_read_sexp(op_stack: TOpStack, val_stack: TValStack, f: Stream, to_s
   if(blob.length === 0){
     throw new Error("bad encoding");
   }
-  const b = blob.get_byte_at(0);
+  const b = blob.at(0);
   if(b === CONS_BOX_MARKER){
     op_stack.push(_op_cons);
     op_stack.push(_op_read_sexp);
@@ -145,7 +145,7 @@ function _op_consume_sexp(f: Stream){
   if(blob.length === 0){
     throw new Error("bad encoding");
   }
-  const b = blob.get_byte_at(0);
+  const b = blob.at(0);
   if(b === CONS_BOX_MARKER){
     return t(blob, 2);
   }

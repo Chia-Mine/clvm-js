@@ -145,7 +145,7 @@ export class Bytes {
     return this._b.length;
   }
   
-  public get_byte_at(i: number){
+  public at(i: number){
     return this._b[i] | 0;
   }
   
@@ -314,7 +314,7 @@ export function isIterable(v: any): v is unknown[] {
 
 export function isBytes(v: any): v is Bytes {
   return v && typeof v.length === "number"
-    && typeof v.get_byte_at === "function"
+    && typeof v.at === "function"
     && typeof v.raw === "function"
     && typeof v.data === "function"
     && typeof v.hex === "function"

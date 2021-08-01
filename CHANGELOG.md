@@ -8,6 +8,7 @@
 - Added GitHub Action
 ### Changed
 - Updated README.md
+- Changed method name `Bytes::get_byte_at` to `Bytes::at` (Breaking change)
 
 ## [0.0.19]
 

@@ -60,7 +60,7 @@ export function run_program(
     const b = sexp.atom as Bytes;
     
     let end_byte_cursor = 0;
-    while(end_byte_cursor < b.length && b.get_byte_at(end_byte_cursor) === 0){
+    while(end_byte_cursor < b.length && b.at(end_byte_cursor) === 0){
       end_byte_cursor += 1;
     }
     
@@ -71,7 +71,7 @@ export function run_program(
   
     // # create a bitmask for the most significant *set* bit
     // # in the last non-zero byte
-    const end_bitmask = msb_mask(b.get_byte_at(end_byte_cursor));
+    const end_bitmask = msb_mask(b.at(end_byte_cursor));
     
     let byte_cursor = b.length - 1;
     let bitmask = 0x01;
@@ -79,7 +79,7 @@ export function run_program(
       if(!isCons(env)){
         throw new EvalError("path into atom", env);
       }
-      if(b.get_byte_at(byte_cursor) & bitmask){
+      if(b.at(byte_cursor) & bitmask){
         env = env.rest();
       }
       else{
