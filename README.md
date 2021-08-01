@@ -1,10 +1,6 @@
 # clvm
 
 Javascript implementation of CLVM (Chia Lisp VM)  
-Still Work in progress.(Untested)  
-
-**v0.x.x is test purpose only!**  
-Please report bugs to https://github.com/Chia-Mine/clvm-js/issues
 
 ## Install
 ```shell
@@ -12,6 +8,11 @@ npm install clvm
 # or
 yarn add clvm
 ```
+
+## Compatibility
+This code is compatible with:
+- [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/1a5cb17895d8707f784a85180bc97d3c6ebe71a0...main)
 
 ## Example
 ```javascript
@@ -56,6 +57,92 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 If so, you can make your code fully synchronous.
 
 
+## Differences with Python's `clvm`
+Although I try hard to make it look like Python's `clvm`, there are things users should take it into account.  
+I put the code which absorbs language incompatibility into `src/__type_compaibility__.ts`, so if you're interested take a look at it.
+
+### There are no build-in `Tuple` type in Javascript
+When you want to create a tuple, you need to write like this:  
+```javascript
+const {t} = require("clvm"); 
+const aTuple = t(1, 2);
+
+// Tuple is Array-Like object
+aTuple[0] === 1; // true
+aTuple[1] === 2; // true
+
+// Tuple content cannot be changed
+aTuple[0] = 99;
+aTuple[0] === 99; // false
+aTuple[0] === 1; // true
+
+// Tuple accepts only 2 elements.
+const tuple2 = t(1, 2, 3);
+tuple2; // (1, 2)
+
+// You can check if a variable is a tuple
+const {isTuple} = require("clvm");
+isTuple([1, 2]); // false
+isTuple(t(1, 2)); // true
+```
+Just add `t` in front of tuple parenthesis `(1, 2)` and you get a tuple.  
+
+### There are no build-in `bytes` type in JavaScript
+This is the most notable difference with Python.  
+I used to be a JavaScript developer for several years, and sometimes I heard Python is slow and JavaScript is fast.  
+But working on the project, I truly surprised that Python can handle byte data really well in ways:  
+- Python's `bytes` is **immutable** and can be used as a dict key.
+- Python's `bytes` is fast and easy to write.  
+  `b'aaa' + b'bbb' == b'aaabbb'`, `b'a' * 3 == b'aaa'`
+- Python's `bytes` comparison is FAST.  
+  If you are interested, compare the performance of `test_very_long_blobs` in `tests/serialize_test.[ts|py]`  
+  See more details [here](https://github.com/Chia-Network/clvm/pull/100)
+
+```javascript
+const {b} = require("clvm");
+// Turns string to UTF-8 byte array.
+b("abc"); // will be { Uint8Array(3) [97,98,99] }
+b("あ"); // will be { Uint8Array(3) [227,129,130] }
+
+// If you want to do Byte comparison, use equal_to method.
+b("abc").equal_to(b("abc")); // true
+b("abc") === b("abc"); // false. Because it compares reference of Bytes instance.
+
+// Initialize Bytes instance with hex string
+const {h} = require("clvm");
+h("0x616263"); // will be { Uint8Array(3) [97,98,99] }
+h("616263"); // You can omit '0x' prefix
+h("0x616263").equal_to(b("abc")); // true
+
+// +: Bytes concat
+b("a").concat(b("b")); // === b("ab")
+// *: Bytes repeat
+b("a").repeat(3); // === b("aaa")
+
+// Bytes initialization
+const {Bytes} = require("clvm");
+uint8 = new Uint8Array([97, 98, 99]);
+b1 = Bytes.from(uint8);
+b1.equal_to(b("abc")); // true
+// Initializing by Bytes.from copies value and cut reference apart.
+uint8[0] = 0;
+b1.at(0); // 97
+// Initializing by new Bytes() just stores value and keep reference, for better performance
+uint8 = new Uint8Array([97, 98, 99]);
+b2 = new Bytes(uint8);
+b2.equal_to(b("abc")); // true
+uint8[0] = 0;
+b2.at(0); // 0
+```
+
+### Python's `str(x)` is `x.toString()` in Javascript
+If you want to stringify `SExp` or `Bytes`, just call `x.toString()` method.
+```javascript
+const {b, SExp, str} = require("clvm");
+b("あ").toString(); // "b'\\xe3\\x81\\x82'"
+SExp.to([1, [2, 3]]).toString(); // 'ff01ffff02ff038080'
+str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by the way.
+```
 
 ## clvm license
 `clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the

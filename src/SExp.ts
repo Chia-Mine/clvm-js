@@ -1,5 +1,5 @@
 import {G1Element} from "@chiamine/bls-signatures";
-import {int, None, Optional, str} from "./__python_types__";
+import {None, Optional} from "./__python_types__";
 import {CLVMObject, CLVMType} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";
 import {int_from_bytes, int_to_bytes} from "./casts";
@@ -10,8 +10,8 @@ import {EvalError} from "./EvalError";
 export type CastableType = SExp
 | CLVMType
 | Bytes
-| str
-| int
+| string
+| number
 | None
 | G1Element
 | CastableType[]
@@ -210,7 +210,7 @@ export class SExp implements CLVMType {
   }
   
   public nullp(){
-    return this.atom !== None && this.atom.raw().length === 0;
+    return this.atom !== None && this.atom.length === 0;
   }
   
   public as_int(){

@@ -29,7 +29,7 @@ function print_leaves(tree: SExp): string {
     if(a.length === 0){
       return "() ";
     }
-    return `${a.get_byte_at(0)} `;
+    return `${a.at(0)} `;
   }
   
   let ret = "";
@@ -45,7 +45,7 @@ function print_tree(tree: SExp): string {
     if(a.length === 0){
       return "() ";
     }
-    return `${a.get_byte_at(0)} `;
+    return `${a.at(0)} `;
   }
   
   let ret = "(";

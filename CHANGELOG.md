@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0]
+This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+
+### Removed
+- Removed `.dist` folder from git.  
+  - This folder made it harder to check diffs between versions.
+### Added
+- Added GitHub Action
+- Added `str()`, `repr()` utility functions.
+- Added `Bytes::subarray` to get bytes data without additional memory allocation/copy.
+### Changed
+- Updated README.md
+- Changed method name `Bytes::get_byte_at` to `Bytes::at` (Breaking change).
+### Deprecated
+- Deprecated python specific type definition such as `str`, `int`. Use `string`, `number` instead.
+
 ## [0.0.19]
 
 **There are 2 breaking changes.**  
@@ -148,6 +164,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[1.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.19...v1.0.0
 [0.0.19]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.18...v0.0.19
 [0.0.18]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.17...v0.0.18
 [0.0.17]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.16...v0.0.17

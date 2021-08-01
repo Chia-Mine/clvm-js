@@ -1,4 +1,4 @@
-import {int, None, uint8} from "./__python_types__";
+import {None} from "./__python_types__";
 import {SExp} from "./SExp";
 import {TToSexpF} from "./as_javascript";
 import {CLVMObject, isAtom, isCons} from "./CLVMObject";
@@ -13,7 +13,7 @@ import {
 import {EvalError} from "./EvalError";
 import {TOperatorDict} from "./operators";
 
-export type OpCallable = (opStack: OpStackType, valStack: ValStackType) => int;
+export type OpCallable = (opStack: OpStackType, valStack: ValStackType) => number;
 export type ValStackType = SExp[];
 export type OpStackType = OpCallable[];
 export type TPreEvalF = (v1: SExp, v2: SExp) => unknown;
@@ -33,7 +33,7 @@ export function to_pre_eval_op(pre_eval_f: TPreEvalF, to_sexp_f: TToSexpF){
   };
 }
 
-export function msb_mask(byte: uint8){
+export function msb_mask(byte: number){
   byte |= byte >> 1;
   byte |= byte >> 2;
   byte |= byte >> 4;
@@ -46,11 +46,11 @@ export function run_program(
   operator_lookup: TOperatorDict,
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
-): Tuple<int, CLVMObject>{
+): Tuple<number, CLVMObject>{
   program = SExp.to(program);
   const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp.to) : None;
   
-  function traverse_path(sexp: SExp, env: SExp): Tuple<int, SExp> {
+  function traverse_path(sexp: SExp, env: SExp): Tuple<number, SExp> {
     let cost = PATH_LOOKUP_BASE_COST;
     cost += PATH_LOOKUP_COST_PER_LEG;
     if(sexp.nullp()){
@@ -60,7 +60,7 @@ export function run_program(
     const b = sexp.atom as Bytes;
     
     let end_byte_cursor = 0;
-    while(end_byte_cursor < b.length && b.get_byte_at(end_byte_cursor) === 0){
+    while(end_byte_cursor < b.length && b.at(end_byte_cursor) === 0){
       end_byte_cursor += 1;
     }
     
@@ -71,7 +71,7 @@ export function run_program(
   
     // # create a bitmask for the most significant *set* bit
     // # in the last non-zero byte
-    const end_bitmask = msb_mask(b.get_byte_at(end_byte_cursor));
+    const end_bitmask = msb_mask(b.at(end_byte_cursor));
     
     let byte_cursor = b.length - 1;
     let bitmask = 0x01;
@@ -79,7 +79,7 @@ export function run_program(
       if(!isCons(env)){
         throw new EvalError("path into atom", env);
       }
-      if(b.get_byte_at(byte_cursor) & bitmask){
+      if(b.at(byte_cursor) & bitmask){
         env = env.rest();
       }
       else{
@@ -95,7 +95,7 @@ export function run_program(
     return t(cost, env);
   }
   
-  function swap_op(op_stack: OpStackType, value_stack: ValStackType): int {
+  function swap_op(op_stack: OpStackType, value_stack: ValStackType): number {
     const v2 = value_stack.pop() as SExp;
     const v1 = value_stack.pop() as SExp;
     value_stack.push(v2);
@@ -103,14 +103,14 @@ export function run_program(
     return 0;
   }
   
-  function cons_op (op_stack: OpStackType, value_stack: ValStackType): int {
+  function cons_op (op_stack: OpStackType, value_stack: ValStackType): number {
     const v1 = value_stack.pop() as SExp;
     const v2 = value_stack.pop() as SExp;
     value_stack.push(v1.cons(v2));
     return 0;
   }
   
-  function eval_op(op_stack: OpStackType, value_stack: ValStackType): int {
+  function eval_op(op_stack: OpStackType, value_stack: ValStackType): number {
     if(pre_eval_op){
       pre_eval_op(op_stack, value_stack);
     }
@@ -122,7 +122,7 @@ export function run_program(
     // # put a bunch of ops on op_stack
     if(!isCons(sexp)){
       // # sexp is an atom
-      const [cost, r] = traverse_path(sexp, args) as [int, SExp];
+      const [cost, r] = traverse_path(sexp, args) as [number, SExp];
       value_stack.push(r);
       return cost;
     }
@@ -162,7 +162,7 @@ export function run_program(
     return 1;
   }
   
-  function apply_op(op_stack: OpStackType, value_stack: ValStackType): int {
+  function apply_op(op_stack: OpStackType, value_stack: ValStackType): number {
     const operand_list = value_stack.pop() as SExp;
     const operator = value_stack.pop() as SExp;
     if(!isAtom(operator)){
@@ -182,7 +182,7 @@ export function run_program(
       return APPLY_COST;
     }
     
-    const [additional_cost, r] = operator_lookup(op, operand_list) as [int, CLVMObject];
+    const [additional_cost, r] = operator_lookup(op, operand_list) as [number, CLVMObject];
     value_stack.push(r as SExp);
     return additional_cost;
   }

@@ -41,12 +41,11 @@ import {
 } from "./costs";
 import {Bytes, Stream, t, Tuple} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
-import {int, str} from "./__python_types__";
 import {int_from_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
 import {G1Element_add, G1Element_from_bytes, getBLSModule} from "./__bls_signatures__";
 
-export function malloc_cost(cost: int, atom: SExp){
+export function malloc_cost(cost: number, atom: SExp){
   if(!atom.atom){
     throw new EvalError("atom is None", atom);
   }
@@ -71,7 +70,7 @@ export function op_sha256(args: SExp){
   return malloc_cost(cost, SExp.to(Bytes.from(h.finalize().toUint8Array())));
 }
 
-export function* args_as_ints(op_name: str, args: SExp){
+export function* args_as_ints(op_name: string, args: SExp){
   for(const arg of args.as_iter()){
     if(arg.pair || !arg.atom){
       throw new EvalError(`${op_name} requires int args`, arg);
@@ -80,7 +79,7 @@ export function* args_as_ints(op_name: str, args: SExp){
   }
 }
 
-export function* args_as_int32(op_name: str, args: SExp){
+export function* args_as_int32(op_name: string, args: SExp){
   for(const arg of args.as_iter()){
     if(arg.pair || !arg.atom){
       throw new EvalError(`${op_name} requires int32 args`, arg);
@@ -92,7 +91,7 @@ export function* args_as_int32(op_name: str, args: SExp){
   }
 }
 
-export function args_as_int_list(op_name: str, args: SExp, count: int){
+export function args_as_int_list(op_name: string, args: SExp, count: number){
   const int_list: Array<Tuple<number, number>> = [];
   for(const _ of args_as_ints(op_name, args)) int_list.push(_);
   
@@ -103,7 +102,7 @@ export function args_as_int_list(op_name: str, args: SExp, count: int){
   return int_list;
 }
 
-export function* args_as_bools(op_name: str, args: SExp){
+export function* args_as_bools(op_name: string, args: SExp){
   for(const arg of args.as_iter()){
     const v = arg.atom;
     if(v?.equal_to(Bytes.NULL)){
@@ -115,7 +114,7 @@ export function* args_as_bools(op_name: str, args: SExp){
   }
 }
 
-export function args_as_bool_list(op_name: str, args: SExp, count: int){
+export function args_as_bool_list(op_name: string, args: SExp, count: number){
   const bool_list: SExp[] = [];
   for(const _ of args_as_bools(op_name, args)) bool_list.push(_);
   
@@ -301,7 +300,7 @@ export function op_substr(args: SExp){
     throw new EvalError("invalid indices for substr", args);
   }
   
-  const s = s0.slice(i1, i2);
+  const s = s0.subarray(i1, i2);
   const cost = 1;
   return t(cost, SExp.to(s));
 }
@@ -369,7 +368,7 @@ export function op_lsh(args: SExp){
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function binop_reduction(op_name: str, initial_value: number, args: SExp, op_f: Function){
+export function binop_reduction(op_name: string, initial_value: number, args: SExp, op_f: Function){
   let total = initial_value;
   let arg_size = 0;
   let cost = LOG_BASE_COST;
@@ -384,7 +383,7 @@ export function binop_reduction(op_name: str, initial_value: number, args: SExp,
 }
 
 export function op_logand(args: SExp){
-  const binop = (a: int, b: int) => {
+  const binop = (a: number, b: number) => {
     a &= b;
     return a;
   }
@@ -393,7 +392,7 @@ export function op_logand(args: SExp){
 }
 
 export function op_logior(args: SExp){
-  const binop = (a: int, b: int) => {
+  const binop = (a: number, b: number) => {
     a |= b;
     return a;
   }
@@ -402,7 +401,7 @@ export function op_logior(args: SExp){
 }
 
 export function op_logxor(args: SExp){
-  const binop = (a: int, b: int) => {
+  const binop = (a: number, b: number) => {
     a ^= b;
     return a;
   }
