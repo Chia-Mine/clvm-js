@@ -4,6 +4,8 @@
 ### Removed
 - Removed `.dist` folder from git.  
   - This folder made it harder to check diffs between versions.
+### Added
+- Added GitHub Action
 
 ## [0.0.19]
 
