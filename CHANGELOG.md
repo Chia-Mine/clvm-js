@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.0]
+### Removed
+- Removed `.dist` folder from git.  
+  - This folder made it harder to check diffs between versions.
+
 ## [0.0.19]
 
 **There are 2 breaking changes.**  
@@ -148,6 +153,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[1.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.19...v1.0.0
 [0.0.19]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.18...v0.0.19
 [0.0.18]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.17...v0.0.18
 [0.0.17]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.16...v0.0.17
