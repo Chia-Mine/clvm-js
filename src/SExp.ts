@@ -210,7 +210,7 @@ export class SExp implements CLVMType {
   }
   
   public nullp(){
-    return this.atom !== None && this.atom.raw().length === 0;
+    return this.atom !== None && this.atom.length === 0;
   }
   
   public as_int(){
