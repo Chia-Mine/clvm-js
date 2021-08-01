@@ -168,7 +168,14 @@ export class Bytes {
   
   public slice(start: number, length?: number){
     const len = typeof length === "number" ? length : (this.length - start);
-    return new Bytes(this._b.slice(start, start+len));
+    const ui8_clone = this._b.slice(start, start+len);
+    return new Bytes(ui8_clone);
+  }
+  
+  public subarray(start: number, length?: number){
+    const len = typeof length === "number" ? length : (this.length - start);
+    const ui8_raw = this._b.subarray(start, start+len);
+    return new Bytes(ui8_raw);
   }
   
   public as_word(){
@@ -231,8 +238,10 @@ export class Bytes {
     if(this.length !== other.length){
       return this.length > other.length ? 1 : -1;
     }
-    const dv_self = new DataView(this.raw().buffer);
-    const dv_other = new DataView(other.raw().buffer);
+    const self_raw_byte = this._b;
+    const dv_self = new DataView(self_raw_byte.buffer, self_raw_byte.byteOffset, self_raw_byte.byteLength);
+    const other_raw_byte = other.raw();
+    const dv_other = new DataView(other_raw_byte.buffer, other_raw_byte.byteOffset, other_raw_byte.byteLength);
   
     const ui32MaxCount = (this.length / 4) | 0;
     for(let i=0;i<ui32MaxCount;i++){
@@ -418,7 +427,7 @@ export class Stream {
     }
     
     if(this.seek + size <= this.length){
-      const u8 = this._buffer.slice(this.seek, this.seek + size);
+      const u8 = this._buffer.subarray(this.seek, this.seek + size);
       this.seek += size;
       return new Bytes(u8);
     }

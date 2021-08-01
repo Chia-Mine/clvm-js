@@ -206,7 +206,7 @@ export function* args_len(op_name: string, args: SExp){
 export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObject> {
   // # any opcode starting with ffff is reserved (i.e. fatal error)
   // # opcodes are not allowed to be empty
-  if(op.length === 0 || op.slice(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
+  if(op.length === 0 || op.subarray(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
     throw new EvalError("reserved operator", SExp.to(op));
   }
   
@@ -222,7 +222,7 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObj
     throw new EvalError("invalid operator", SExp.to(op));
   }
   
-  const cost_multiplier = int_from_bytes(op.slice(0, op.length-1)) + 1;
+  const cost_multiplier = int_from_bytes(op.subarray(0, op.length-1)) + 1;
   /*
     # 0 = constant
     # 1 = like op_add/op_sub

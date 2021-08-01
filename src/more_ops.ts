@@ -300,7 +300,7 @@ export function op_substr(args: SExp){
     throw new EvalError("invalid indices for substr", args);
   }
   
-  const s = s0.slice(i1, i2);
+  const s = s0.subarray(i1, i2);
   const cost = 1;
   return t(cost, SExp.to(s));
 }

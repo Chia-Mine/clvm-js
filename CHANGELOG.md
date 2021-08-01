@@ -7,9 +7,10 @@
 ### Added
 - Added GitHub Action
 - Added `str()`, `repr()` utility functions.
+- Added `Bytes::subarray` to get bytes data without additional memory allocation/copy.
 ### Changed
 - Updated README.md
-- Changed method name `Bytes::get_byte_at` to `Bytes::at` (Breaking change)
+- Changed method name `Bytes::get_byte_at` to `Bytes::at` (Breaking change).
 ### Deprecated
 - Deprecated python specific type definition such as `str`, `int`. Use `string`, `number` instead.
 

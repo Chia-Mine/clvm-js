@@ -106,7 +106,7 @@ b("あ"); // will be { Uint8Array(3) [227,129,130] }
 
 // If you want to do Byte comparison, use equal_to method.
 b("abc").equal_to(b("abc")); // true
-b("abc") === b("abc"); // false. Because it is just an instance of a Bytes class and not immutable.
+b("abc") === b("abc"); // false. Because it compares reference of Bytes instance.
 
 // Initialize Bytes instance with hex string
 const {h} = require("clvm");
@@ -138,9 +138,10 @@ b2.at(0); // 0
 ### Python's `str(x)` is `x.toString()` in Javascript
 If you want to stringify `SExp` or `Bytes`, just call `x.toString()` method.
 ```javascript
-const {b, SExp} = require("clvm");
+const {b, SExp, str} = require("clvm");
 b("あ").toString(); // "b'\\xe3\\x81\\x82'"
 SExp.to([1, [2, 3]]).toString(); // 'ff01ffff02ff038080'
+str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by the way.
 ```
 
 ## clvm license

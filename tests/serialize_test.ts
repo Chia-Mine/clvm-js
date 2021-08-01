@@ -18,8 +18,8 @@ class InfiniteStream extends Stream {
   public read(n: number){
     let ret = b("");
     while(n > 0 && this._buf.length > 0){
-      ret = ret.concat(this._buf.slice(0,1));
-      this._buf = this._buf.slice(1);
+      ret = ret.concat(this._buf.subarray(0,1));
+      this._buf = this._buf.subarray(1);
       n -= 1;
     }
     ret = ret.concat(b(" ").repeat(n));
@@ -85,7 +85,7 @@ test("test_long_blobs", () =>{
   text = text.repeat(300);
   
   for(let _=0;_<text.length;_++){
-    const t1 = text.slice(0, _);
+    const t1 = text.subarray(0, _);
     check_serde(t1);
   }
 });

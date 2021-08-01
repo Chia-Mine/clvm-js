@@ -187,7 +187,7 @@ function _consume_atom(f: Stream, b: number){
   if(blob.length !== size){
     throw new Error("bad encoding");
   }
-  return Bytes.from([b]).concat(size_blob.slice(1)).concat(blob);
+  return Bytes.from([b]).concat(size_blob.subarray(1)).concat(blob);
 }
 
 /*
