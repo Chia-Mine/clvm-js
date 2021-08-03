@@ -31,6 +31,8 @@ import {
   MUL_COST_PER_OP,
   MUL_LINEAR_COST_PER_BYTE,
   MUL_SQUARE_COST_PER_BYTE_DIVIDER,
+  PUBKEY_BASE_COST,
+  PUBKEY_COST_PER_BYTE,
   POINT_ADD_BASE_COST,
   POINT_ADD_COST_PER_ARG,
   SHA256_BASE_COST,
@@ -39,9 +41,9 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, Stream, t, Tuple} from "./__type_compatibility__";
+import {Bytes, list, Stream, t} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
-import {int_from_bytes, limbs_for_int} from "./casts";
+import {bigint_from_bytes, bigint_to_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
 import {G1Element_add, G1Element_from_bytes, getBLSModule} from "./__bls_signatures__";
 
@@ -75,7 +77,7 @@ export function* args_as_ints(op_name: string, args: SExp){
     if(arg.pair || !arg.atom){
       throw new EvalError(`${op_name} requires int args`, arg);
     }
-    yield t(arg.as_int(), arg.atom.length);
+    yield t(arg.as_bigint(), arg.atom.length);
   }
 }
 
@@ -92,8 +94,7 @@ export function* args_as_int32(op_name: string, args: SExp){
 }
 
 export function args_as_int_list(op_name: string, args: SExp, count: number){
-  const int_list: Array<Tuple<number, number>> = [];
-  for(const _ of args_as_ints(op_name, args)) int_list.push(_);
+  const int_list = list(args_as_ints(op_name, args));
   
   if(int_list.length !== count){
     const plural = count !== 1 ? "s" : "";
@@ -115,8 +116,7 @@ export function* args_as_bools(op_name: string, args: SExp){
 }
 
 export function args_as_bool_list(op_name: string, args: SExp, count: number){
-  const bool_list: SExp[] = [];
-  for(const _ of args_as_bools(op_name, args)) bool_list.push(_);
+  const bool_list = list(args_as_bools(op_name, args));
   
   if(bool_list.length !== count){
     const plural = count !== 1 ? "s" : "";
@@ -126,12 +126,12 @@ export function args_as_bool_list(op_name: string, args: SExp, count: number){
 }
 
 export function op_add(args: SExp){
-  let total = 0;
+  let total = BigInt(0);
   let cost = ARITH_BASE_COST;
   let arg_size = 0;
   
   for(const ints of args_as_ints("+", args)){
-    const [r, l] = ints;
+    const [r, l] = ints as [bigint, number];
     total += r;
     arg_size += l;
     cost += ARITH_COST_PER_ARG;
@@ -146,13 +146,13 @@ export function op_subtract(args: SExp){
     return malloc_cost(cost, SExp.to(0));
   }
   
-  let sign = 1;
-  let total = 0;
+  let sign = BigInt(1);
+  let total = BigInt(0);
   let arg_size = 0;
   for(const ints of args_as_ints("-", args)){
-    const [r, l] = ints;
+    const [r, l] = ints as [bigint, number];
     total += sign * r;
-    sign = -1;
+    sign = BigInt(-1);
     arg_size += l;
     cost += ARITH_COST_PER_BYTE;
   }
@@ -168,10 +168,10 @@ export function op_multiply(args: SExp){
   if(res.done){
     return malloc_cost(cost, SExp.to(1));
   }
-  let [v, vs] = res.value;
+  let [v, vs] = res.value as [bigint, number];
   
   for(const o of operands){
-    const [r, rs] = o;
+    const [r, rs] = o as [bigint, number];
     cost += MUL_COST_PER_OP;
     cost += (rs + vs) * MUL_LINEAR_COST_PER_BYTE;
     cost += ((rs * vs) / MUL_SQUARE_COST_PER_BYTE_DIVIDER) >> 0;
@@ -184,13 +184,13 @@ export function op_multiply(args: SExp){
 export function op_divmod(args: SExp){
   let cost = DIVMOD_BASE_COST;
   const [t1, t2] = args_as_int_list("divmod", args, 2);
-  const [i0, l0] = t1;
-  const [i1, l1] = t2;
-  if(i1 === 0){
+  const [i0, l0] = t1 as [bigint, number];
+  const [i1, l1] = t2 as [bigint, number];
+  if(i1 === BigInt(0)){
     throw new EvalError("divmod with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIVMOD_COST_PER_BYTE;
-  const q = (i0 / i1) >> 0;
+  const q = i0 / i1;
   const r = i0 % i1;
   const q1 = SExp.to(q);
   const r1 = SExp.to(r);
@@ -201,28 +201,27 @@ export function op_divmod(args: SExp){
 export function op_div(args: SExp){
   let cost = DIV_BASE_COST;
   const [t1, t2] = args_as_int_list("/", args, 2);
-  const [i0, l0] = t1;
-  const [i1, l1] = t2;
-  if(i1 === 0){
+  const [i0, l0] = t1 as [bigint, number];
+  const [i1, l1] = t2 as [bigint, number];
+  if(i1 === BigInt(0)){
     throw new EvalError("div with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIV_COST_PER_BYTE;
-  const q = (i0 / i1) >> 0;
+  const q = i0 / i1;
   return malloc_cost(cost, SExp.to(q));
 }
 
 export function op_gr(args: SExp){
   const [t1, t2] = args_as_int_list(">", args, 2);
-  const [i0, l0] = t1;
-  const [i1, l1] = t2;
+  const [i0, l0] = t1 as [bigint, number];
+  const [i1, l1] = t2 as [bigint, number];
   let cost = GR_BASE_COST;
   cost += (l0+l1)*GR_COST_PER_BYTE;
   return t(cost, i0 > i1 ? SExp.TRUE : SExp.FALSE);
 }
 
 export function op_gr_bytes(args: SExp){
-  const arg_list: SExp[] = [];
-  for(const _ of args.as_iter()) arg_list.push(_);
+  const arg_list = list(args.as_iter());
   if(arg_list.length !== 2){
     throw new EvalError(">s takes exactly 2 arguments", args);
   }
@@ -237,7 +236,30 @@ export function op_gr_bytes(args: SExp){
   return t(cost, b0.compare(b1) > 0/* b0 > b1 */ ? SExp.TRUE : SExp.FALSE);
 }
 
-export function op_pubkey_for_exp(items: SExp){
+export function op_pubkey_for_exp(args: SExp){
+  const t0 = args_as_int_list("pubkey_for_exp", args, 1)[0] as [bigint, number];
+  let i0 = t0[0];
+  const l0 = t0[1];
+  i0 = i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001");
+  const {PrivateKey} = getBLSModule();
+  const bytes = new Uint8Array(32);
+  const u0 =bigint_to_bytes(i0).raw();
+  if(u0.length > 0){
+    bytes.set(u0, 32 - u0.length);
+  }
+  const exponent = PrivateKey.from_bytes(bytes, false);
+  try{
+    const r = SExp.to(Bytes.from(exponent.get_g1(), "G1Element"));
+    let cost = PUBKEY_BASE_COST;
+    cost += l0 * PUBKEY_COST_PER_BYTE;
+    return malloc_cost(cost, r);
+  }
+  catch(e){
+    throw new EvalError(`problem in op_pubkey_for_exp: ${e}`, args);
+  }
+}
+
+export function op_point_add(items: SExp){
   let cost = POINT_ADD_BASE_COST;
   const {G1Element} = getBLSModule();
   let p = new G1Element();
@@ -247,7 +269,7 @@ export function op_pubkey_for_exp(items: SExp){
       throw new EvalError("point_add on list", _);
     }
     try{
-      const atom_g1 = G1Element_from_bytes(_.atom.data());
+      const atom_g1 = G1Element_from_bytes(_.atom.raw());
       p = G1Element_add(p, atom_g1);
       cost += POINT_ADD_COST_PER_ARG;
     }
@@ -322,12 +344,12 @@ export function op_concat(args: SExp){
 
 export function op_ash(args: SExp){
   const [t1, t2] = args_as_int_list("ash", args, 2);
-  const [i0, l0] = t1;
-  const [i1, l1] = t2;
+  const [i0, l0] = t1 as [bigint, number];
+  const [i1, l1] = t2 as [bigint, number];
   if(l1 > 4){
     throw new EvalError("ash requires int32 args (with no leading zeros)", args.rest().first());
   }
-  else if(Math.abs(i1) > 65535){
+  else if((i1 >= BigInt(0) ? i1 : -i1) > BigInt(65535)){
     throw new EvalError("shift too large", SExp.to(i1));
   }
   let r;
@@ -344,17 +366,17 @@ export function op_ash(args: SExp){
 
 export function op_lsh(args: SExp){
   const [t1, t2] = args_as_int_list("lsh", args, 2);
-  const l0 = t1[1];
-  const [i1, l1] = t2;
+  const l0 = t1[1] as number;
+  const [i1, l1] = t2 as [bigint, number];
   if(l1 > 4){
     throw new EvalError("lsh requires int32 args (with no leading zeros)", args.rest().first());
   }
-  else if(Math.abs(i1) > 65535){
+  else if(i1 >= BigInt(0) ? i1 : -i1 > BigInt(65535)){
     throw new EvalError("shift too large", SExp.to(i1));
   }
   // we actually want i0 to be an *unsigned* int
   const a0 = args.first().atom;
-  const i0 = int_from_bytes(a0);
+  const i0 = bigint_from_bytes(a0);
   let r;
   if(i1 >= 0){
     r = i0 << i1;
@@ -373,7 +395,7 @@ export function binop_reduction(op_name: string, initial_value: number, args: SE
   let arg_size = 0;
   let cost = LOG_BASE_COST;
   for(const t of args_as_ints(op_name, args)){
-    const [r, l] = t;
+    const [r, l] = t as [bigint, number];
     total = op_f(total, r);
     arg_size += l;
     cost += LOG_COST_PER_ARG;
@@ -411,7 +433,7 @@ export function op_logxor(args: SExp){
 
 export function op_lognot(args: SExp){
   const t = args_as_int_list("lognot", args, 1);
-  const [i0, l0] = t[0];
+  const [i0, l0] = t[0] as [bigint, number];
   const cost = LOGNOT_BASE_COST + l0 * LOGNOT_COST_PER_BYTE;
   return malloc_cost(cost, SExp.to(~i0));
 }

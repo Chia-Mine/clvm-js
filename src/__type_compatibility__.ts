@@ -102,6 +102,9 @@ export class Bytes {
       return new Bytes(Uint8Array.from(value));
     }
     else if(typeof value === "string"){
+      if(!value){
+        return new Bytes();
+      }
       if(type === "hex"){
         value = value.replace(/^0x/, "");
         return new Bytes(Hex.parse(value).toUint8Array());

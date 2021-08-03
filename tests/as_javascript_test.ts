@@ -142,6 +142,13 @@ test("test_as_int", () => {
   expect(SExp.to(fh("00ff")).as_int()).toBe(255);
 });
 
+test("test_as_bigint", () => {
+  expect(SExp.to(fh("80")).as_bigint()).toBe(BigInt(-128));
+  expect(SExp.to(fh("ff")).as_bigint()).toBe(BigInt(-1));
+  expect(SExp.to(fh("0080")).as_bigint()).toBe(BigInt(128));
+  expect(SExp.to(fh("00ff")).as_bigint()).toBe(BigInt(255));
+});
+
 test("test_cons", () => {
   // list
   expect(

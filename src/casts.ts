@@ -1,16 +1,37 @@
 import {None} from "./__python_types__";
-import {Bytes, h} from "./__type_compatibility__";
+import {Bytes} from "./__type_compatibility__";
 
-// In javascript, max safe integer is 2**53-1 (53bit)
-// Surprisingly, parseInt() can parse over 32bit integer. 
 export function int_from_bytes(b: Bytes|None): number {
   if(!b || b.length === 0){
     return 0;
   }
-  const unsigned32 = parseInt(b.hex(), 16);
+  else if(b.length*8 > 52){
+    throw new Error("Cannot convert Bytes to Integer larger than 52bit. Use bigint_from_bytes instead.");
+  }
+  let unsigned32 = 0;
+  for(let i=b.length-1;i>=0;i--){
+    const byte = b.at(i);
+    unsigned32 += byte * (256**((b.length-1)-i));
+  }
   // If the first bit is 1, it is recognized as a negative number.
   if(b.at(0) & 0x80){
-    return unsigned32 - (1 << (b.length*8));
+    return unsigned32 - (256**b.length);
+  }
+  return unsigned32;
+}
+
+export function bigint_from_bytes(b: Bytes|None): bigint {
+  if(!b || b.length === 0){
+    return BigInt(0);
+  }
+  let unsigned32 = BigInt(0);
+  for(let i=b.length-1;i>=0;i--){
+    const byte = b.at(i);
+    unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt((b.length-1)-i)));
+  }
+  // If the first bit is 1, it is recognized as a negative number.
+  if(b.at(0) & 0x80){
+    return unsigned32 - (BigInt(1) << BigInt(b.length*8));
   }
   return unsigned32;
 }
@@ -23,26 +44,58 @@ export function int_to_bytes(v: number): Bytes {
     return Bytes.NULL;
   }
   
-  const byte_count = ((v < 0 ? -v : v).toString(2).length + 8) >> 3;
-  let hexStr = (v >>> 0).toString(16);
-  if(v >= 0){
-    hexStr = hexStr.length % 2 ? `0${hexStr}` : hexStr;
+  let byte_count = 1;
+  if(v > 0){
+    while(2**(8*byte_count - 1) - 1 < v){
+      byte_count++;
+    }
   }
-  while(hexStr.length / 2 < byte_count){
-    hexStr = "00" + hexStr;
+  else if(v < 0){
+    while(2**(8*byte_count - 1) < -v){
+      byte_count++;
+    }
   }
   
-  while(hexStr.length > 2 && hexStr.substr(0, 2) === (parseInt(hexStr.substr(2, 2), 16) & 0x80 ? "ff" : "00")){
-    hexStr = hexStr.substr(2);
+  const needExtraByte = v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0;
+  const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
+  for(let i=0;i<byte_count;i++){
+    const j = needExtraByte ? i+1 : i;
+    u8[j] = (v >> (byte_count-i-1)*8) & 0xff;
   }
   
-  return h(hexStr);
+  return new Bytes(u8);
+}
+
+export function bigint_to_bytes(v: bigint): Bytes {
+  if(v === BigInt(0)){
+    return Bytes.NULL;
+  }
+  let byte_count = 1;
+  if(v > 0){
+    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - BigInt(1)) - BigInt(1) < v){
+      byte_count++;
+    }
+  }
+  else if(v < 0){
+    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - BigInt(1)) < -v){
+      byte_count++;
+    }
+  }
+  
+  const needExtraByte = v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0);
+  const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
+  for(let i=0;i<byte_count;i++){
+    const j = needExtraByte ? i+1 : i;
+    u8[j] = Number((v >> (BigInt(byte_count-i-1))*BigInt(8)) & BigInt(0xff));
+  }
+  
+  return new Bytes(u8);
 }
 
 /**
  * Return the number of bytes required to represent this integer.
  * @param {number} v
  */
-export function limbs_for_int(v: number): number {
-  return ((v < 0 ? -v : v).toString(2).length + 7) >> 3;
+export function limbs_for_int(v: number|bigint): number {
+  return ((v >= 0 ? v : -v).toString(2).length + 7) >> 3;
 }

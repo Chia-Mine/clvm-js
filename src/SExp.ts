@@ -2,7 +2,7 @@ import {G1Element} from "@chiamine/bls-signatures";
 import {None, Optional} from "./__python_types__";
 import {CLVMObject, CLVMType} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";
-import {int_from_bytes, int_to_bytes} from "./casts";
+import {bigint_from_bytes, bigint_to_bytes, int_from_bytes, int_to_bytes} from "./casts";
 import {sexp_to_stream} from "./serialize";
 import {as_javascript} from "./as_javascript";
 import {EvalError} from "./EvalError";
@@ -12,6 +12,7 @@ export type CastableType = SExp
 | Bytes
 | string
 | number
+| bigint
 | None
 | G1Element
 | CastableType[]
@@ -39,6 +40,9 @@ export function convert_atom_to_bytes(v: any): Bytes {
   }
   else if(typeof v === "boolean"){ // Tips. In Python, isinstance(True, int) == True. 
     return int_to_bytes(v ? 1 : 0);
+  }
+  else if(typeof v === "bigint"){
+    return bigint_to_bytes(v);
   }
   else if(v === None || !v){
     return Bytes.NULL;
@@ -215,6 +219,10 @@ export class SExp implements CLVMType {
   
   public as_int(){
     return int_from_bytes(this.atom);
+  }
+  
+  public as_bigint(){
+    return bigint_from_bytes(this.atom);
   }
   
   public as_bin(){

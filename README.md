@@ -81,9 +81,11 @@ const tuple2 = t(1, 2, 3);
 tuple2; // (1, 2)
 
 // You can check if a variable is a tuple
-const {isTuple} = require("clvm");
+const {isTuple, isList} = require("clvm");
 isTuple([1, 2]); // false
 isTuple(t(1, 2)); // true
+isList([1, 2]); // true
+isList(t(1, 2)); // false
 ```
 Just add `t` in front of tuple parenthesis `(1, 2)` and you get a tuple.  
 
@@ -133,6 +135,12 @@ b2 = new Bytes(uint8);
 b2.equal_to(b("abc")); // true
 uint8[0] = 0;
 b2.at(0); // 0
+
+// Check byte instance
+const {isBytes} = require("clvm");
+isBytes(b('aaa')); // true
+isBytes(h('0xfe')); // true
+isBytes(new Bytes()); // true
 ```
 
 ### Python's `str(x)` is `x.toString()` in Javascript
