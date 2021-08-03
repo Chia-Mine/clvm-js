@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.2]
+This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+
+### Fixed
+- Fixed an issue where `op_pubkey_for_exp` was missing.
+- Fixed an issue where arithmetic op of atoms more than 32 bit integer did not work.
+### Added
+- Added `bigint_to_bytes` function in `src/casts.ts`
+- Added tests for Bytes-BigInt conversion.
+
 ## [1.0.1]
 This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
 
@@ -170,6 +180,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[1.0.2]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.19...v1.0.0
 [0.0.19]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.18...v0.0.19
