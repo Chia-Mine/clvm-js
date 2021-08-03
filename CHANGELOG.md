@@ -5,7 +5,7 @@ This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](htt
 
 ### Fixed
 - Fixed an issue where `op_pubkey_for_exp` was missing.
-- Fixed an issue where arithmetic op of atoms more than 32 bit integer did not work.
+- Fixed an issue where arithmetic op of atoms larger than 32 bit integer did not work.
 ### Added
 - Added `bigint_to_bytes` function in `src/casts.ts`
 - Added tests for Bytes-BigInt conversion.
