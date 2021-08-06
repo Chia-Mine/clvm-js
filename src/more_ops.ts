@@ -455,8 +455,7 @@ export function op_not(args: SExp){
 }
 
 export function op_any(args: SExp){
-  const items: SExp[] = [];
-  for(const _ of args_as_bools("any", args)) items.push(_);
+  const items = list(args_as_bools("any", args));
   const cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
   let r = SExp.FALSE;
   for(const v of items){
@@ -472,8 +471,7 @@ export function op_any(args: SExp){
 }
 
 export function op_all(args: SExp){
-  const items: SExp[] = [];
-  for(const _ of args_as_bools("all", args)) items.push(_);
+  const items = list(args_as_bools("all", args));
   const cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
   let r = SExp.TRUE;
   for(const v of items){
