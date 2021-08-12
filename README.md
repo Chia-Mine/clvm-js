@@ -11,8 +11,8 @@ yarn add clvm
 
 ## Compatibility
 This code is compatible with:
-- [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
-  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/1a5cb17895d8707f784a85180bc97d3c6ebe71a0...main)
+- [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/ab4560900cf475ff515054bec0ca9a4491aca366...main)
 
 ## Example
 ```javascript
@@ -58,7 +58,7 @@ If so, you can make your code fully synchronous.
 
 
 ## Differences with Python's `clvm`
-Although I try hard to make it look like Python's `clvm`, there are things users should take it into account.  
+Although I try hard to make it look like Python's `clvm`, there are things users should be aware of.  
 I put the code which absorbs language incompatibility into `src/__type_compaibility__.ts`, so if you're interested take a look at it.
 
 ### There are no build-in `Tuple` type in Javascript
@@ -151,6 +151,12 @@ b("あ").toString(); // "b'\\xe3\\x81\\x82'"
 SExp.to([1, [2, 3]]).toString(); // 'ff01ffff02ff038080'
 str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by the way.
 ```
+
+### Calculation of division/modulo against negative number is different
+|Python|JavaScript|
+|------|----------|
+|`-8 // 5 == -2`|`-8n / 5n === -1n`|
+|`-8 % 5 == 2`|`-8n % 5n === -3n`|
 
 ## clvm license
 `clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the

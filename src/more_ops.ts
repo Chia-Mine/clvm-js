@@ -41,7 +41,7 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, list, Stream, t} from "./__type_compatibility__";
+import {Bytes, list, Stream, t, division, modulo} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 import {bigint_from_bytes, bigint_to_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
@@ -190,8 +190,8 @@ export function op_divmod(args: SExp){
     throw new EvalError("divmod with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIVMOD_COST_PER_BYTE;
-  const q = i0 / i1;
-  const r = i0 % i1;
+  const q = division(i0, i1); // i0 / i1
+  const r = modulo(i0, i1); // i0 % i1
   const q1 = SExp.to(q);
   const r1 = SExp.to(r);
   cost += ((q1.atom as Bytes).length + (r1.atom as Bytes).length) * MALLOC_COST_PER_BYTE;
@@ -207,7 +207,7 @@ export function op_div(args: SExp){
     throw new EvalError("div with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIV_COST_PER_BYTE;
-  const q = i0 / i1;
+  const q = division(i0, i1); // i0 / i1
   return malloc_cost(cost, SExp.to(q));
 }
 
@@ -240,7 +240,7 @@ export function op_pubkey_for_exp(args: SExp){
   const t0 = args_as_int_list("pubkey_for_exp", args, 1)[0] as [bigint, number];
   let i0 = t0[0];
   const l0 = t0[1];
-  i0 = i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001");
+  i0 = modulo(i0, BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")); // i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")
   const {PrivateKey} = getBLSModule();
   const bytes = new Uint8Array(32);
   const u0 =bigint_to_bytes(i0).raw();
@@ -390,7 +390,7 @@ export function op_lsh(args: SExp){
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function binop_reduction(op_name: string, initial_value: number, args: SExp, op_f: Function){
+export function binop_reduction(op_name: string, initial_value: bigint, args: SExp, op_f: (a: bigint, b: bigint) => bigint){
   let total = initial_value;
   let arg_size = 0;
   let cost = LOG_BASE_COST;
@@ -405,30 +405,30 @@ export function binop_reduction(op_name: string, initial_value: number, args: SE
 }
 
 export function op_logand(args: SExp){
-  const binop = (a: number, b: number) => {
+  const binop = (a: bigint, b: bigint) => {
     a &= b;
     return a;
   }
   
-  return binop_reduction("logand", -1, args, binop);
+  return binop_reduction("logand", BigInt(-1), args, binop);
 }
 
 export function op_logior(args: SExp){
-  const binop = (a: number, b: number) => {
+  const binop = (a: bigint, b: bigint) => {
     a |= b;
     return a;
   }
   
-  return binop_reduction("logior", 0, args, binop);
+  return binop_reduction("logior", BigInt(0), args, binop);
 }
 
 export function op_logxor(args: SExp){
-  const binop = (a: number, b: number) => {
+  const binop = (a: bigint, b: bigint) => {
     a ^= b;
     return a;
   }
   
-  return binop_reduction("logxor", 0, args, binop);
+  return binop_reduction("logxor", BigInt(0), args, binop);
 }
 
 export function op_lognot(args: SExp){
@@ -455,8 +455,7 @@ export function op_not(args: SExp){
 }
 
 export function op_any(args: SExp){
-  const items: SExp[] = [];
-  for(const _ of args_as_bools("any", args)) items.push(_);
+  const items = list(args_as_bools("any", args));
   const cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
   let r = SExp.FALSE;
   for(const v of items){
@@ -472,8 +471,7 @@ export function op_any(args: SExp){
 }
 
 export function op_all(args: SExp){
-  const items: SExp[] = [];
-  for(const _ of args_as_bools("all", args)) items.push(_);
+  const items = list(args_as_bools("all", args));
   const cost = BOOL_BASE_COST + items.length * BOOL_COST_PER_ARG;
   let r = SExp.TRUE;
   for(const v of items){

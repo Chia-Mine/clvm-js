@@ -444,3 +444,27 @@ export class Stream {
     return new Bytes(this._buffer.subarray(0, this.length));
   }
 }
+
+/**
+ * Python's style division.
+ * In javascript, `-8 / 5 === -1` while `-8 / 5 == -2` in Python
+ */
+export function division(a: bigint, b: bigint): bigint {
+  const div = a / b;
+  if(a === div*b){
+    return div;
+  }
+  if(div >= BigInt(0)){
+    return div;
+  }
+  return div - BigInt(1);
+}
+
+/**
+ * Python's style modulo.
+ * In javascript, `-8 % 5 === -3` while `-8 / 5 == 2` in Python
+ */
+export function modulo(a: bigint, b: bigint): bigint {
+  const div = division(a, b);
+  return a - b*div;
+}
