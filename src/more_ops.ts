@@ -390,7 +390,7 @@ export function op_lsh(args: SExp){
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function binop_reduction(op_name: string, initial_value: number, args: SExp, op_f: Function){
+export function binop_reduction(op_name: string, initial_value: bigint, args: SExp, op_f: (a: bigint, b: bigint) => bigint){
   let total = initial_value;
   let arg_size = 0;
   let cost = LOG_BASE_COST;
@@ -405,30 +405,30 @@ export function binop_reduction(op_name: string, initial_value: number, args: SE
 }
 
 export function op_logand(args: SExp){
-  const binop = (a: number, b: number) => {
+  const binop = (a: bigint, b: bigint) => {
     a &= b;
     return a;
   }
   
-  return binop_reduction("logand", -1, args, binop);
+  return binop_reduction("logand", BigInt(-1), args, binop);
 }
 
 export function op_logior(args: SExp){
-  const binop = (a: number, b: number) => {
+  const binop = (a: bigint, b: bigint) => {
     a |= b;
     return a;
   }
   
-  return binop_reduction("logior", 0, args, binop);
+  return binop_reduction("logior", BigInt(0), args, binop);
 }
 
 export function op_logxor(args: SExp){
-  const binop = (a: number, b: number) => {
+  const binop = (a: bigint, b: bigint) => {
     a ^= b;
     return a;
   }
   
-  return binop_reduction("logxor", 0, args, binop);
+  return binop_reduction("logxor", BigInt(0), args, binop);
 }
 
 export function op_lognot(args: SExp){
