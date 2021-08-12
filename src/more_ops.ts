@@ -41,7 +41,7 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, list, Stream, t} from "./__type_compatibility__";
+import {Bytes, list, Stream, t, division, modulo} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 import {bigint_from_bytes, bigint_to_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
@@ -190,8 +190,8 @@ export function op_divmod(args: SExp){
     throw new EvalError("divmod with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIVMOD_COST_PER_BYTE;
-  const q = i0 / i1;
-  const r = i0 % i1;
+  const q = division(i0, i1); // i0 / i1
+  const r = modulo(i0, i1); // i0 % i1
   const q1 = SExp.to(q);
   const r1 = SExp.to(r);
   cost += ((q1.atom as Bytes).length + (r1.atom as Bytes).length) * MALLOC_COST_PER_BYTE;
@@ -207,7 +207,7 @@ export function op_div(args: SExp){
     throw new EvalError("div with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIV_COST_PER_BYTE;
-  const q = i0 / i1;
+  const q = division(i0, i1); // i0 / i1
   return malloc_cost(cost, SExp.to(q));
 }
 
@@ -240,7 +240,7 @@ export function op_pubkey_for_exp(args: SExp){
   const t0 = args_as_int_list("pubkey_for_exp", args, 1)[0] as [bigint, number];
   let i0 = t0[0];
   const l0 = t0[1];
-  i0 = i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001");
+  i0 = modulo(i0, BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")); // i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")
   const {PrivateKey} = getBLSModule();
   const bytes = new Uint8Array(32);
   const u0 =bigint_to_bytes(i0).raw();

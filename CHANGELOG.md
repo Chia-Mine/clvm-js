@@ -6,6 +6,7 @@ This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](htt
 ### Fixed
 - Enhanced code readability a bit.
 - Fixed an issue where `op_logand`, `op_logior`, `op_logxor` did not work
+- Fixed an issue where result of div/mod against negative `bigint` was not compatible with original `clvm`
 
 
 ## [1.0.2]

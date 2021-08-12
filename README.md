@@ -58,7 +58,7 @@ If so, you can make your code fully synchronous.
 
 
 ## Differences with Python's `clvm`
-Although I try hard to make it look like Python's `clvm`, there are things users should take it into account.  
+Although I try hard to make it look like Python's `clvm`, there are things users should be aware of.  
 I put the code which absorbs language incompatibility into `src/__type_compaibility__.ts`, so if you're interested take a look at it.
 
 ### There are no build-in `Tuple` type in Javascript
@@ -151,6 +151,9 @@ b("あ").toString(); // "b'\\xe3\\x81\\x82'"
 SExp.to([1, [2, 3]]).toString(); // 'ff01ffff02ff038080'
 str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by the way.
 ```
+
+### Calculation of modulo against negative number is different
+In JavaScript `-8 % 5 === -3` while `-8 % 5 == 2` in Python.  
 
 ## clvm license
 `clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the
