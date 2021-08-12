@@ -454,14 +454,10 @@ export function division(a: bigint, b: bigint): bigint {
   if(a === div*b){
     return div;
   }
-  const sign = div >= BigInt(0);
-  if(sign){
+  if(div >= BigInt(0)){
     return div;
   }
-  let abs = sign ? div : -div;
-  abs = abs + BigInt(1);
-  
-  return abs * (sign ? BigInt(1) : BigInt(-1));
+  return div - BigInt(1);
 }
 
 /**
