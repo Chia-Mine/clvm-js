@@ -455,6 +455,9 @@ export function division(a: bigint, b: bigint): bigint {
     return div;
   }
   const sign = div >= BigInt(0);
+  if(sign){
+    return div;
+  }
   let abs = sign ? div : -div;
   abs = abs + BigInt(1);
   
