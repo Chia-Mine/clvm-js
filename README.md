@@ -152,8 +152,11 @@ SExp.to([1, [2, 3]]).toString(); // 'ff01ffff02ff038080'
 str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by the way.
 ```
 
-### Calculation of modulo against negative number is different
-In JavaScript `-8 % 5 === -3` while `-8 % 5 == 2` in Python.  
+### Calculation of division/modulo against negative number is different
+|Python|JavaScript|
+|------|----------|
+|`-8 // 5 == -2`|`-8n / 5n === -1n`|
+|`-8 % 5 == 2`|`-8n % 5n === -3n`|
 
 ## clvm license
 `clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the
