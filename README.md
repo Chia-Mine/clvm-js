@@ -11,8 +11,8 @@ yarn add clvm
 
 ## Compatibility
 This code is compatible with:
-- [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
-  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/1a5cb17895d8707f784a85180bc97d3c6ebe71a0...main)
+- [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/ab4560900cf475ff515054bec0ca9a4491aca366...main)
 
 ## Example
 ```javascript
