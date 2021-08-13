@@ -1,36 +1,38 @@
 import {None} from "./__python_types__";
 import {Bytes} from "./__type_compatibility__";
 
-export function int_from_bytes(b: Bytes|None): number {
+export function int_from_bytes(b: Bytes|None, option?: {signed?: boolean}): number {
   if(!b || b.length === 0){
     return 0;
   }
   else if(b.length*8 > 52){
     throw new Error("Cannot convert Bytes to Integer larger than 52bit. Use bigint_from_bytes instead.");
   }
+  const signed = (option && typeof option.signed === "boolean") ? option.signed : true;
   let unsigned32 = 0;
   for(let i=b.length-1;i>=0;i--){
     const byte = b.at(i);
     unsigned32 += byte * (256**((b.length-1)-i));
   }
   // If the first bit is 1, it is recognized as a negative number.
-  if(b.at(0) & 0x80){
+  if(signed && (b.at(0) & 0x80)){
     return unsigned32 - (256**b.length);
   }
   return unsigned32;
 }
 
-export function bigint_from_bytes(b: Bytes|None): bigint {
+export function bigint_from_bytes(b: Bytes|None, option?: {signed?: boolean}): bigint {
   if(!b || b.length === 0){
     return BigInt(0);
   }
+  const signed = (option && typeof option.signed === "boolean") ? option.signed : true;
   let unsigned32 = BigInt(0);
   for(let i=b.length-1;i>=0;i--){
     const byte = b.at(i);
     unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt((b.length-1)-i)));
   }
   // If the first bit is 1, it is recognized as a negative number.
-  if(b.at(0) & 0x80){
+  if(signed && (b.at(0) & 0x80)){
     return unsigned32 - (BigInt(1) << BigInt(b.length*8));
   }
   return unsigned32;

@@ -223,7 +223,7 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObj
   }
   
   // The bytes here is 4bytes or smaller. So `int_from_bytes` is enough. (No bigint_from_bytes required)
-  const cost_multiplier = int_from_bytes(op.subarray(0, op.length-1)) + 1;
+  const cost_multiplier = int_from_bytes(op.subarray(0, op.length-1), {signed: false}) + 1;
   /*
     # 0 = constant
     # 1 = like op_add/op_sub

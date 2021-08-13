@@ -376,7 +376,7 @@ export function op_lsh(args: SExp){
   }
   // we actually want i0 to be an *unsigned* int
   const a0 = args.first().atom;
-  const i0 = bigint_from_bytes(a0);
+  const i0 = bigint_from_bytes(a0, {signed: false});
   let r;
   if(i1 >= 0){
     r = i0 << i1;
