@@ -4,7 +4,8 @@
 This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
 
 ### Fixed
-- Fixed an issue where `int_from_bytes` and `bigint_from_bytes` returns int/bigint always signed.
+- Fixed an issue where `int_from_bytes` and `bigint_from_bytes` returned always signed int/bigint.
+- Fixed an issue where `int_to_bytes` and `bigint_to_bytes` blindly recognized the argument as a signed int/bigint.
 
 ## [1.0.3]
 This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)

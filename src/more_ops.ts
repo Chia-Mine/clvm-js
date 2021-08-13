@@ -243,7 +243,7 @@ export function op_pubkey_for_exp(args: SExp){
   i0 = modulo(i0, BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")); // i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")
   const {PrivateKey} = getBLSModule();
   const bytes = new Uint8Array(32);
-  const u0 =bigint_to_bytes(i0).raw();
+  const u0 =bigint_to_bytes(i0, {signed: false}).raw();
   if(u0.length > 0){
     bytes.set(u0, 32 - u0.length);
   }

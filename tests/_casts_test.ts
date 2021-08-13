@@ -64,39 +64,101 @@ describe("bigint_from_bytes", () => {
   });
 });
 
-test("int_to_bytes", () => {
-  expect(int_to_bytes(0).equal_to(h(""))).toBeTruthy();
-  expect(int_to_bytes(1).equal_to(h("01"))).toBeTruthy();
-  expect(int_to_bytes(-1).equal_to(h("ff"))).toBeTruthy();
-  expect(int_to_bytes(127).equal_to(h("7f"))).toBeTruthy();
-  expect(int_to_bytes(-128).equal_to(h("80"))).toBeTruthy();
-  expect(int_to_bytes(255).equal_to(h("00ff"))).toBeTruthy();
-  expect(int_to_bytes(-256).equal_to(h("ff00"))).toBeTruthy();
-  expect(int_to_bytes(65535).equal_to(h("00ffff"))).toBeTruthy();
-  expect(int_to_bytes(65536).equal_to(h("010000"))).toBeTruthy();
-  expect(int_to_bytes(-65535).equal_to(h("ff0001"))).toBeTruthy();
-  expect(int_to_bytes(-65534).equal_to(h("ff0002"))).toBeTruthy();
-  expect(int_to_bytes(-65536).equal_to(h("ff0000"))).toBeTruthy();
+describe("int_to_bytes", () => {
+  test("signed: true", () => {
+    expect(int_to_bytes(0, {signed: true}).equal_to(h(""))).toBeTruthy();
+    expect(int_to_bytes(1, {signed: true}).equal_to(h("01"))).toBeTruthy();
+    expect(int_to_bytes(-1, {signed: true}).equal_to(h("ff"))).toBeTruthy();
+    expect(int_to_bytes(127, {signed: true}).equal_to(h("7f"))).toBeTruthy();
+    expect(int_to_bytes(-128, {signed: true}).equal_to(h("80"))).toBeTruthy();
+    expect(int_to_bytes(255, {signed: true}).equal_to(h("00ff"))).toBeTruthy();
+    expect(int_to_bytes(-256, {signed: true}).equal_to(h("ff00"))).toBeTruthy();
+    expect(int_to_bytes(65535, {signed: true}).equal_to(h("00ffff"))).toBeTruthy();
+    expect(int_to_bytes(65536, {signed: true}).equal_to(h("010000"))).toBeTruthy();
+    expect(int_to_bytes(-65535, {signed: true}).equal_to(h("ff0001"))).toBeTruthy();
+    expect(int_to_bytes(-65534, {signed: true}).equal_to(h("ff0002"))).toBeTruthy();
+    expect(int_to_bytes(-65536, {signed: true}).equal_to(h("ff0000"))).toBeTruthy();
+  });
+  test("signed: false", () => {
+    expect(int_to_bytes(0, {signed: false}).equal_to(h(""))).toBeTruthy();
+    expect(int_to_bytes(1, {signed: false}).equal_to(h("01"))).toBeTruthy();
+    expect(() => int_to_bytes(-1, {signed: false})).toThrow();
+    expect(int_to_bytes(127, {signed: false}).equal_to(h("7f"))).toBeTruthy();
+    expect(() => int_to_bytes(-128, {signed: false})).toThrow();
+    expect(int_to_bytes(255, {signed: false}).equal_to(h("ff"))).toBeTruthy();
+    expect(() => int_to_bytes(-256, {signed: false})).toThrow();
+    expect(int_to_bytes(65535, {signed: false}).equal_to(h("ffff"))).toBeTruthy();
+    expect(int_to_bytes(65536, {signed: false}).equal_to(h("010000"))).toBeTruthy();
+    expect(() => int_to_bytes(-65535, {signed: false})).toThrow();
+  });
+  test("default option", () => {
+    expect(int_to_bytes(0).equal_to(int_to_bytes(0, {signed: false}))).toBeTruthy();
+    expect(int_to_bytes(1).equal_to(int_to_bytes(1, {signed: false}))).toBeTruthy();
+    expect(() => int_to_bytes(-1)).toThrow();
+    expect(int_to_bytes(127).equal_to(int_to_bytes(127, {signed: false}))).toBeTruthy();
+    expect(() => int_to_bytes(-128)).toThrow();
+    expect(int_to_bytes(255).equal_to(int_to_bytes(255, {signed: false}))).toBeTruthy();
+    expect(() => int_to_bytes(-256)).toThrow();
+    expect(int_to_bytes(65535).equal_to(int_to_bytes(65535, {signed: false}))).toBeTruthy();
+    expect(int_to_bytes(65536).equal_to(int_to_bytes(65536, {signed: false}))).toBeTruthy();
+    expect(() => int_to_bytes(-65535)).toThrow();
+  });
 });
 
-test("bigint_to_bytes", () => {
-  expect(bigint_to_bytes(BigInt(0)).equal_to(h(""))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(1)).equal_to(h("01"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(-1)).equal_to(h("ff"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(127)).equal_to(h("7f"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(-128)).equal_to(h("80"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(255)).equal_to(h("00ff"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(-256)).equal_to(h("ff00"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(65535)).equal_to(h("00ffff"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(65536)).equal_to(h("010000"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(-65535)).equal_to(h("ff0001"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(-65534)).equal_to(h("ff0002"))).toBeTruthy();
-  expect(bigint_to_bytes(BigInt(-65536)).equal_to(h("ff0000"))).toBeTruthy();
-  expect(bigint_to_bytes(
-      BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")).equal_to(
+describe("bigint_to_bytes", () => {
+  test("signed: true", () => {
+    expect(bigint_to_bytes(BigInt(0), {signed: true}).equal_to(h(""))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(1), {signed: true}).equal_to(h("01"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(-1), {signed: true}).equal_to(h("ff"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(127), {signed: true}).equal_to(h("7f"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(-128), {signed: true}).equal_to(h("80"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(255), {signed: true}).equal_to(h("00ff"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(-256), {signed: true}).equal_to(h("ff00"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(65535), {signed: true}).equal_to(h("00ffff"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(65536), {signed: true}).equal_to(h("010000"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(-65535), {signed: true}).equal_to(h("ff0001"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(-65534), {signed: true}).equal_to(h("ff0002"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(-65536), {signed: true}).equal_to(h("ff0000"))).toBeTruthy();
+    expect(bigint_to_bytes(
+        BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001"), {signed: true}).equal_to(
         h("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")
       )
-  ).toBeTruthy();
+    ).toBeTruthy();
+  });
+  test("signed: false", () => {
+    expect(bigint_to_bytes(BigInt(0), {signed: false}).equal_to(h(""))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(1), {signed: false}).equal_to(h("01"))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-1), {signed: false})).toThrow();
+    expect(bigint_to_bytes(BigInt(127), {signed: false}).equal_to(h("7f"))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-128), {signed: false})).toThrow();
+    expect(bigint_to_bytes(BigInt(255), {signed: false}).equal_to(h("ff"))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-256), {signed: false})).toThrow();
+    expect(bigint_to_bytes(BigInt(65535), {signed: false}).equal_to(h("ffff"))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(65536), {signed: false}).equal_to(h("010000"))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-65535), {signed: false})).toThrow();
+    expect(bigint_to_bytes(
+        BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001"), {signed: false}).equal_to(
+        h("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")
+      )
+    ).toBeTruthy();
+  });
+  test("default option", () => {
+    expect(bigint_to_bytes(BigInt(0)).equal_to(bigint_to_bytes(BigInt(0), {signed: false}))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(1)).equal_to(bigint_to_bytes(BigInt(1), {signed: false}))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-1))).toThrow();
+    expect(bigint_to_bytes(BigInt(127)).equal_to(bigint_to_bytes(BigInt(127), {signed: false}))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-128))).toThrow();
+    expect(bigint_to_bytes(BigInt(255)).equal_to(bigint_to_bytes(BigInt(255), {signed: false}))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-256))).toThrow();
+    expect(bigint_to_bytes(BigInt(65535)).equal_to(bigint_to_bytes(BigInt(65535), {signed: false}))).toBeTruthy();
+    expect(bigint_to_bytes(BigInt(65536)).equal_to(bigint_to_bytes(BigInt(65536), {signed: false}))).toBeTruthy();
+    expect(() => bigint_to_bytes(BigInt(-65535))).toThrow();
+    expect(
+        bigint_to_bytes(BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")).equal_to(
+        bigint_to_bytes(BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001"), {signed: false})
+      )
+    ).toBeTruthy();
+  });
 });
 
 test("limbs_for_int", () => {

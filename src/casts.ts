@@ -1,7 +1,11 @@
 import {None} from "./__python_types__";
 import {Bytes} from "./__type_compatibility__";
 
-export function int_from_bytes(b: Bytes|None, option?: {signed?: boolean}): number {
+export type TConvertOption = {
+  signed: boolean;
+};
+
+export function int_from_bytes(b: Bytes|None, option?: Partial<TConvertOption>): number {
   if(!b || b.length === 0){
     return 0;
   }
@@ -21,7 +25,7 @@ export function int_from_bytes(b: Bytes|None, option?: {signed?: boolean}): numb
   return unsigned32;
 }
 
-export function bigint_from_bytes(b: Bytes|None, option?: {signed?: boolean}): bigint {
+export function bigint_from_bytes(b: Bytes|None, option?: Partial<TConvertOption>): bigint {
   if(!b || b.length === 0){
     return BigInt(0);
   }
@@ -38,7 +42,7 @@ export function bigint_from_bytes(b: Bytes|None, option?: {signed?: boolean}): b
   return unsigned32;
 }
 
-export function int_to_bytes(v: number): Bytes {
+export function int_to_bytes(v: number, option?: Partial<TConvertOption>): Bytes {
   if(v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER){
     throw new Error(`The int value is beyond ${v > 0 ? "MAX_SAFE_INTEGER" : "MIN_SAFE_INTEGER"}: ${v}`);
   }
@@ -46,9 +50,13 @@ export function int_to_bytes(v: number): Bytes {
     return Bytes.NULL;
   }
   
+  const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
+  if(!signed && v < 0){
+    throw new Error("OverflowError: can't convert negative int to unsigned");
+  }
   let byte_count = 1;
   if(v > 0){
-    while(2**(8*byte_count - 1) - 1 < v){
+    while(2**(8*byte_count - (signed ? 1 : 0)) - 1 < v){
       byte_count++;
     }
   }
@@ -58,7 +66,7 @@ export function int_to_bytes(v: number): Bytes {
     }
   }
   
-  const needExtraByte = v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0;
+  const needExtraByte = signed && v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0;
   const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
   for(let i=0;i<byte_count;i++){
     const j = needExtraByte ? i+1 : i;
@@ -68,13 +76,18 @@ export function int_to_bytes(v: number): Bytes {
   return new Bytes(u8);
 }
 
-export function bigint_to_bytes(v: bigint): Bytes {
+export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): Bytes {
   if(v === BigInt(0)){
     return Bytes.NULL;
   }
+  
+  const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
+  if(!signed && v < BigInt(0)){
+    throw new Error("OverflowError: can't convert negative int to unsigned");
+  }
   let byte_count = 1;
   if(v > 0){
-    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - BigInt(1)) - BigInt(1) < v){
+    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - (signed ? BigInt(1) : BigInt(0))) - BigInt(1) < v){
       byte_count++;
     }
   }
@@ -84,7 +97,7 @@ export function bigint_to_bytes(v: bigint): Bytes {
     }
   }
   
-  const needExtraByte = v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0);
+  const needExtraByte = signed && v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0);
   const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
   for(let i=0;i<byte_count;i++){
     const j = needExtraByte ? i+1 : i;
