@@ -8,7 +8,7 @@ export function int_from_bytes(b: Bytes|None, option?: {signed?: boolean}): numb
   else if(b.length*8 > 52){
     throw new Error("Cannot convert Bytes to Integer larger than 52bit. Use bigint_from_bytes instead.");
   }
-  const signed = (option && typeof option.signed === "boolean") ? option.signed : true;
+  const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
   let unsigned32 = 0;
   for(let i=b.length-1;i>=0;i--){
     const byte = b.at(i);
@@ -25,7 +25,7 @@ export function bigint_from_bytes(b: Bytes|None, option?: {signed?: boolean}): b
   if(!b || b.length === 0){
     return BigInt(0);
   }
-  const signed = (option && typeof option.signed === "boolean") ? option.signed : true;
+  const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
   let unsigned32 = BigInt(0);
   for(let i=b.length-1;i>=0;i--){
     const byte = b.at(i);

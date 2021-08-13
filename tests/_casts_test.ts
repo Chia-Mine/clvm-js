@@ -1,25 +1,48 @@
 import {int_from_bytes, bigint_from_bytes, int_to_bytes, bigint_to_bytes, limbs_for_int} from "../src/casts";
 import {None, h} from "../src";
 
-test("int_from_bytes", () => {
-  expect(int_from_bytes(None)).toBe(0);
-  expect(int_from_bytes(h("01"))).toBe(1);
-  expect(int_from_bytes(h("7f"))).toBe(127);
-  expect(int_from_bytes(h("80"))).toBe(-128);
-  expect(int_from_bytes(h("ff"))).toBe(-1);
-  expect(int_from_bytes(h("ffffffff"))).toBe(-1);
-  expect(() => int_from_bytes(h("ffffffffffffffff"))).toThrow();
-});
+describe("int_from_bytes", () => {
+  test("signed: true", () => {
+    expect(int_from_bytes(None, {signed: true})).toBe(0);
+    expect(int_from_bytes(h("01"), {signed: true})).toBe(1);
+    expect(int_from_bytes(h("7f"), {signed: true})).toBe(127);
+    expect(int_from_bytes(h("80"), {signed: true})).toBe(-128);
+    expect(int_from_bytes(h("ff"), {signed: true})).toBe(-1);
+    expect(int_from_bytes(h("ffffffff"), {signed: true})).toBe(-1);
+    expect(() => int_from_bytes(h("ffffffffffffffff"), {signed: true})).toThrow();
+  });
+  test("signed: false", () => {
+    expect(int_from_bytes(None, {signed: false})).toBe(0);
+    expect(int_from_bytes(h("01"), {signed: false})).toBe(1);
+    expect(int_from_bytes(h("7f"), {signed: false})).toBe(127);
+    expect(int_from_bytes(h("80"), {signed: false})).toBe(128);
+    expect(int_from_bytes(h("ff"), {signed: false})).toBe(255);
+    expect(int_from_bytes(h("ffffffff"), {signed: false})).toBe(4294967295);
+    expect(() => int_from_bytes(h("ffffffffffffffff"), {signed: false})).toThrow();
+  });
+})
 
-test("bigint_from_bytes", () => {
-  expect(bigint_from_bytes(None)).toBe(BigInt(0));
-  expect(bigint_from_bytes(h("01"))).toBe(BigInt(1));
-  expect(bigint_from_bytes(h("7f"))).toBe(BigInt(127));
-  expect(bigint_from_bytes(h("80"))).toBe(BigInt(-128));
-  expect(bigint_from_bytes(h("ff"))).toBe(BigInt(-1));
-  expect(bigint_from_bytes(h("ffffffff"))).toBe(BigInt(-1));
-  expect(bigint_from_bytes(h("ffffffffffffffff"))).toBe(BigInt(-1));
-  expect(bigint_from_bytes(h("7fffffffffffffff"))).toBe(BigInt(2)**BigInt(63) - BigInt(1));
+describe("bigint_from_bytes", () => {
+  test("signed: true", () => {
+    expect(bigint_from_bytes(None, {signed: true}) === BigInt(0)).toBeTruthy();
+    expect(bigint_from_bytes(h("01"), {signed: true}) === BigInt(1)).toBeTruthy();
+    expect(bigint_from_bytes(h("7f"), {signed: true}) === BigInt(127)).toBeTruthy();
+    expect(bigint_from_bytes(h("80"), {signed: true}) === BigInt(-128)).toBeTruthy();
+    expect(bigint_from_bytes(h("ff"), {signed: true}) === BigInt(-1)).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffff"), {signed: true}) === BigInt(-1)).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: true}) === BigInt(-1)).toBeTruthy();
+    expect(bigint_from_bytes(h("7fffffffffffffff"), {signed: true}) === BigInt(2)**BigInt(63) - BigInt(1)).toBeTruthy();
+  });
+  test("signed: false", () => {
+    expect(bigint_from_bytes(None, {signed: false}) === BigInt(0)).toBeTruthy();
+    expect(bigint_from_bytes(h("01"), {signed: false}) === BigInt(1)).toBeTruthy();
+    expect(bigint_from_bytes(h("7f"), {signed: false}) === BigInt(127)).toBeTruthy();
+    expect(bigint_from_bytes(h("80"), {signed: false}) === BigInt(128)).toBeTruthy();
+    expect(bigint_from_bytes(h("ff"), {signed: false}) === BigInt(255)).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffff"), {signed: false}) === BigInt(4294967295)).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("18446744073709551615")).toBeTruthy();
+    expect(bigint_from_bytes(h("7fffffffffffffff"), {signed: false}) === BigInt(2)**BigInt(63) - BigInt(1)).toBeTruthy();
+  });
 });
 
 test("int_to_bytes", () => {

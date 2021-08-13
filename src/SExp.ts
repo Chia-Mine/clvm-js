@@ -218,11 +218,11 @@ export class SExp implements CLVMType {
   }
   
   public as_int(){
-    return int_from_bytes(this.atom);
+    return int_from_bytes(this.atom, {signed: true});
   }
   
   public as_bigint(){
-    return bigint_from_bytes(this.atom);
+    return bigint_from_bytes(this.atom, {signed: true});
   }
   
   public as_bin(){
