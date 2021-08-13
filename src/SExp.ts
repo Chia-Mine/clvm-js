@@ -36,13 +36,13 @@ export function convert_atom_to_bytes(v: any): Bytes {
     return Bytes.from(v, "utf8");
   }
   else if(typeof v === "number"){
-    return int_to_bytes(v);
+    return int_to_bytes(v, {signed: true});
   }
   else if(typeof v === "boolean"){ // Tips. In Python, isinstance(True, int) == True. 
-    return int_to_bytes(v ? 1 : 0);
+    return int_to_bytes(v ? 1 : 0, {signed: true});
   }
   else if(typeof v === "bigint"){
-    return bigint_to_bytes(v);
+    return bigint_to_bytes(v, {signed: true});
   }
   else if(v === None || !v){
     return Bytes.NULL;
@@ -218,11 +218,11 @@ export class SExp implements CLVMType {
   }
   
   public as_int(){
-    return int_from_bytes(this.atom);
+    return int_from_bytes(this.atom, {signed: true});
   }
   
   public as_bigint(){
-    return bigint_from_bytes(this.atom);
+    return bigint_from_bytes(this.atom, {signed: true});
   }
   
   public as_bin(){

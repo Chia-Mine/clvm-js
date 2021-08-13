@@ -243,7 +243,7 @@ export function op_pubkey_for_exp(args: SExp){
   i0 = modulo(i0, BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")); // i0 % BigInt("0x73EDA753299D7D483339D80809A1D80553BDA402FFFE5BFEFFFFFFFF00000001")
   const {PrivateKey} = getBLSModule();
   const bytes = new Uint8Array(32);
-  const u0 =bigint_to_bytes(i0).raw();
+  const u0 =bigint_to_bytes(i0, {signed: false}).raw();
   if(u0.length > 0){
     bytes.set(u0, 32 - u0.length);
   }
@@ -376,7 +376,7 @@ export function op_lsh(args: SExp){
   }
   // we actually want i0 to be an *unsigned* int
   const a0 = args.first().atom;
-  const i0 = bigint_from_bytes(a0);
+  const i0 = bigint_from_bytes(a0, {signed: false});
   let r;
   if(i1 >= 0){
     r = i0 << i1;
