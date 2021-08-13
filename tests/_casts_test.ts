@@ -20,6 +20,15 @@ describe("int_from_bytes", () => {
     expect(int_from_bytes(h("ffffffff"), {signed: false})).toBe(4294967295);
     expect(() => int_from_bytes(h("ffffffffffffffff"), {signed: false})).toThrow();
   });
+  test("default option", () => {
+    expect(int_from_bytes(None)).toBe(int_from_bytes(None, {signed: false}));
+    expect(int_from_bytes(h("01"))).toBe(int_from_bytes(h("01"), {signed: false}));
+    expect(int_from_bytes(h("7f"))).toBe(int_from_bytes(h("7f"), {signed: false}));
+    expect(int_from_bytes(h("80"))).toBe(int_from_bytes(h("80"), {signed: false}));
+    expect(int_from_bytes(h("ff"))).toBe(int_from_bytes(h("ff"), {signed: false}));
+    expect(int_from_bytes(h("ffffffff"))).toBe(int_from_bytes(h("ffffffff"), {signed: false}));
+    expect(() => int_from_bytes(h("ffffffffffffffff"))).toThrow();
+  });
 })
 
 describe("bigint_from_bytes", () => {
@@ -42,6 +51,16 @@ describe("bigint_from_bytes", () => {
     expect(bigint_from_bytes(h("ffffffff"), {signed: false}) === BigInt(4294967295)).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("18446744073709551615")).toBeTruthy();
     expect(bigint_from_bytes(h("7fffffffffffffff"), {signed: false}) === BigInt(2)**BigInt(63) - BigInt(1)).toBeTruthy();
+  });
+  test("default option", () => {
+    expect(bigint_from_bytes(None) === bigint_from_bytes(None, {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("01")) === bigint_from_bytes(h("01"), {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("7f")) === bigint_from_bytes(h("7f"), {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("80")) === bigint_from_bytes(h("80"), {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("ff")) === bigint_from_bytes(h("ff"), {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffff")) === bigint_from_bytes(h("ffffffff"), {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("18446744073709551615")).toBeTruthy();
+    expect(bigint_from_bytes(h("7fffffffffffffff")) === bigint_from_bytes(h("7fffffffffffffff"), {signed: false})).toBeTruthy();
   });
 });
 
