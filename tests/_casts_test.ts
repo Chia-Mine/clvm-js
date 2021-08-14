@@ -50,8 +50,8 @@ describe("bigint_from_bytes", () => {
     expect(bigint_from_bytes(h("80"), {signed: false}) === BigInt(128)).toBeTruthy();
     expect(bigint_from_bytes(h("ff"), {signed: false}) === BigInt(255)).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffff"), {signed: false}) === BigInt(4294967295)).toBeTruthy();
-    expect(bigint_from_bytes(h("fedcba987654"), {signed: false}) === BigInt("280223976814164")).toBeTruthy();
-    expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("18446744073709551615")).toBeTruthy();
+    expect(bigint_from_bytes(h("fedcba987654"), {signed: false}) === BigInt("0xfedcba987654")).toBeTruthy();
+    expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("0xffffffffffffffff")).toBeTruthy();
     expect(bigint_from_bytes(h("7fffffffffffffff"), {signed: false}) === BigInt(2)**BigInt(63) - BigInt(1)).toBeTruthy();
   });
   test("default option", () => {
