@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.5]
+This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+
+### Fixed
+- Fixed an issue where `op_lsh` did not work as expected.
+
 ## [1.0.4]
 This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
 
@@ -194,6 +200,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[1.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.1...v1.0.2

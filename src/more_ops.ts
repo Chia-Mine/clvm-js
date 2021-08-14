@@ -371,7 +371,7 @@ export function op_lsh(args: SExp){
   if(l1 > 4){
     throw new EvalError("lsh requires int32 args (with no leading zeros)", args.rest().first());
   }
-  else if(i1 >= BigInt(0) ? i1 : -i1 > BigInt(65535)){
+  else if((i1 >= BigInt(0) ? i1 : -i1) > BigInt(65535)){
     throw new EvalError("shift too large", SExp.to(i1));
   }
   // we actually want i0 to be an *unsigned* int
