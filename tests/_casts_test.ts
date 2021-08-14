@@ -8,6 +8,7 @@ describe("int_from_bytes", () => {
     expect(int_from_bytes(h("7f"), {signed: true})).toBe(127);
     expect(int_from_bytes(h("80"), {signed: true})).toBe(-128);
     expect(int_from_bytes(h("ff"), {signed: true})).toBe(-1);
+    expect(int_from_bytes(h("00ffff00"), {signed: true})).toBe(16776960);
     expect(int_from_bytes(h("ffffffff"), {signed: true})).toBe(-1);
     expect(() => int_from_bytes(h("ffffffffffffffff"), {signed: true})).toThrow();
   });
