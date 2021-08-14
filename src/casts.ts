@@ -36,33 +36,21 @@ export function bigint_from_bytes(b: Bytes|None, option?: Partial<TConvertOption
   const bytes4Remain = dv.byteLength % 4;
   const bytes4Length = (dv.byteLength - bytes4Remain) / 4;
   
-  if(bytes4Length > 0){
-    const byte32 = dv.getUint32((bytes4Length-1)*4 + bytes4Remain);
-    unsigned32 += BigInt(byte32);
-  }
-  // let order = BigInt(4294967296) << (BigInt(32)*BigInt(0));
-  for(let i=bytes4Length-2;i>=0;i--){
+  let order = BigInt(1);
+  for(let i=bytes4Length-1;i>=0;i--){
     const byte32 = dv.getUint32(i*4 + bytes4Remain);
-    // unsigned32 += BigInt(byte32) * (BigInt(4294967296)**(BigInt(bytes4Length-1-i)));
-    unsigned32 += BigInt(byte32) * (BigInt(4294967296) << (BigInt(32) * BigInt(bytes4Length-2-i)));
+    unsigned32 += BigInt(byte32) * order;
+    order <<= BigInt(32);
   }
   
   if(bytes4Remain > 0){
-    const byte = ui8array[bytes4Remain-1];
     if(bytes4Length === 0){
-      unsigned32 += BigInt(byte);
-      for(let i=bytes4Remain-2;i>=0;i--){
-        const byte = ui8array[i];
-        unsigned32 += BigInt(byte) * (BigInt(256) << (BigInt(8) * BigInt(bytes4Remain-2-i)));
-      }
+      order = BigInt(1);
     }
-    else{
-      unsigned32 += BigInt(byte) * (BigInt(256) << (BigInt(8) * BigInt(b.length-1-bytes4Remain)));
-      for(let i=bytes4Remain-2;i>=0;i--){
-        const byte = ui8array[i];
-        // unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt(b.length-1-i)));
-        unsigned32 += BigInt(byte) * (BigInt(256) << (BigInt(8) * BigInt(b.length-2-i)));
-      }
+    for(let i=bytes4Remain-1;i>=0;i--){
+      const byte = ui8array[i];
+      unsigned32 += BigInt(byte) * order;
+      order <<= BigInt(8);
     }
   }
   
