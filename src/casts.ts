@@ -31,12 +31,28 @@ export function bigint_from_bytes(b: Bytes|None, option?: Partial<TConvertOption
   }
   const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
   let unsigned32 = BigInt(0);
-  for(let i=b.length-1;i>=0;i--){
-    const byte = b.at(i);
-    unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt((b.length-1)-i)));
+  const ui8array = b.raw();
+  const dv = new DataView(ui8array.buffer);
+  const bytes4Remain = dv.byteLength % 4;
+  const bytes4Length = (dv.byteLength - bytes4Remain) / 4;
+  if(bytes4Length > 0){
+    const byte32 = dv.getUint32((bytes4Length-1)*4 + bytes4Remain);
+    unsigned32 += BigInt(byte32);
   }
+  for(let i=bytes4Length-2;i>=0;i--){
+    const byte32 = dv.getUint32(i*4 + bytes4Remain);
+    // unsigned32 += BigInt(byte32) * (BigInt(4294967296)**(BigInt(bytes4Length-1-i)));
+    unsigned32 += BigInt(byte32) * (BigInt(4294967296)<<(BigInt(32)*BigInt(bytes4Length-2-i)));
+  }
+  
+  for(let i=bytes4Remain-1;i>=0;i--){
+    const byte = ui8array[i];
+    // unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt(b.length-1-i)));
+    unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt(b.length-1-i)));
+  }
+  
   // If the first bit is 1, it is recognized as a negative number.
-  if(signed && (b.at(0) & 0x80)){
+  if(signed && (ui8array[0] & 0x80)){
     return unsigned32 - (BigInt(1) << BigInt(b.length*8));
   }
   return unsigned32;

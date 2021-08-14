@@ -39,6 +39,7 @@ describe("bigint_from_bytes", () => {
     expect(bigint_from_bytes(h("80"), {signed: true}) === BigInt(-128)).toBeTruthy();
     expect(bigint_from_bytes(h("ff"), {signed: true}) === BigInt(-1)).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffff"), {signed: true}) === BigInt(-1)).toBeTruthy();
+    expect(bigint_from_bytes(h("fedcba987654"), {signed: true}) === BigInt("-1250999896492")).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: true}) === BigInt(-1)).toBeTruthy();
     expect(bigint_from_bytes(h("7fffffffffffffff"), {signed: true}) === BigInt(2)**BigInt(63) - BigInt(1)).toBeTruthy();
   });
@@ -49,6 +50,7 @@ describe("bigint_from_bytes", () => {
     expect(bigint_from_bytes(h("80"), {signed: false}) === BigInt(128)).toBeTruthy();
     expect(bigint_from_bytes(h("ff"), {signed: false}) === BigInt(255)).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffff"), {signed: false}) === BigInt(4294967295)).toBeTruthy();
+    expect(bigint_from_bytes(h("fedcba987654"), {signed: false}) === BigInt("280223976814164")).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("18446744073709551615")).toBeTruthy();
     expect(bigint_from_bytes(h("7fffffffffffffff"), {signed: false}) === BigInt(2)**BigInt(63) - BigInt(1)).toBeTruthy();
   });
@@ -59,6 +61,7 @@ describe("bigint_from_bytes", () => {
     expect(bigint_from_bytes(h("80")) === bigint_from_bytes(h("80"), {signed: false})).toBeTruthy();
     expect(bigint_from_bytes(h("ff")) === bigint_from_bytes(h("ff"), {signed: false})).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffff")) === bigint_from_bytes(h("ffffffff"), {signed: false})).toBeTruthy();
+    expect(bigint_from_bytes(h("fedcba987654")) === bigint_from_bytes(h("fedcba987654"), {signed: false})).toBeTruthy();
     expect(bigint_from_bytes(h("ffffffffffffffff"), {signed: false}) === BigInt("18446744073709551615")).toBeTruthy();
     expect(bigint_from_bytes(h("7fffffffffffffff")) === bigint_from_bytes(h("7fffffffffffffff"), {signed: false})).toBeTruthy();
   });
