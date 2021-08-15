@@ -450,11 +450,14 @@ export class Stream {
  * In javascript, `-8 / 5 === -1` while `-8 / 5 == -2` in Python
  */
 export function division(a: bigint, b: bigint): bigint {
+  if(a === BigInt(0)){
+    return a;
+  }
   const div = a / b;
   if(a === div*b){
     return div;
   }
-  if(div >= BigInt(0)){
+  if(div > BigInt(0)){
     return div;
   }
   return div - BigInt(1);
@@ -462,9 +465,14 @@ export function division(a: bigint, b: bigint): bigint {
 
 /**
  * Python's style modulo.
- * In javascript, `-8 % 5 === -3` while `-8 / 5 == 2` in Python
+ * In javascript, `-8 % 5 === -3` while `-8 % 5 == 2` in Python
  */
 export function modulo(a: bigint, b: bigint): bigint {
   const div = division(a, b);
   return a - b*div;
+}
+
+export function divmod(a: bigint, b: bigint): Tuple<bigint, bigint> {
+  const div = division(a, b);
+  return t(div, a - b*div);
 }
