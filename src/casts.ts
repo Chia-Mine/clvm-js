@@ -94,13 +94,18 @@ export function int_to_bytes(v: number, option?: Partial<TConvertOption>): Bytes
   }
   let byte_count = 1;
   if(v > 0){
-    while(2**(8*byte_count - (signed ? 1 : 0)) - 1 < v){
+    const div = signed ? 2 : 1;
+    let power = BigInt(256);
+    while(power < (v + 1)*div){
       byte_count++;
+      power <<= BigInt(8);
     }
   }
   else if(v < 0){
-    while(2**(8*byte_count - 1) < -v){
+    let power = BigInt(256);
+    while(power < -v*2){
       byte_count++;
+      power <<= BigInt(8);
     }
   }
   
@@ -125,21 +130,36 @@ export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): By
   }
   let byte_count = 1;
   if(v > 0){
-    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - (signed ? BigInt(1) : BigInt(0))) - BigInt(1) < v){
+    const div = BigInt(signed ? 1 : 0);
+    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count) - div) - BigInt(1) < v) {
       byte_count++;
     }
   }
   else if(v < 0){
-    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - BigInt(1)) < -v){
+    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count) - BigInt(1)) < -v) {
       byte_count++;
     }
   }
   
-  const needExtraByte = signed && v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0);
-  const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
-  for(let i=0;i<byte_count;i++){
-    const j = needExtraByte ? i+1 : i;
-    u8[j] = Number((v >> (BigInt(byte_count-i-1))*BigInt(8)) & BigInt(0xff));
+  const extraByte = (signed && v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0)) ? 1 : 0;
+  const total_bytes = byte_count + extraByte;
+  const u8 = new Uint8Array(total_bytes);
+  const dv = new DataView(u8.buffer);
+  const byte4Remain = byte_count % 4;
+  const byte4Length = (byte_count - byte4Remain) / 4;
+  
+  let bitmask = BigInt(0xffffffff);
+  for(let i=0;i<byte4Length;i++){
+    const num = Number((v >> BigInt(32)*BigInt(i)) & bitmask);
+    const pointer = extraByte + byte4Remain + (byte4Length-1 - i)*4;
+    dv.setUint32(pointer, num);
+  }
+  v >>= BigInt(32) * BigInt(byte4Length);
+  bitmask = BigInt(0xff);
+  for(let i=0;i<byte4Remain;i++){
+    const num = Number((v >> BigInt(8)*BigInt(i)) & bitmask);
+    const pointer = extraByte + byte4Remain-1-i;
+    dv.setUint8(pointer, num);
   }
   
   return new Bytes(u8);
