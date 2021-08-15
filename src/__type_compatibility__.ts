@@ -453,11 +453,21 @@ export function division(a: bigint, b: bigint): bigint {
   if(a === BigInt(0)){
     return a;
   }
+  else if(b === BigInt(0)){
+    throw new Error("Division by zero!");
+  }
+  else if(a > BigInt(0) && b > BigInt(0) && a < b){
+    return BigInt(0);
+  }
+  else if(a < BigInt(0) && b < BigInt(0) && a > b){
+    return BigInt(0);
+  }
+  
   const div = a / b;
   if(a === div*b){
     return div;
   }
-  if(div > BigInt(0)){
+  else if(div > BigInt(0)){
     return div;
   }
   return div - BigInt(1);
