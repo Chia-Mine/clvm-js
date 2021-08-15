@@ -176,47 +176,47 @@ export function* args_len(op_name: string, args: SExp){
 }
 
 /*
-# unknown ops are reserved if they start with 0xffff
-# otherwise, unknown ops are no-ops, but they have costs. The cost is computed
-# like this:
+unknown ops are reserved if they start with 0xffff
+otherwise, unknown ops are no-ops, but they have costs. The cost is computed
+like this:
 
-# byte index (reverse):
-# | 4 | 3 | 2 | 1 | 0          |
-# +---+---+---+---+------------+
-# | multiplier    |XX | XXXXXX |
-# +---+---+---+---+---+--------+
-#  ^               ^    ^
-#  |               |    + 6 bits ignored when computing cost
-# cost_multiplier  |
-#                  + 2 bits
-#                    cost_function
+byte index (reverse):
+| 4 | 3 | 2 | 1 | 0          |
++---+---+---+---+------------+
+| multiplier    |XX | XXXXXX |
++---+---+---+---+---+--------+
+ ^               ^    ^
+ |               |    + 6 bits ignored when computing cost
+cost_multiplier  |
+                 + 2 bits
+                   cost_function
 
-# 1 is always added to the multiplier before using it to multiply the cost, this
-# is since cost may not be 0.
+1 is always added to the multiplier before using it to multiply the cost, this
+is since cost may not be 0.
 
-# cost_function is 2 bits and defines how cost is computed based on arguments:
-# 0: constant, cost is 1 * (multiplier + 1)
-# 1: computed like operator add, multiplied by (multiplier + 1)
-# 2: computed like operator mul, multiplied by (multiplier + 1)
-# 3: computed like operator concat, multiplied by (multiplier + 1)
+cost_function is 2 bits and defines how cost is computed based on arguments:
+0: constant, cost is 1 * (multiplier + 1)
+1: computed like operator add, multiplied by (multiplier + 1)
+2: computed like operator mul, multiplied by (multiplier + 1)
+3: computed like operator concat, multiplied by (multiplier + 1)
 
-# this means that unknown ops where cost_function is 1, 2, or 3, may still be
-# fatal errors if the arguments passed are not atoms.
- */
+this means that unknown ops where cost_function is 1, 2, or 3, may still be
+fatal errors if the arguments passed are not atoms.
+*/
 export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObject> {
-  // # any opcode starting with ffff is reserved (i.e. fatal error)
-  // # opcodes are not allowed to be empty
+  // any opcode starting with ffff is reserved (i.e. fatal error)
+  // opcodes are not allowed to be empty
   if(op.length === 0 || op.subarray(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
     throw new EvalError("reserved operator", SExp.to(op));
   }
   
   /*
-    # all other unknown opcodes are no-ops
-    # the cost of the no-ops is determined by the opcode number, except the
-    # 6 least significant bits.
+   all other unknown opcodes are no-ops
+   the cost of the no-ops is determined by the opcode number, except the
+   6 least significant bits.
    */
   const cost_function = (op.at(op.length-1) & 0b11000000) >> 6;
-  // # the multiplier cannot be 0. it starts at 1
+  // the multiplier cannot be 0. it starts at 1
   
   if(op.length > 5){
     throw new EvalError("invalid operator", SExp.to(op));
@@ -225,10 +225,10 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObj
   // The bytes here is 4bytes or smaller. So `int_from_bytes` is enough. (No bigint_from_bytes required)
   const cost_multiplier = int_from_bytes(op.subarray(0, op.length-1), {signed: false}) + 1;
   /*
-    # 0 = constant
-    # 1 = like op_add/op_sub
-    # 2 = like op_multiply
-    # 3 = like op_concat
+    0 = constant
+    1 = like op_add/op_sub
+    2 = like op_multiply
+    3 = like op_concat
    */
   let cost;
   if(cost_function === 0){
@@ -244,7 +244,7 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObj
     cost += arg_size * ARITH_COST_PER_BYTE;
   }
   else if(cost_function === 2){
-    // # like op_multiply
+    // like op_multiply
     cost = MUL_BASE_COST;
     const operands = args_len("unknown op", args);
     const res = operands.next();
@@ -259,7 +259,7 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObj
     }
   }
   else if(cost_function === 3){
-    // # like concat
+    // like concat
     cost = CONCAT_BASE_COST;
     let length = 0;
     for(const arg of args.as_iter()){
