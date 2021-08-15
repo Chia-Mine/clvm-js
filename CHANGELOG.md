@@ -6,7 +6,7 @@ This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](htt
 ### Changed
 - Improved `bigint_from_bytes` around 3-10 times faster.
 - Improved `int_from_bytes` performance.
-- Improved `bigint_to_bytes` performance.
+- Improved `bigint_to_bytes` around 2 times faster.
 
 ## [1.0.5]
 This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)

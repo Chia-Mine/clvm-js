@@ -129,14 +129,25 @@ export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): By
     throw new Error("OverflowError: can't convert negative int to unsigned");
   }
   let byte_count = 1;
+  const div = BigInt(signed ? 1 : 0);
+  const b32 = BigInt(4294967296);
   if(v > 0){
-    const div = BigInt(signed ? 1 : 0);
-    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count) - div) - BigInt(1) < v) {
+    let right_hand = (v + BigInt(1)) * (div + BigInt(1));
+    while((b32 ** BigInt((byte_count-1)/4 + 1)) < right_hand){
+      byte_count += 4;
+    }
+    right_hand = (v + BigInt(1)) * (div + BigInt(1));
+    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count)) < right_hand) {
       byte_count++;
     }
   }
   else if(v < 0){
-    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count) - BigInt(1)) < -v) {
+    let right_hand = (-v + BigInt(1)) * (div + BigInt(1));
+    while((b32 ** BigInt((byte_count-1)/4 + 1)) < right_hand){
+      byte_count += 4;
+    }
+    right_hand = -v * BigInt(2);
+    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count)) < right_hand) {
       byte_count++;
     }
   }
