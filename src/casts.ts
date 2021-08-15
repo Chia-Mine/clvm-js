@@ -92,27 +92,35 @@ export function int_to_bytes(v: number, option?: Partial<TConvertOption>): Bytes
   if(!signed && v < 0){
     throw new Error("OverflowError: can't convert negative int to unsigned");
   }
+  
   let byte_count = 1;
+  const div = signed ? 1 : 0;
+  const b16 = 65536;
   if(v > 0){
-    const div = signed ? 2 : 1;
-    let power = BigInt(256);
-    while(power < (v + 1)*div){
+    let right_hand = (v + 1) * (div + 1);
+    while((b16 ** ((byte_count-1)/2 + 1)) < right_hand){
+      byte_count += 2;
+    }
+    right_hand = (v + 1) * (div + 1);
+    while (2 ** (8 * byte_count) < right_hand) {
       byte_count++;
-      power <<= BigInt(8);
     }
   }
   else if(v < 0){
-    let power = BigInt(256);
-    while(power < -v*2){
+    let right_hand = (-v + 1) * (div + 1);
+    while((b16 ** ((byte_count-1)/2 + 1)) < right_hand){
+      byte_count += 2;
+    }
+    right_hand = -v * 2;
+    while (2 ** (8 * byte_count) < right_hand) {
       byte_count++;
-      power <<= BigInt(8);
     }
   }
   
-  const needExtraByte = signed && v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0;
-  const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
+  const extraByte = signed && v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0 ? 1 : 0;
+  const u8 = new Uint8Array(byte_count + extraByte);
   for(let i=0;i<byte_count;i++){
-    const j = needExtraByte ? i+1 : i;
+    const j = extraByte ? i+1 : i;
     u8[j] = (v >> (byte_count-i-1)*8) & 0xff;
   }
   
