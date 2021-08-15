@@ -82,11 +82,11 @@ export function* atom_to_byte_iterator(atom: Bytes|None){
   }
   else if(size < 0x400000000){
     uint8array = Uint8Array.from([
-      0xF8 | ((size / 2**32) >> 0),// (size >> 32),
-      ((size / 2**24) >> 0) & 0xFF,
-      ((size / 2**16) >> 0) & 0xFF,
-      ((size / 2**8) >> 0) & 0xFF,
-      ((size / 2**0) >> 0) & 0xFF,
+      0xF8 | ((size / 2**32) | 0),// (size >> 32),
+      ((size / 2**24) | 0) & 0xFF,
+      ((size / 2**16) | 0) & 0xFF,
+      ((size / 2**8) | 0) & 0xFF,
+      ((size / 2**0) | 0) & 0xFF,
     ]);
   }
   else{

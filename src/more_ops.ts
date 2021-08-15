@@ -174,7 +174,7 @@ export function op_multiply(args: SExp){
     const [r, rs] = o as [bigint, number];
     cost += MUL_COST_PER_OP;
     cost += (rs + vs) * MUL_LINEAR_COST_PER_BYTE;
-    cost += ((rs * vs) / MUL_SQUARE_COST_PER_BYTE_DIVIDER) >> 0;
+    cost += ((rs * vs) / MUL_SQUARE_COST_PER_BYTE_DIVIDER) | 0;
     v = v * r;
     vs = limbs_for_int(v);
   }

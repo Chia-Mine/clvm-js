@@ -253,7 +253,7 @@ export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObj
       for(const rs of operands){
         cost += MUL_COST_PER_OP;
         cost += (rs + vs) * MUL_LINEAR_COST_PER_BYTE;
-        cost += ((rs * vs) / MUL_SQUARE_COST_PER_BYTE_DIVIDER) >> 0;
+        cost += ((rs * vs) / MUL_SQUARE_COST_PER_BYTE_DIVIDER) | 0;
         vs += rs;
       }
     }
