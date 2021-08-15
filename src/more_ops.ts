@@ -41,7 +41,7 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, list, Stream, t, division, modulo} from "./__type_compatibility__";
+import {Bytes, list, Stream, t, division, modulo, divmod, Tuple} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 import {bigint_from_bytes, bigint_to_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
@@ -190,8 +190,7 @@ export function op_divmod(args: SExp){
     throw new EvalError("divmod with 0", SExp.to(i0));
   }
   cost += (l0+l1)*DIVMOD_COST_PER_BYTE;
-  const q = division(i0, i1); // i0 / i1
-  const r = modulo(i0, i1); // i0 % i1
+  const [q, r] = divmod(i0, i1) as Tuple<bigint, bigint>;
   const q1 = SExp.to(q);
   const r1 = SExp.to(r);
   cost += ((q1.atom as Bytes).length + (r1.atom as Bytes).length) * MALLOC_COST_PER_BYTE;
