@@ -1,16 +1,16 @@
 /*
-# decoding:
-# read a byte
-# if it's 0xfe, it's nil (which might be same as 0)
-# if it's 0xff, it's a cons box. Read two items, build cons
-# otherwise, number of leading set bits is length in bytes to read size
-# 0-0x7f are literal one byte values
-# leading bits is the count of bytes to read of size
-# 0x80-0xbf is a size of one byte (perform logical and of first byte with 0x3f to get size)
-# 0xc0-0xdf is a size of two bytes (perform logical and of first byte with 0x1f)
-# 0xe0-0xef is 3 bytes ((perform logical and of first byte with 0xf))
-# 0xf0-0xf7 is 4 bytes ((perform logical and of first byte with 0x7))
-# 0xf7-0xfb is 5 bytes ((perform logical and of first byte with 0x3))
+decoding:
+read a byte
+if it's 0xfe, it's nil (which might be same as 0)
+if it's 0xff, it's a cons box. Read two items, build cons
+otherwise, number of leading set bits is length in bytes to read size
+0-0x7f are literal one byte values
+leading bits is the count of bytes to read of size
+0x80-0xbf is a size of one byte (perform logical and of first byte with 0x3f to get size)
+0xc0-0xdf is a size of two bytes (perform logical and of first byte with 0x1f)
+0xe0-0xef is 3 bytes ((perform logical and of first byte with 0xf))
+0xf0-0xf7 is 4 bytes ((perform logical and of first byte with 0x7))
+0xf7-0xfb is 5 bytes ((perform logical and of first byte with 0x3))
  */
 import {SExp} from "./SExp";
 import {Bytes, Stream, t} from "./__type_compatibility__";
@@ -82,11 +82,11 @@ export function* atom_to_byte_iterator(atom: Bytes|None){
   }
   else if(size < 0x400000000){
     uint8array = Uint8Array.from([
-      0xF8 | ((size / 2**32) >> 0),// (size >> 32),
-      ((size / 2**24) >> 0) & 0xFF,
-      ((size / 2**16) >> 0) & 0xFF,
-      ((size / 2**8) >> 0) & 0xFF,
-      ((size / 2**0) >> 0) & 0xFF,
+      0xF8 | ((size / 2**32) | 0),// (size >> 32),
+      ((size / 2**24) | 0) & 0xFF,
+      ((size / 2**16) | 0) & 0xFF,
+      ((size / 2**8) | 0) & 0xFF,
+      ((size / 2**0) | 0) & 0xFF,
     ]);
   }
   else{
@@ -191,9 +191,9 @@ function _consume_atom(f: Stream, b: number){
 }
 
 /*
-# instead of parsing the input stream, this function pulls out all the bytes
-# that represent on S-expression tree, and returns them. This is more efficient
-# than parsing and returning a python S-expression tree.
+instead of parsing the input stream, this function pulls out all the bytes
+that represent on S-expression tree, and returns them. This is more efficient
+than parsing and returning a python S-expression tree.
  */
 export function sexp_buffer_from_stream(f: Stream): Bytes {
   const buffer = new Stream();

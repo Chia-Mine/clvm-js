@@ -14,13 +14,32 @@ export function int_from_bytes(b: Bytes|None, option?: Partial<TConvertOption>):
   }
   const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
   let unsigned32 = 0;
-  for(let i=b.length-1;i>=0;i--){
-    const byte = b.at(i);
-    unsigned32 += byte * (256**((b.length-1)-i));
+  const ui8array = b.raw();
+  const dv = new DataView(ui8array.buffer, ui8array.byteOffset, ui8array.byteLength);
+  const bytes4Remain = dv.byteLength % 4;
+  const bytes4Length = (dv.byteLength - bytes4Remain) / 4;
+  
+  let order = 1;
+  for(let i=bytes4Length-1;i>=0;i--){
+    const byte32 = dv.getUint32(i*4 + bytes4Remain);
+    unsigned32 += byte32 * order;
+    order = Number(BigInt(order) << BigInt(32));
   }
+  
+  if(bytes4Remain > 0){
+    if(bytes4Length === 0){
+      order = 1;
+    }
+    for(let i=bytes4Remain-1;i>=0;i--){
+      const byte = ui8array[i];
+      unsigned32 += byte * order;
+      order = Number(BigInt(order) << BigInt(8));
+    }
+  }
+  
   // If the first bit is 1, it is recognized as a negative number.
-  if(signed && (b.at(0) & 0x80)){
-    return unsigned32 - (256**b.length);
+  if(signed && (ui8array[0] & 0x80)){
+    return unsigned32 - Number(BigInt(1) << BigInt(b.length*8));
   }
   return unsigned32;
 }
@@ -31,12 +50,31 @@ export function bigint_from_bytes(b: Bytes|None, option?: Partial<TConvertOption
   }
   const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
   let unsigned32 = BigInt(0);
-  for(let i=b.length-1;i>=0;i--){
-    const byte = b.at(i);
-    unsigned32 += BigInt(byte) * (BigInt(256)**(BigInt((b.length-1)-i)));
+  const ui8array = b.raw();
+  const dv = new DataView(ui8array.buffer, ui8array.byteOffset, ui8array.byteLength);
+  const bytes4Remain = dv.byteLength % 4;
+  const bytes4Length = (dv.byteLength - bytes4Remain) / 4;
+  
+  let order = BigInt(1);
+  for(let i=bytes4Length-1;i>=0;i--){
+    const byte32 = dv.getUint32(i*4 + bytes4Remain);
+    unsigned32 += BigInt(byte32) * order;
+    order <<= BigInt(32);
   }
+  
+  if(bytes4Remain > 0){
+    if(bytes4Length === 0){
+      order = BigInt(1);
+    }
+    for(let i=bytes4Remain-1;i>=0;i--){
+      const byte = ui8array[i];
+      unsigned32 += BigInt(byte) * order;
+      order <<= BigInt(8);
+    }
+  }
+  
   // If the first bit is 1, it is recognized as a negative number.
-  if(signed && (b.at(0) & 0x80)){
+  if(signed && (ui8array[0] & 0x80)){
     return unsigned32 - (BigInt(1) << BigInt(b.length*8));
   }
   return unsigned32;
@@ -54,22 +92,35 @@ export function int_to_bytes(v: number, option?: Partial<TConvertOption>): Bytes
   if(!signed && v < 0){
     throw new Error("OverflowError: can't convert negative int to unsigned");
   }
+  
   let byte_count = 1;
+  const div = signed ? 1 : 0;
+  const b16 = 65536;
   if(v > 0){
-    while(2**(8*byte_count - (signed ? 1 : 0)) - 1 < v){
+    let right_hand = (v + 1) * (div + 1);
+    while((b16 ** ((byte_count-1)/2 + 1)) < right_hand){
+      byte_count += 2;
+    }
+    right_hand = (v + 1) * (div + 1);
+    while (2 ** (8 * byte_count) < right_hand) {
       byte_count++;
     }
   }
   else if(v < 0){
-    while(2**(8*byte_count - 1) < -v){
+    let right_hand = (-v + 1) * (div + 1);
+    while((b16 ** ((byte_count-1)/2 + 1)) < right_hand){
+      byte_count += 2;
+    }
+    right_hand = -v * 2;
+    while (2 ** (8 * byte_count) < right_hand) {
       byte_count++;
     }
   }
   
-  const needExtraByte = signed && v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0;
-  const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
+  const extraByte = signed && v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0 ? 1 : 0;
+  const u8 = new Uint8Array(byte_count + extraByte);
   for(let i=0;i<byte_count;i++){
-    const j = needExtraByte ? i+1 : i;
+    const j = extraByte ? i+1 : i;
     u8[j] = (v >> (byte_count-i-1)*8) & 0xff;
   }
   
@@ -86,22 +137,48 @@ export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): By
     throw new Error("OverflowError: can't convert negative int to unsigned");
   }
   let byte_count = 1;
+  const div = BigInt(signed ? 1 : 0);
+  const b32 = BigInt(4294967296);
   if(v > 0){
-    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - (signed ? BigInt(1) : BigInt(0))) - BigInt(1) < v){
+    let right_hand = (v + BigInt(1)) * (div + BigInt(1));
+    while((b32 ** BigInt((byte_count-1)/4 + 1)) < right_hand){
+      byte_count += 4;
+    }
+    right_hand = (v + BigInt(1)) * (div + BigInt(1));
+    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count)) < right_hand) {
       byte_count++;
     }
   }
   else if(v < 0){
-    while(BigInt(2)**(BigInt(8)*BigInt(byte_count) - BigInt(1)) < -v){
+    let right_hand = (-v + BigInt(1)) * (div + BigInt(1));
+    while((b32 ** BigInt((byte_count-1)/4 + 1)) < right_hand){
+      byte_count += 4;
+    }
+    right_hand = -v * BigInt(2);
+    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count)) < right_hand) {
       byte_count++;
     }
   }
   
-  const needExtraByte = signed && v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0);
-  const u8 = new Uint8Array(byte_count+(needExtraByte ? 1 : 0));
-  for(let i=0;i<byte_count;i++){
-    const j = needExtraByte ? i+1 : i;
-    u8[j] = Number((v >> (BigInt(byte_count-i-1))*BigInt(8)) & BigInt(0xff));
+  const extraByte = (signed && v > 0 && ((v >> (BigInt(byte_count-1)*BigInt(8))) & BigInt(0x80)) > BigInt(0)) ? 1 : 0;
+  const total_bytes = byte_count + extraByte;
+  const u8 = new Uint8Array(total_bytes);
+  const dv = new DataView(u8.buffer);
+  const byte4Remain = byte_count % 4;
+  const byte4Length = (byte_count - byte4Remain) / 4;
+  
+  let bitmask = BigInt(0xffffffff);
+  for(let i=0;i<byte4Length;i++){
+    const num = Number((v >> BigInt(32)*BigInt(i)) & bitmask);
+    const pointer = extraByte + byte4Remain + (byte4Length-1 - i)*4;
+    dv.setUint32(pointer, num);
+  }
+  v >>= BigInt(32) * BigInt(byte4Length);
+  bitmask = BigInt(0xff);
+  for(let i=0;i<byte4Remain;i++){
+    const num = Number((v >> BigInt(8)*BigInt(i)) & bitmask);
+    const pointer = extraByte + byte4Remain-1-i;
+    dv.setUint8(pointer, num);
   }
   
   return new Bytes(u8);

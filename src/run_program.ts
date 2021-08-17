@@ -69,8 +69,8 @@ export function run_program(
       return t(cost, SExp.null());
     }
   
-    // # create a bitmask for the most significant *set* bit
-    // # in the last non-zero byte
+    // create a bitmask for the most significant *set* bit
+    // in the last non-zero byte
     const end_bitmask = msb_mask(b.at(end_byte_cursor));
     
     let byte_cursor = b.length - 1;
@@ -119,9 +119,9 @@ export function run_program(
     const sexp = pair.first();
     const args = pair.rest();
     
-    // # put a bunch of ops on op_stack
+    // put a bunch of ops on op_stack
     if(!isCons(sexp)){
-      // # sexp is an atom
+      // sexp is an atom
       const [cost, r] = traverse_path(sexp, args) as [number, SExp];
       value_stack.push(r);
       return cost;

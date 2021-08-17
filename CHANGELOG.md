@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.6]
+This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+
+### Changed
+- Improved `bigint_from_bytes` around 3-10 times faster.
+- Improved `int_from_bytes` performance.
+- Improved `bigint_to_bytes` around 2 times faster.
+- Improved `int_to_bytes` performance.
+### Fixed
+- Fixed an issue where utility function `division`/`modulo` returned wrong values in some cases.
+### Added
+- Added `divmod` utility function.
+
 ## [1.0.5]
 This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
 
@@ -200,6 +213,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[1.0.6]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.2...v1.0.3
