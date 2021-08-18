@@ -1,7 +1,13 @@
 # Changelog
 
+## [1.0.7]
+This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+
+### Added
+- Added type declaration file `browser/index.d.ts` on build.
+
 ## [1.0.6]
-This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
 
 ### Changed
 - Improved `bigint_from_bytes` around 3-10 times faster.
@@ -213,6 +219,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[1.0.7]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.3...v1.0.4
