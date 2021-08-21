@@ -132,16 +132,16 @@ export function to_sexp_type(value: CastableType): CLVMObject {
     }
     
     if (op === op_set_left){ // set left
-      (stack[targetIndex] as CLVMObject).pair = t(
+      stack[targetIndex] = new CLVMObject(t(
         new CLVMObject(stack.pop()),
         ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[1]
-      );
+      ));
     }
     else if(op === op_set_right){ // set right
-      (stack[targetIndex] as CLVMObject).pair = t(
+      stack[targetIndex] = new CLVMObject(t(
         ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[0],
         new CLVMObject(stack.pop())
-      );
+      ));
     }
     else if(op === op_prepend_list){ // prepend list
       stack[targetIndex] = new CLVMObject(t(stack.pop(), stack[targetIndex]));
@@ -171,9 +171,15 @@ export function to_sexp_type(value: CastableType): CLVMObject {
  Exactly one of "atom" and "pair" must be None.
  */
 export class SExp implements CLVMType {
-  atom: Optional<Bytes> = None;
-  // this is always a 2-tuple of an object implementing the CLVM object protocol.
-  pair: Optional<Tuple<any, any>> = None;
+  private readonly _atom: Optional<Bytes> = None;
+  private readonly _pair: Optional<Tuple<any, any>> = None;
+  
+  get atom(){
+    return this._atom;
+  }
+  get pair(){
+    return this._pair;
+  }
   
   static readonly TRUE: SExp = new SExp(new CLVMObject(Bytes.from("0x01", "hex")));
   static readonly FALSE: SExp = new SExp(new CLVMObject(Bytes.NULL));
@@ -197,8 +203,8 @@ export class SExp implements CLVMType {
   }
   
   public constructor(v: CLVMObject) {
-    this.atom = v.atom;
-    this.pair = v.pair;
+    this._atom = v.atom;
+    this._pair = v.pair;
   }
   
   public as_pair(): Tuple<SExp, SExp>|None {
