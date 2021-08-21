@@ -5,6 +5,8 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 
 ### Added
 - Added type declaration file `browser/index.d.ts` on build.
+### Optimized
+- Improved serialization performance a bit by replacing fixed data into constants.
 
 ## [1.0.6]
 This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
