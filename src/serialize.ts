@@ -21,8 +21,6 @@ import {CLVMObject} from "./CLVMObject";
 
 const MAX_SINGLE_BYTE = 0x7F;
 const CONS_BOX_MARKER = 0xFF;
-const BYTES_CONS_BOX_MARKER = new Bytes(new Uint8Array([CONS_BOX_MARKER]));
-const BYTES_0x80 = new Bytes(new Uint8Array([0x80]));
 
 type TOpStack = Array<(op_stack: TOpStack, val_stack: TValStack, f: Stream, to_sexp_f: TToSexpF) => unknown>;
 
@@ -32,7 +30,8 @@ export function* sexp_to_byte_iterator(sexp: SExp){
     sexp = todo_stack.pop() as SExp;
     const pair = sexp.as_pair();
     if(pair){
-      yield BYTES_CONS_BOX_MARKER;
+      // yield Bytes.from([CONS_BOX_MARKER]);
+      yield new Bytes(new Uint8Array([CONS_BOX_MARKER]));
       todo_stack.push(pair[1]);
       todo_stack.push(pair[0]);
     }
@@ -45,7 +44,8 @@ export function* sexp_to_byte_iterator(sexp: SExp){
 export function* atom_to_byte_iterator(atom: Bytes|None){
   const size = atom ? atom.length : 0;
   if(size === 0 || !atom){
-    yield BYTES_0x80;
+    // yield Bytes.from("0x80", "hex");
+    yield new Bytes(new Uint8Array([0x80]));
     return;
   }
   else if(size === 1){
@@ -154,7 +154,7 @@ function _op_consume_sexp(f: Stream){
 
 function _consume_atom(f: Stream, b: number){
   if(b === 0x80){
-    return BYTES_0x80;
+    return Bytes.from([b]);
   }
   else if(b <= MAX_SINGLE_BYTE){
     return Bytes.from([b]);
