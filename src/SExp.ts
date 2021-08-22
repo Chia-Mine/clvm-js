@@ -19,7 +19,7 @@ export type CastableType = SExp
 | Tuple<CastableType, CastableType>
 ;
 
-export function looks_like_clvm_object(o: any): o is CLVMObject {
+export function looks_like_clvm_object(o: any): o is CLVMType {
   if(!o || typeof o !== "object"){
     return false;
   }
@@ -68,7 +68,7 @@ type operations = typeof op_convert | typeof op_set_left | typeof op_set_right |
 type op_target = number | None;
 type op_and_target = Tuple<operations, op_target>;
 
-export function to_sexp_type(value: CastableType): CLVMObject {
+export function to_sexp_type(value: CastableType): CLVMType {
   let v: CastableType|undefined = value;
   const stack = [v];
   
@@ -113,7 +113,7 @@ export function to_sexp_type(value: CastableType): CLVMObject {
         stack.push(new CLVMObject(Bytes.NULL));
   
         for(const _ of v){
-          stack.push(_ as CLVMObject);
+          stack.push(_ as CLVMType);
           ops.push(t(3, targetIndex)); // prepend list
           // we only need to convert if it's not already the right type
           if(!looks_like_clvm_object(_)){
@@ -134,12 +134,12 @@ export function to_sexp_type(value: CastableType): CLVMObject {
     if (op === op_set_left){ // set left
       stack[targetIndex] = new CLVMObject(t(
         new CLVMObject(stack.pop()),
-        ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[1]
+        ((stack[targetIndex] as CLVMType).pair as Tuple<any, any>)[1]
       ));
     }
     else if(op === op_set_right){ // set right
       stack[targetIndex] = new CLVMObject(t(
-        ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[0],
+        ((stack[targetIndex] as CLVMType).pair as Tuple<any, any>)[0],
         new CLVMObject(stack.pop())
       ));
     }
@@ -154,7 +154,7 @@ export function to_sexp_type(value: CastableType): CLVMObject {
   }
   
   // stack[0] implements the clvm object protocol and can be wrapped by an SExp
-  return stack[0] as CLVMObject;
+  return stack[0] as CLVMType;
 }
 
 /*
@@ -202,7 +202,7 @@ export class SExp implements CLVMType {
     return SExp.__NULL__;
   }
   
-  public constructor(v: CLVMObject) {
+  public constructor(v: CLVMType) {
     this._atom = v.atom;
     this._pair = v.pair;
   }

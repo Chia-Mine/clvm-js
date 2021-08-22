@@ -42,11 +42,11 @@ export function msb_mask(byte: number){
 
 export function run_program(
   program: SExp,
-  args: CLVMObject,
+  args: CLVMType,
   operator_lookup: TOperatorDict,
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
-): Tuple<number, CLVMObject>{
+): Tuple<number, CLVMType>{
   program = SExp.to(program);
   const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp.to) : None;
   

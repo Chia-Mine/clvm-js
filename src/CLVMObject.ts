@@ -62,6 +62,6 @@ export function isCons(obj: CLVMType): obj is Cons {
   return Boolean((!obj.atom && obj.pair));
 }
 
-export function isCLVMObject(v: any): v is CLVMObject {
+export function isCLVMObject(v: any): v is CLVMType {
   return v && typeof v.atom !== "undefined" && typeof v.pair !== "undefined";
 }

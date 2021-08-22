@@ -9,6 +9,8 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 - Changed SExp/CLVMObject properties `atom` and `pair` to readonly to prevent potential bug.
 - Changed `src/__bls_signatures__.ts` location to `src/__bls_signatures__/index.ts` to prepare for future wasm-loading tweaks.
 - Upgraded `@chiamine/bls-signatures` to 0.2.1-beta.2.
+- Use `CLVMType` instead of `CLVMObject` as a valid type representation of `CLVMObject`.  
+  (CLVMObject should not be used as a type because there might be number of type incompatibility due to new private field)
 
 ## [1.0.6]
 This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
