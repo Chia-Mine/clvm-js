@@ -25,7 +25,7 @@
     "node": ">=12.13.0"
   },
   "dependencies": {
-    "@chiamine/bls-signatures": "^0.2.1-beta.1",
+    "@chiamine/bls-signatures": "^0.2.1-beta.2",
     "jscrypto": "^1.0.2"
   },
   "devDependencies": {
