@@ -1,5 +1,5 @@
 import type {G1Element as G1ElementType, ModuleInstance} from "@chiamine/bls-signatures";
-import * as blsLoader from "@chiamine/bls-signatures";
+import * as blsLoader from "./loader";
 
 type TCreateModule = () => Promise<ModuleInstance>;
 export let BLS: ModuleInstance | undefined;

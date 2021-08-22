@@ -7,6 +7,7 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 - Added type declaration file `browser/index.d.ts` on build.
 ### Changed
 - Changed SExp/CLVMObject properties `atom` and `pair` to readonly to prevent potential bug.
+- Changed `src/__bls_signatures__.ts` location to `src/__bls_signatures__/index.ts` to prepare for future wasm-loading tweaks.
 
 ## [1.0.6]
 This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)

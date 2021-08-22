@@ -9,6 +9,7 @@ module.exports = {
       tsConfig: {
         sourceMap: true,
         inlineSourceMap: true,
+        allowJs: true,
       }
     },
   },

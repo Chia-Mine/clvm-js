@@ -13,6 +13,8 @@ yarn add clvm
 This code is compatible with:
 - [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
   - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/ab4560900cf475ff515054bec0ca9a4491aca366...main)
+- [`6aca6349bd6c8ed369672307885df33cdcd124f9`](https://github.com/Chia-Network/bls-signatures/tree/6aca6349bd6c8ed369672307885df33cdcd124f9) of [bls-signatures@1.0.2](https://github.com/Chia-Network/bls-signatures)
+  - [Diff to the latest bls-signatures](https://github.com/Chia-Network/bls-signatures/compare/6aca6349bd6c8ed369672307885df33cdcd124f9...main)
 
 ## Example
 ```javascript
@@ -51,6 +53,8 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 ├── main.js      # js file which clvm is compiled into
 └── blsjs.wasm   # copy it from npm_modules/clvm/dist/browser/blsjs.wasm
 </pre>
+
+If you use [React](https://reactjs.org/), put `blsjs.wasm` into `public` folder. It automatically places wasm file next to main js file.
 
 **Note1**: Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
 **Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.

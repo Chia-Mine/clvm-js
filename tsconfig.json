@@ -3,7 +3,7 @@
     "outDir": "./.dist/npm",
     "module": "CommonJS",
     "target": "es2016",
-    "allowJs": false,
+    "allowJs": true,
     "lib": [
       "dom",
       "dom.iterable",
