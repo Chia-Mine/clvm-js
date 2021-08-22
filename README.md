@@ -51,7 +51,7 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 <pre>
 ├── ...
 ├── main.js      # js file which clvm is compiled into
-└── blsjs.wasm   # copy it from npm_modules/clvm/dist/browser/blsjs.wasm
+└── blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
 </pre>
 
 If you use [React](https://reactjs.org/), put `blsjs.wasm` into `public` folder. It automatically places wasm file next to main js file.
