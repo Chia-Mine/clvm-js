@@ -54,7 +54,7 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 └── blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
 </pre>
 
-If you use [React](https://reactjs.org/), put `blsjs.wasm` into `public` folder. It automatically places wasm file next to main js file.
+If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `public/static/js` folder. It automatically copies wasm file next to main js file.
 
 **Note1**: Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
 **Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
