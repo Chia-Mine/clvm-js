@@ -22,7 +22,7 @@ This code is compatible with:
 async function main(){
   var clvm = require("clvm");
 
-  // 'clvm.initialization()' here is not required
+  // 'clvm.initialize()' here is not required
   // if you're so sure it never calls 'pubkey_for_exp' or 'point_add' operation.
   // When one of those operations is called without prior 'clvm.initialize()'
   // it will raise an Error.
