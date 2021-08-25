@@ -161,7 +161,7 @@ export function to_sexp_type(value: CastableType): CLVMType {
  SExp provides higher level API on top of any object implementing the CLVM
  object protocol.
  The tree of values is not a tree of SExp objects, it's a tree of CLVMObject
- like objects. SExp simply wraps them to privide a uniform view of any
+ like objects. SExp simply wraps them to provide a uniform view of any
  underlying conforming tree structure.
  
  The CLVM object protocol (concept) exposes two attributes:

@@ -1,7 +1,7 @@
 import {None} from "./__python_types__";
 import {SExp} from "./SExp";
 import {TToSexpF} from "./as_javascript";
-import {CLVMObject, CLVMType, isAtom, isCons} from "./CLVMObject";
+import {CLVMType, isAtom, isCons} from "./CLVMObject";
 import {Bytes, Tuple, t} from "./__type_compatibility__";
 import {
   APPLY_COST,
