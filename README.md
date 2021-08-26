@@ -1,5 +1,4 @@
 # clvm
-
 Javascript implementation of CLVM (Chia Lisp VM)  
 
 ## Install
@@ -8,6 +7,17 @@ npm install clvm
 # or
 yarn add clvm
 ```
+
+## Test
+`clvm-js` passes all the test equivalent to Python's original `clvm`.  
+You can compare test files for [Javascript](./tests) and [Python](https://github.com/Chia-Network/clvm/tree/main/tests)  
+To run the test, execute the following command.
+```shell
+npm run test
+# or
+yarn test
+```
+If you find something not compatible with Python's clvm, please report it to GitHub issues.
 
 ## Compatibility
 This code is compatible with:
