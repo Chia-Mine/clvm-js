@@ -44,5 +44,20 @@
     "typescript": "^4.2.4",
     "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2"
-  }
+  },
+  "browserslist": [
+    "edge >= 79",
+    "firefox >= 68",
+    "chrome >= 67",
+    "safari > 14",
+    "opera >= 54",
+    "ios_saf >= 14.4",
+    "android >= 67",
+    "op_mob >= 48",
+    "and_chr >= 67",
+    "and_ff >= 68",
+    "samsung >= 9.2",
+    "node >= 10.4.0",
+    "electron >= 4.0.0"
+  ]
 }
