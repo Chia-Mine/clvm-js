@@ -69,14 +69,14 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 └── blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
 </pre>
 
-If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `<react-project-root>/public/static/js` folder. It automatically copies wasm file next to main js file.
+If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
 
 **Note1**: Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
 **Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
 If so, you can make your code fully synchronous.
 
 ### Browser compatibility
-`clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work.  
+`clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work as well.  
 If you transpile code using babel or something which uses babel (like create-react-app),
 you need to tell the transpiler to optimize code only for the target browsers.  
 Just copy and paste below to your `package.json` and you can avoid a lot of runtime incompatibility issues.
