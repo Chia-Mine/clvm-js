@@ -1,4 +1,4 @@
-import {int_from_bytes, bigint_from_bytes, int_to_bytes, bigint_to_bytes, limbs_for_int} from "../src/casts";
+import {int_from_bytes, bigint_from_bytes, int_to_bytes, pow, bigint_to_bytes, limbs_for_int} from "../src/casts";
 import {None, h} from "../src";
 
 describe("int_from_bytes", () => {
@@ -110,6 +110,16 @@ describe("int_to_bytes", () => {
     expect(() => int_to_bytes(-65535)).toThrow();
     expect(int_to_bytes(3735928559).equal_to(int_to_bytes(3735928559, {signed: false}))).toBeTruthy();
   });
+});
+
+test("pow", () => {
+  expect(pow(BigInt(2), BigInt(10))).toBe(BigInt(1024));
+  expect(pow(BigInt(1024), BigInt(1))).toBe(BigInt(1024));
+  expect(pow(BigInt(256), BigInt(0))).toBe(BigInt(1));
+  expect(pow(BigInt(0), BigInt(0))).toBe(BigInt(1));
+  expect(pow(BigInt(0), BigInt(1))).toBe(BigInt(0));
+  expect(pow(BigInt(-2), BigInt(3))).toBe(BigInt(-8));
+  expect(pow(BigInt(-2), BigInt(2))).toBe(BigInt(4));
 });
 
 describe("bigint_to_bytes", () => {

@@ -127,6 +127,49 @@ export function int_to_bytes(v: number, option?: Partial<TConvertOption>): Bytes
   return new Bytes(u8);
 }
 
+// The reason to use `pow` instead of `**` is that some transpiler automatically converts `**` into `Math.pow`
+// which cannot be used against bigint.
+export function pow(base: bigint, exp: bigint): bigint {
+  return base ** exp;
+  // The code below was once tested, but it is 100x slower than '**' operator.
+  // So I gave up to use it.
+  /*
+  if(exp === BigInt(0)){
+    return BigInt(1);
+  }
+  else if(exp === BigInt(1)){
+    return base;
+  }
+  else if(exp < BigInt(0)){
+    throw new RangeError("BigInt negative exponent");
+  }
+  
+  const stack: Array<[bigint, bigint]> = [];
+  stack.push([base, exp]);
+  let retVal: bigint = BigInt(1);
+  while(stack.length){
+    [base, exp] = stack.pop() as [bigint, bigint];
+    if(exp === BigInt(0)){
+      continue;
+    }
+    else if(exp === BigInt(1)){
+      retVal *= base;
+      continue;
+    }
+    
+    if(exp % BigInt(2)){
+      stack.push([base*base, exp/BigInt(2)]);
+      stack.push([base, BigInt(1)]);
+    }
+    else{
+      stack.push([base*base, exp/BigInt(2)]);
+    }
+  }
+  
+  return retVal;
+   */
+}
+
 export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): Bytes {
   if(v === BigInt(0)){
     return Bytes.NULL;
@@ -141,21 +184,21 @@ export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): By
   const b32 = BigInt(4294967296);
   if(v > 0){
     let right_hand = (v + BigInt(1)) * (div + BigInt(1));
-    while((b32 ** BigInt((byte_count-1)/4 + 1)) < right_hand){
+    while(pow(b32, BigInt((byte_count-1)/4 + 1)) < right_hand){
       byte_count += 4;
     }
     right_hand = (v + BigInt(1)) * (div + BigInt(1));
-    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count)) < right_hand) {
+    while(pow(BigInt(2), (BigInt(8) * BigInt(byte_count))) < right_hand) {
       byte_count++;
     }
   }
   else if(v < 0){
     let right_hand = (-v + BigInt(1)) * (div + BigInt(1));
-    while((b32 ** BigInt((byte_count-1)/4 + 1)) < right_hand){
+    while(pow(b32, BigInt((byte_count-1)/4 + 1)) < right_hand){
       byte_count += 4;
     }
     right_hand = -v * BigInt(2);
-    while (BigInt(2) ** (BigInt(8) * BigInt(byte_count)) < right_hand) {
+    while(pow(BigInt(2), (BigInt(8) * BigInt(byte_count))) < right_hand) {
       byte_count++;
     }
   }
