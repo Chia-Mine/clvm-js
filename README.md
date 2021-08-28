@@ -44,11 +44,16 @@ async function main(){
   // which requires asynchronous loading.
   await clvm.initialize();
   
-  const {SExp, OPERATOR_LOOKUP, KEYWORD_TO_ATOM} = clvm;
-  const v1 = OPERATOR_LOOKUP(KEYWORD_TO_ATOM["+"], SExp.to([3,4,5]))[1];
-  const v2 = SExp.to(12);
-  const ok = v1.equal_to(v2);
-  console.log(`ok: ${ok}`); // 'ok: true'
+  const {SExp, OPERATOR_LOOKUP, KEYWORD_TO_ATOM, h, t, run_program} = clvm;
+  const plus = h(KEYWORD_TO_ATOM["+"]);
+  const q = h(KEYWORD_TO_ATOM["q"]);
+  const program = SExp.to([plus, 1, t(q, 175)]);
+  const env = SExp.to(25);
+  const [cost, result] = run_program(program, env, OPERATOR_LOOKUP);
+  let isEqual = result.equal_to(SExp.to(25 + 175));
+  console.log(`isEqual: ${isEqual}`); // 'isEqual: true'
+  isEqual = result.as_int() === (25 + 175);
+  console.log(`isEqual: ${isEqual}`); // 'isEqual: true'
 }
 
 main().catch(e => console.error(e));
