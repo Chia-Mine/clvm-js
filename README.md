@@ -70,6 +70,28 @@ If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `<react-project
 **Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
 If so, you can make your code fully synchronous.
 
+### Browser compatibility
+`clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work.  
+If you transpile code using babel or something which uses babel (like create-react-app),
+you need to tell the transpiler to optimize code only for the target browsers.  
+Just copy and paste below to your `package.json` and you can avoid a lot of runtime incompatibility issues.
+```
+"browserslist": [
+  "edge >= 79",
+  "firefox >= 68",
+  "chrome >= 67",
+  "safari > 14",
+  "opera >= 54",
+  "ios_saf >= 14.4",
+  "android >= 67",
+  "op_mob >= 48",
+  "and_chr >= 67",
+  "and_ff >= 68",
+  "samsung >= 9.2",
+  "node >= 10.4.0",
+  "electron >= 4.0.0"
+]
+```
 
 ## Differences with Python's `clvm`
 Although I try hard to make it look like Python's `clvm`, there are things users should be aware of.  

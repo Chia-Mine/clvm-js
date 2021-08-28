@@ -12,7 +12,7 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 - Use `CLVMType` instead of `CLVMObject` as a valid type representation of `CLVMObject`.  
   (CLVMObject should not be used as a type because there might be number of type incompatibility due to new private field)
 - <strike>Replace `**` operator on `BigInt` by user-defined function because babel or some transpiler always converts `**` to `Math.pow` which cannot be used with `BigInt`</strike>  
-  - Although I tried this, it turns out to be 100x slower than `**` operator, so I gave up. It is required to disable such a transform by end-developer.
+  - Although I tried this, it turns out to be 100x slower than `**` operator, so I gave up. It is required to disable such a transform by end-developer. See detail [here](./README.md#browser-compatibility)
 
 ## [1.0.6]
 This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
