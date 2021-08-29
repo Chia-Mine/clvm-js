@@ -13,8 +13,13 @@ yarn add clvm
 You can compare test files for [Javascript](./tests) and [Python](https://github.com/Chia-Network/clvm/tree/main/tests)  
 To run the test, execute the following command.
 ```shell
+git clone https://github.com/Chia-Mine/clvm-js
+cd clvm-js
+
+npm install
 npm run test
 # or
+yarn
 yarn test
 ```
 If you find something not compatible with Python's clvm, please report it to GitHub issues.
@@ -73,7 +78,8 @@ If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `<react-project
 
 **Note1**: Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
 **Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
-If so, you can make your code fully synchronous.
+If so, you can make your code fully synchronous.  
+**Note3**: Redistributing your project with bundled `blsjs.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
 
 ### Browser compatibility
 `clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work as well.  
@@ -204,7 +210,7 @@ str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by th
 [Apache license 2.0](https://github.com/Chia-Network/clvm/blob/main/LICENSE)
 
 ## bls-signatures license
-[bls-signatures](https://github.com/Chia-Network/bls-signatures) is used under the
+[bls-signatures](https://github.com/Chia-Network/bls-signatures) is used and redistributed under the
 [Apache license 2.0](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
 
 ## jscrypto license
