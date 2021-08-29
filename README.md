@@ -26,9 +26,9 @@ If you find something not compatible with Python's clvm, please report it to Git
 
 ## Compatibility
 This code is compatible with:
-- [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+- [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)
   - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/2722c78ddb92f067c5025196f397e4d2955f9053...main)
-- [`f9db7faa370c4743e48be8a9823232e4d906c4d0`](https://github.com/Chia-Network/bls-signatures/tree/f9db7faa370c4743e48be8a9823232e4d906c4d0) of [bls-signatures@1.0.5](https://github.com/Chia-Network/bls-signatures)
+- [`f9db7faa370c4743e48be8a9823232e4d906c4d0`](https://github.com/Chia-Network/bls-signatures/tree/f9db7faa370c4743e48be8a9823232e4d906c4d0) of [bls-signatures](https://github.com/Chia-Network/bls-signatures)
   - [Diff to the latest bls-signatures](https://github.com/Chia-Network/bls-signatures/compare/f9db7faa370c4743e48be8a9823232e4d906c4d0...main)
 
 ## Example
@@ -76,10 +76,13 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 
 If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
 
-**Note1**: Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
-**Note2**: If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
+**Note1**  
+Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
+**Note2**  
+If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
 If so, you can make your code fully synchronous.  
-**Note3**: Redistributing your project with bundled `blsjs.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
+**Note3**  
+Redistributing your project with bundled `blsjs.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
 
 ### Browser compatibility
 `clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work as well.  

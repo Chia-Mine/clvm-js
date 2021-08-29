@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.0.7]
-This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Added
 - Added type declaration file `browser/index.d.ts` on build.
@@ -15,7 +15,7 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
   - Although I tried this, it turns out to be 100x slower than `**` operator, so I gave up. It is required to disable such a transform by end-developer. See detail [here](./README.md#browser-compatibility)
 
 ## [1.0.6]
-This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Changed
 - Improved `bigint_from_bytes` around 3-10 times faster.
@@ -28,27 +28,27 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 - Added `divmod` utility function.
 
 ## [1.0.5]
-This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Fixed
 - Fixed an issue where `op_lsh` did not work as expected.
 
 ## [1.0.4]
-This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Fixed
 - Fixed an issue where `int_from_bytes` and `bigint_from_bytes` returned always signed int/bigint.
 - Fixed an issue where `int_to_bytes` and `bigint_to_bytes` blindly recognized the argument as a signed int/bigint.
 
 ## [1.0.3]
-This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`ab4560900cf475ff515054bec0ca9a4491aca366`](https://github.com/Chia-Network/clvm/tree/ab4560900cf475ff515054bec0ca9a4491aca366) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Fixed
 - Fixed an issue where `op_logand`, `op_logior`, `op_logxor` did not work
 - Fixed an issue where result of div/mod against negative `bigint` was not compatible with original `clvm`
 
 ## [1.0.2]
-This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Fixed
 - Fixed an issue where `op_pubkey_for_exp` was missing.
@@ -58,13 +58,13 @@ This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](htt
 - Added tests for Bytes-BigInt conversion.
 
 ## [1.0.1]
-This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Changed
 - Improved `Stream::read` performance by removing extra memory copy.
 
 ## [1.0.0]
-This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm@0.9.7](https://github.com/Chia-Network/clvm)
+This version is compatible with [`1a5cb17895d8707f784a85180bc97d3c6ebe71a0`](https://github.com/Chia-Network/clvm/tree/1a5cb17895d8707f784a85180bc97d3c6ebe71a0) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Removed
 - Removed `.dist` folder from git.  
