@@ -20,22 +20,28 @@ export type Cons = {
   by just having an "atom" and a "pair" field
  */
 export class CLVMObject implements CLVMType {
-  atom: Optional<Bytes> = None;
-  // this is always a 2-tuple of an object implementing the CLVM object protocol.
-  pair: Optional<Tuple<any, any>> = None;
+  private readonly _atom: Optional<Bytes> = None;
+  private readonly _pair: Optional<Tuple<any, any>> = None;
+  
+  get atom(){
+    return this._atom;
+  }
+  get pair(){
+    return this._pair;
+  }
   
   public constructor(v: any) {
     if(isCLVMObject(v)){
-      this.atom = v.atom;
-      this.pair = v.pair;
+      this._atom = v.atom;
+      this._pair = v.pair;
     }
     else if(isTuple(v)){
-      this.pair = v;
-      this.atom = None;
+      this._pair = v;
+      this._atom = None;
     }
     else{
-      this.atom = v;
-      this.pair = None;
+      this._atom = v;
+      this._pair = None;
     }
   }
 }
@@ -56,6 +62,6 @@ export function isCons(obj: CLVMType): obj is Cons {
   return Boolean((!obj.atom && obj.pair));
 }
 
-export function isCLVMObject(v: any): v is CLVMObject {
+export function isCLVMObject(v: any): v is CLVMType {
   return v && typeof v.atom !== "undefined" && typeof v.pair !== "undefined";
 }

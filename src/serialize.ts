@@ -17,7 +17,7 @@ import {Bytes, Stream, t} from "./__type_compatibility__";
 import {None} from "./__python_types__";
 import {TToSexpF, TValStack} from "./as_javascript";
 import {int_from_bytes} from "./casts";
-import {CLVMObject} from "./CLVMObject";
+import {CLVMObject, CLVMType} from "./CLVMObject";
 
 const MAX_SINGLE_BYTE = 0x7F;
 const CONS_BOX_MARKER = 0xFF;
@@ -133,7 +133,7 @@ export function sexp_from_stream(f: Stream, to_sexp_f: TToSexpF){
   while(op_stack.length){
     const func = op_stack.pop();
     if(func){
-      func(op_stack, val_stack, f, ((v: any) => new CLVMObject(v)) as TToSexpF);
+      func(op_stack, val_stack, f, ((v: any) => new CLVMObject(v) as CLVMType) as TToSexpF);
     }
   }
   

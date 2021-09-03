@@ -1,7 +1,7 @@
 import {int_from_bytes} from "./casts";
 import {SExp} from "./SExp";
 import {Bytes, Tuple, t, isBytes} from "./__type_compatibility__";
-import {CLVMObject} from "./CLVMObject";
+import type {CLVMType} from "./CLVMObject";
 import {EvalError} from "./EvalError";
 import {
   ARITH_BASE_COST,
@@ -203,7 +203,7 @@ cost_function is 2 bits and defines how cost is computed based on arguments:
 this means that unknown ops where cost_function is 1, 2, or 3, may still be
 fatal errors if the arguments passed are not atoms.
 */
-export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMObject> {
+export function default_unknown_op(op: Bytes, args: SExp): Tuple<number, CLVMType> {
   // any opcode starting with ffff is reserved (i.e. fatal error)
   // opcodes are not allowed to be empty
   if(op.length === 0 || op.subarray(0, 2).equal_to(Bytes.from("0xffff", "hex"))){
@@ -299,7 +299,7 @@ function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>){
 export type TOperatorDict<A extends string = ATOMS> = {
   unknown_op_handler: typeof default_unknown_op;
 }
-& ((op: Bytes|string|number, args: SExp) => Tuple<number, CLVMObject>)
+& ((op: Bytes|string|number, args: SExp) => Tuple<number, CLVMType>)
 & TAtomOpFunctionMap<A>
 & Record<TBasicAtom, Bytes>
 ;

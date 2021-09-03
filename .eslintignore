@@ -6,3 +6,4 @@ tests/
 bin/
 pre_build.js
 jest.config.js
+src/__bls_signatures__/loader.js

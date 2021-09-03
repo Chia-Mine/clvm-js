@@ -19,7 +19,7 @@ export type CastableType = SExp
 | Tuple<CastableType, CastableType>
 ;
 
-export function looks_like_clvm_object(o: any): o is CLVMObject {
+export function looks_like_clvm_object(o: any): o is CLVMType {
   if(!o || typeof o !== "object"){
     return false;
   }
@@ -68,7 +68,7 @@ type operations = typeof op_convert | typeof op_set_left | typeof op_set_right |
 type op_target = number | None;
 type op_and_target = Tuple<operations, op_target>;
 
-export function to_sexp_type(value: CastableType): CLVMObject {
+export function to_sexp_type(value: CastableType): CLVMType {
   let v: CastableType|undefined = value;
   const stack = [v];
   
@@ -113,7 +113,7 @@ export function to_sexp_type(value: CastableType): CLVMObject {
         stack.push(new CLVMObject(Bytes.NULL));
   
         for(const _ of v){
-          stack.push(_ as CLVMObject);
+          stack.push(_ as CLVMType);
           ops.push(t(3, targetIndex)); // prepend list
           // we only need to convert if it's not already the right type
           if(!looks_like_clvm_object(_)){
@@ -132,16 +132,16 @@ export function to_sexp_type(value: CastableType): CLVMObject {
     }
     
     if (op === op_set_left){ // set left
-      (stack[targetIndex] as CLVMObject).pair = t(
+      stack[targetIndex] = new CLVMObject(t(
         new CLVMObject(stack.pop()),
-        ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[1]
-      );
+        ((stack[targetIndex] as CLVMType).pair as Tuple<any, any>)[1]
+      ));
     }
     else if(op === op_set_right){ // set right
-      (stack[targetIndex] as CLVMObject).pair = t(
-        ((stack[targetIndex] as CLVMObject).pair as Tuple<any, any>)[0],
+      stack[targetIndex] = new CLVMObject(t(
+        ((stack[targetIndex] as CLVMType).pair as Tuple<any, any>)[0],
         new CLVMObject(stack.pop())
-      );
+      ));
     }
     else if(op === op_prepend_list){ // prepend list
       stack[targetIndex] = new CLVMObject(t(stack.pop(), stack[targetIndex]));
@@ -154,14 +154,14 @@ export function to_sexp_type(value: CastableType): CLVMObject {
   }
   
   // stack[0] implements the clvm object protocol and can be wrapped by an SExp
-  return stack[0] as CLVMObject;
+  return stack[0] as CLVMType;
 }
 
 /*
  SExp provides higher level API on top of any object implementing the CLVM
  object protocol.
  The tree of values is not a tree of SExp objects, it's a tree of CLVMObject
- like objects. SExp simply wraps them to privide a uniform view of any
+ like objects. SExp simply wraps them to provide a uniform view of any
  underlying conforming tree structure.
  
  The CLVM object protocol (concept) exposes two attributes:
@@ -171,9 +171,15 @@ export function to_sexp_type(value: CastableType): CLVMObject {
  Exactly one of "atom" and "pair" must be None.
  */
 export class SExp implements CLVMType {
-  atom: Optional<Bytes> = None;
-  // this is always a 2-tuple of an object implementing the CLVM object protocol.
-  pair: Optional<Tuple<any, any>> = None;
+  private readonly _atom: Optional<Bytes> = None;
+  private readonly _pair: Optional<Tuple<any, any>> = None;
+  
+  get atom(){
+    return this._atom;
+  }
+  get pair(){
+    return this._pair;
+  }
   
   static readonly TRUE: SExp = new SExp(new CLVMObject(Bytes.from("0x01", "hex")));
   static readonly FALSE: SExp = new SExp(new CLVMObject(Bytes.NULL));
@@ -196,9 +202,9 @@ export class SExp implements CLVMType {
     return SExp.__NULL__;
   }
   
-  public constructor(v: CLVMObject) {
-    this.atom = v.atom;
-    this.pair = v.pair;
+  public constructor(v: CLVMType) {
+    this._atom = v.atom;
+    this._pair = v.pair;
   }
   
   public as_pair(): Tuple<SExp, SExp>|None {

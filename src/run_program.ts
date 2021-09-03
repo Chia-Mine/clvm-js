@@ -1,7 +1,7 @@
 import {None} from "./__python_types__";
 import {SExp} from "./SExp";
 import {TToSexpF} from "./as_javascript";
-import {CLVMObject, isAtom, isCons} from "./CLVMObject";
+import {CLVMType, isAtom, isCons} from "./CLVMObject";
 import {Bytes, Tuple, t} from "./__type_compatibility__";
 import {
   APPLY_COST,
@@ -42,11 +42,11 @@ export function msb_mask(byte: number){
 
 export function run_program(
   program: SExp,
-  args: CLVMObject,
+  args: CLVMType,
   operator_lookup: TOperatorDict,
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
-): Tuple<number, CLVMObject>{
+): Tuple<number, CLVMType>{
   program = SExp.to(program);
   const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp.to) : None;
   
@@ -182,7 +182,7 @@ export function run_program(
       return APPLY_COST;
     }
     
-    const [additional_cost, r] = operator_lookup(op, operand_list) as [number, CLVMObject];
+    const [additional_cost, r] = operator_lookup(op, operand_list) as [number, CLVMType];
     value_stack.push(r as SExp);
     return additional_cost;
   }
