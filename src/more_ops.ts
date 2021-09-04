@@ -87,7 +87,7 @@ export function* args_as_int32(op_name: string, args: SExp){
       throw new EvalError(`${op_name} requires int32 args`, arg);
     }
     else if(arg.atom.length > 4){
-      throw new EvalError(`${op_name} requires int32 args (with no leading zeros`, arg);
+      throw new EvalError(`${op_name} requires int32 args (with no leading zeros)`, arg);
     }
     yield arg.as_int();
   }
@@ -154,7 +154,7 @@ export function op_subtract(args: SExp){
     total += sign * r;
     sign = BigInt(-1);
     arg_size += l;
-    cost += ARITH_COST_PER_BYTE;
+    cost += ARITH_COST_PER_ARG;
   }
   cost += arg_size * ARITH_COST_PER_BYTE;
   return malloc_cost(cost, SExp.to(total));
@@ -273,7 +273,8 @@ export function op_point_add(items: SExp){
       cost += POINT_ADD_COST_PER_ARG;
     }
     catch(e){
-      throw new EvalError(`point_add expects blob, got ${_.atom}: ${JSON.stringify(e)}`, items);
+      const eMsg = e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e);
+      throw new EvalError(`point_add expects blob, got ${_}: ${eMsg}`, items);
     }
   }
   return malloc_cost(cost, SExp.to(p));
@@ -321,7 +322,7 @@ export function op_substr(args: SExp){
     throw new EvalError("invalid indices for substr", args);
   }
   
-  const s = s0.subarray(i1, i2);
+  const s = s0.subarray(i1, i2-i1);
   const cost = 1;
   return t(cost, SExp.to(s));
 }
@@ -493,7 +494,12 @@ export function op_softfork(args: SExp){
   if(!isAtom(a)){
     throw new EvalError("softfork requires int args", a);
   }
-  const cost = a.as_int();
+  const cost_bigint = a.as_bigint();
+  if(cost_bigint > BigInt(Number.MAX_SAFE_INTEGER)){
+    throw new Error("Cost greater than 2**53-1 is not supported at this time");
+  }
+  
+  const cost = Number(cost_bigint);
   if(cost < 1){
     throw new EvalError("cost must be > 0", args);
   }

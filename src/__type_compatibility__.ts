@@ -4,6 +4,7 @@ import {Word32Array} from "jscrypto/Word32Array";
 import {SHA256} from "jscrypto/SHA256";
 import {None} from "./__python_types__";
 import {G1Element} from "@chiamine/bls-signatures";
+import {bigint_from_bytes} from "./casts";
 
 export function to_hexstr(r: Uint8Array) {
   return (new Word32Array(r)).toString();
@@ -238,25 +239,46 @@ export class Bytes {
    * @param other
    */
   public compare(other: Bytes): -1|0|1 {
-    if(this.length !== other.length){
-      return this.length > other.length ? 1 : -1;
+    if(this.length === 0 && other.length === 0){
+      return 0;
+    }
+    else if(this.length * other.length === 0){ // Either length of this or other is zero.
+      return this.length > 0 ? 1 : -1;
     }
     const self_raw_byte = this._b;
-    const dv_self = new DataView(self_raw_byte.buffer, self_raw_byte.byteOffset, self_raw_byte.byteLength);
+    const self_byteLength = self_raw_byte.byteLength;
+    const dv_self = new DataView(self_raw_byte.buffer, self_raw_byte.byteOffset, self_byteLength);
     const other_raw_byte = other.raw();
-    const dv_other = new DataView(other_raw_byte.buffer, other_raw_byte.byteOffset, other_raw_byte.byteLength);
+    const other_byteLength = other_raw_byte.byteLength;
+    const dv_other = new DataView(other_raw_byte.buffer, other_raw_byte.byteOffset, other_byteLength);
   
-    const ui32MaxCount = (this.length / 4) | 0;
-    for(let i=0;i<ui32MaxCount;i++){
-      const ui32_self = dv_self.getUint32(i*4);
-      const ui32_other = dv_other.getUint32(i*4);
+    // const minByteLength = Math.min(self_byteLength, other_byteLength); 
+    const minByteLength = Math.min(self_byteLength, other_byteLength) - 4;
+    const ui32MaxCount = (Math.max(self_byteLength, other_byteLength) / 4) | 0;
+    let offset = 0;
+    for(offset=0;offset<ui32MaxCount;offset++){
+      const k = offset*4;
+      // if(k + 4 > minByteLength){ // k > minByteLength - 4 ==(optimize)==> minByteLength = minByteLength - 4
+      if(k > minByteLength){
+        break;
+      }
+      const ui32_self = dv_self.getUint32(k);
+      const ui32_other = dv_other.getUint32(k);
       if(ui32_self !== ui32_other){
         return ui32_self > ui32_other ? 1 : -1;
       }
     }
   
-    const offset = ui32MaxCount*4;
-    for(let i=offset;i<this.length;i++){
+    offset = offset*4;
+    const ui8MaxCount = Math.max(self_byteLength, other_byteLength);
+    for(let i=offset;i<ui8MaxCount;i++){
+      const k = i + 1;
+      if(k > self_byteLength){
+        return -1;
+      }
+      else if(k > other_byteLength){
+        return 1;
+      }
       const ui8_self = dv_self.getUint8(i);
       const ui8_other = dv_other.getUint8(i);
       if(ui8_self !== ui8_other){

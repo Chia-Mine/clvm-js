@@ -72,7 +72,7 @@ export function assert_G1Element_valid(bytes: Uint8Array){
   const BLSModule = getBLSModule();
   const {G1Element} = BLSModule;
   if(bytes.length !== G1Element.SIZE){
-    throw new Error("G1Element: Invalid size");
+    throw new Error("Length of bytes object not equal to G1Element::SIZE");
   }
   
   if((bytes[0] & 0xc0) === 0xc0){ // representing infinity

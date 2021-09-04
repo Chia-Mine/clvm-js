@@ -169,7 +169,7 @@ export type KEYWORDS = keyof typeof KEYWORD_TO_ATOM;
 export function* args_len(op_name: string, args: SExp){
   for(const arg of args.as_iter()){
     if(arg.pair){
-      throw new EvalError(`${op_name} requires int args"`, arg);
+      throw new EvalError(`${op_name} requires int args`, arg);
     }
     yield (arg.atom as Bytes).length;
   }
