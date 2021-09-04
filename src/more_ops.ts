@@ -273,7 +273,8 @@ export function op_point_add(items: SExp){
       cost += POINT_ADD_COST_PER_ARG;
     }
     catch(e){
-      throw new EvalError(`point_add expects blob, got ${_.atom}: ${JSON.stringify(e)}`, items);
+      const eMsg = e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e);
+      throw new EvalError(`point_add expects blob, got ${_}: ${eMsg}`, items);
     }
   }
   return malloc_cost(cost, SExp.to(p));

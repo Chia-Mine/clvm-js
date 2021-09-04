@@ -9,6 +9,7 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 - Fixed `limbs_for_int` return wrong value when argument is `0`.
 - Fixed an issue where `Bytes` comparison returns wrong result in some cases.
 - Fixed an issue where `op_softfork` crashed with argument atom larger than or equal to 53bit.
+- Fixed G1Element error message.
 
 ## [1.0.7]
 This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)
