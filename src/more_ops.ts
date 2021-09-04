@@ -87,7 +87,7 @@ export function* args_as_int32(op_name: string, args: SExp){
       throw new EvalError(`${op_name} requires int32 args`, arg);
     }
     else if(arg.atom.length > 4){
-      throw new EvalError(`${op_name} requires int32 args (with no leading zeros`, arg);
+      throw new EvalError(`${op_name} requires int32 args (with no leading zeros)`, arg);
     }
     yield arg.as_int();
   }
