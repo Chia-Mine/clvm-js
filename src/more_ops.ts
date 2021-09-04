@@ -493,7 +493,12 @@ export function op_softfork(args: SExp){
   if(!isAtom(a)){
     throw new EvalError("softfork requires int args", a);
   }
-  const cost = a.as_int();
+  const cost_bigint = a.as_bigint();
+  if(cost_bigint > BigInt(Number.MAX_SAFE_INTEGER)){
+    throw new Error("Cost greater than 2**53-1 is not supported at this time");
+  }
+  
+  const cost = Number(cost_bigint);
   if(cost < 1){
     throw new EvalError("cost must be > 0", args);
   }
