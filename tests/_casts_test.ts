@@ -184,7 +184,7 @@ describe("bigint_to_bytes", () => {
 });
 
 test("limbs_for_int", () => {
-  expect(limbs_for_int(0)).toBe(1);
+  expect(limbs_for_int(0)).toBe(0);
   expect(limbs_for_int(1)).toBe(1);
   expect(limbs_for_int(-255)).toBe(1);
   expect(limbs_for_int(255)).toBe(1);
