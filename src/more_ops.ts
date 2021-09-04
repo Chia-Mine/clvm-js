@@ -154,7 +154,7 @@ export function op_subtract(args: SExp){
     total += sign * r;
     sign = BigInt(-1);
     arg_size += l;
-    cost += ARITH_COST_PER_BYTE;
+    cost += ARITH_COST_PER_ARG;
   }
   cost += arg_size * ARITH_COST_PER_BYTE;
   return malloc_cost(cost, SExp.to(total));
