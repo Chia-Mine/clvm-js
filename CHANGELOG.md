@@ -6,6 +6,7 @@ This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](htt
 - Fixed typo in error message
 - Fixed an issue where `op_substr` did not work as expected.
 - Fixed an issue where cost calculation for `op_subtract` was not correct.
+- Fixed `limbs_for_int` return wrong value when argument is `0`.
 
 ## [1.0.7]
 This version is compatible with [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)

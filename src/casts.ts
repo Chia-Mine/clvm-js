@@ -232,5 +232,8 @@ export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): By
  * @param {number} v
  */
 export function limbs_for_int(v: number|bigint): number {
+  if(v === 0 || v === BigInt(0)){
+    return 0;
+  }
   return ((v >= 0 ? v : -v).toString(2).length + 7) >> 3;
 }
