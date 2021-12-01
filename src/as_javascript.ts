@@ -1,5 +1,5 @@
 import {CastableType, SExp} from "./SExp";
-import {Bytes, Tuple, t} from "./__type_compatibility__";
+import {Bytes, Tuple, t, isList, isBytes} from "./__type_compatibility__";
 
 export type TOpStack = Array<(op_stack: TOpStack, val_stack: TValStack) => unknown>;
 export type TValStack = Array<Bytes|SExp|SExp[]|Tuple<SExp, SExp>>;
@@ -18,19 +18,16 @@ export function as_javascript(sexp: SExp){
   function _make_tuple(op_stack: TOpStack, val_stack: TValStack){
     const left = val_stack.pop() as SExp;
     const right = val_stack.pop() as SExp;
-    if(right.equal_to(Bytes.NULL)){
+    if(isBytes(right) && right.equal_to(Bytes.NULL)){
       val_stack.push([left]);
+    }
+    else if(isList(right)){
+      const v = [left].concat(right);
+      val_stack.push(v);
     }
     else{
       val_stack.push(t(left, right));
     }
-  }
-  
-  function _extend_list(op_stack: TOpStack, val_stack: TValStack){
-    let left = [val_stack.pop()];
-    const right = val_stack.pop();
-    left = left.concat(right);
-    val_stack.push(left as SExp[]);
   }
   
   function _as_javascript(op_stack: TOpStack, val_stack: TValStack){
@@ -38,12 +35,7 @@ export function as_javascript(sexp: SExp){
     const pair = v.as_pair();
     if(pair){
       const [left, right] = pair;
-      if(right.listp()){
-        op_stack.push(_extend_list);
-      }
-      else{
-        op_stack.push(_make_tuple);
-      }
+      op_stack.push(_make_tuple);
       op_stack.push(_as_javascript);
       op_stack.push(_roll);
       op_stack.push(_as_javascript);
