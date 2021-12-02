@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.0.9]
-This version is compatible with [`389efa3fbe65c77600da63c78d29c0866d292754`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)
+This version is compatible with [`389efa3fbe65c77600da63c78d29c0866d292754`](https://github.com/Chia-Network/clvm/tree/389efa3fbe65c77600da63c78d29c0866d292754) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Fixed
 - Fixed an issue of `as_javascript` with tuples inside tuples and ending with 0
