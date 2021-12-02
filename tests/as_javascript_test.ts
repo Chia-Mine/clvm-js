@@ -42,6 +42,10 @@ test("test_null", () => {
   check_as_javascript(b(""));
 });
 
+test("test_embedded_tuples", () => {
+  check_as_javascript(t(b("10"), t(t(b("200"), b("300")), b("400"))));
+});
+
 test("test_single_bytes", () => {
   for(let _=0;_<256;_++){
     check_as_javascript(Bytes.from([_]));
