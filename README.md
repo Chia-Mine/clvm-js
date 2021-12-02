@@ -26,8 +26,8 @@ If you find something not compatible with Python's clvm, please report it to Git
 
 ## Compatibility
 This code is compatible with:
-- [`2722c78ddb92f067c5025196f397e4d2955f9053`](https://github.com/Chia-Network/clvm/tree/2722c78ddb92f067c5025196f397e4d2955f9053) of [clvm](https://github.com/Chia-Network/clvm)
-  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/2722c78ddb92f067c5025196f397e4d2955f9053...main)
+- [`389efa3fbe65c77600da63c78d29c0866d292754`](https://github.com/Chia-Network/clvm/tree/389efa3fbe65c77600da63c78d29c0866d292754) of [clvm](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/389efa3fbe65c77600da63c78d29c0866d292754...main)
 - [`f9db7faa370c4743e48be8a9823232e4d906c4d0`](https://github.com/Chia-Network/bls-signatures/tree/f9db7faa370c4743e48be8a9823232e4d906c4d0) of [bls-signatures](https://github.com/Chia-Network/bls-signatures)
   - [Diff to the latest bls-signatures](https://github.com/Chia-Network/bls-signatures/compare/f9db7faa370c4743e48be8a9823232e4d906c4d0...main)
 
