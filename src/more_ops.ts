@@ -212,8 +212,8 @@ export function op_div(args: SExp){
   
   // this is to preserve a buggy behavior from the initial implementation
   // of this operator.
-  if(q === -1 && r !== 0){
-    q += 1;
+  if (q === BigInt(-1) && r !== BigInt(0)) {
+    q += BigInt(1);
   }
   
   return malloc_cost(cost, SExp.to(q));
