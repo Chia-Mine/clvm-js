@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0]
+This version is compatible with [`534c878f4eb1509e48c324695605bef2e4af7554`](https://github.com/Chia-Network/clvm/tree/534c878f4eb1509e48c324695605bef2e4af7554) of [clvm](https://github.com/Chia-Network/clvm)
+
+### Changed
+- Made `op_div` bug-compatible with `clvm_rs`
+
 ## [1.0.9]
 This version is compatible with [`389efa3fbe65c77600da63c78d29c0866d292754`](https://github.com/Chia-Network/clvm/tree/389efa3fbe65c77600da63c78d29c0866d292754) of [clvm](https://github.com/Chia-Network/clvm)
 
@@ -245,6 +251,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[2.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.9...v2.0.0
 [1.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.6...v1.0.7
