@@ -1,2 +1,2 @@
-const createModuleInstance = require("@chiamine/bls-signatures");
+const createModuleInstance = require("bls-signatures");
 module.exports = createModuleInstance;

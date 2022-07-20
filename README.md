@@ -26,10 +26,10 @@ If you find something not compatible with Python's clvm, please report it to Git
 
 ## Compatibility
 This code is compatible with:
-- [`534c878f4eb1509e48c324695605bef2e4af7554`](https://github.com/Chia-Network/clvm/tree/534c878f4eb1509e48c324695605bef2e4af7554) of [clvm](https://github.com/Chia-Network/clvm)
-  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/534c878f4eb1509e48c324695605bef2e4af7554...main)
-- [`f9db7faa370c4743e48be8a9823232e4d906c4d0`](https://github.com/Chia-Network/bls-signatures/tree/f9db7faa370c4743e48be8a9823232e4d906c4d0) of [bls-signatures](https://github.com/Chia-Network/bls-signatures)
-  - [Diff to the latest bls-signatures](https://github.com/Chia-Network/bls-signatures/compare/f9db7faa370c4743e48be8a9823232e4d906c4d0...main)
+- [`fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8`](https://github.com/Chia-Network/clvm/tree/fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8) of [clvm](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8...main)
+- [`34f504bd0ef2cd3a219fea8ce6b15ff7684687fd`](https://github.com/Chia-Network/bls-signatures/tree/34f504bd0ef2cd3a219fea8ce6b15ff7684687fd) of [bls-signatures](https://github.com/Chia-Network/bls-signatures)
+  - [Diff to the latest bls-signatures](https://github.com/Chia-Network/bls-signatures/compare/34f504bd0ef2cd3a219fea8ce6b15ff7684687fd...main)
 
 ## Example
 ```javascript

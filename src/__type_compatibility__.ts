@@ -3,8 +3,7 @@ import {Utf8} from "jscrypto/Utf8";
 import {Word32Array} from "jscrypto/Word32Array";
 import {SHA256} from "jscrypto/SHA256";
 import {None} from "./__python_types__";
-import {G1Element} from "@chiamine/bls-signatures";
-import {bigint_from_bytes} from "./casts";
+import {G1Element} from "bls-signatures";
 
 export function to_hexstr(r: Uint8Array) {
   return (new Word32Array(r)).toString();

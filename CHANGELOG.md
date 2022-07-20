@@ -5,6 +5,7 @@ This version is compatible with [`534c878f4eb1509e48c324695605bef2e4af7554`](htt
 
 ### Changed
 - Made `op_div` bug-compatible with `clvm_rs`
+- Replaced npm package `@chiamine/bls-signatures` with `bls-signatures`
 
 ## [1.0.9]
 This version is compatible with [`389efa3fbe65c77600da63c78d29c0866d292754`](https://github.com/Chia-Network/clvm/tree/389efa3fbe65c77600da63c78d29c0866d292754) of [clvm](https://github.com/Chia-Network/clvm)
