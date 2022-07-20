@@ -1,7 +1,10 @@
 # Changelog
 
 ## [2.0.0]
-This version is compatible with [`534c878f4eb1509e48c324695605bef2e4af7554`](https://github.com/Chia-Network/clvm/tree/534c878f4eb1509e48c324695605bef2e4af7554) of [clvm](https://github.com/Chia-Network/clvm)
+This version is compatible with [`fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8`](https://github.com/Chia-Network/clvm/tree/fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8) of [clvm](https://github.com/Chia-Network/clvm)
+
+### Breaking Change
+The behaviour of `op_div` has changed. See detailed explanation [here](https://www.chia.net/2022/03/04/divided-we-fork.en.html) 
 
 ### Changed
 - Made `op_div` bug-compatible with `clvm_rs`
