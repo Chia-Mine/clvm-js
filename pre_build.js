@@ -4,7 +4,7 @@ const fs = require("fs");
 // clean and create output dir
 const distDir = path.join(__dirname, ".dist");
 if(fs.existsSync(distDir)){
-  fs.rmdirSync(distDir, {recursive: true});
+  fs.rmSync(distDir, {recursive: true});
 }
 fs.mkdirSync(distDir);
 const distNpmDir = path.join(distDir, "npm");
@@ -13,10 +13,10 @@ fs.mkdirSync(distNpmDir);
 // Copy wasm file
 const browserDir = path.join(distNpmDir, "browser");
 if(fs.existsSync(browserDir)){
-  fs.rmdirSync(browserDir, {recursive: true});
+  fs.rmSync(browserDir, {recursive: true});
 }
 fs.mkdirSync(browserDir);
-const blsWasmSrcPath = path.join(__dirname, "node_modules", "@chiamine", "bls-signatures", "blsjs.wasm");
+const blsWasmSrcPath = path.join(__dirname, "node_modules", "bls-signatures", "blsjs.wasm");
 const blsWasmDestPath = path.join(browserDir, "blsjs.wasm");
 if(!fs.existsSync(blsWasmSrcPath)){
   console.error("blsjs.wasm not found at:");
