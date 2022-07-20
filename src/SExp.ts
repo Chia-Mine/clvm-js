@@ -1,4 +1,4 @@
-import {G1Element} from "@chiamine/bls-signatures";
+import {G1Element} from "bls-signatures";
 import {None, Optional} from "./__python_types__";
 import {CLVMObject, CLVMType} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";

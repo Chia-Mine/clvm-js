@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.0]
+This version is compatible with [`fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8`](https://github.com/Chia-Network/clvm/tree/fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8) of [clvm](https://github.com/Chia-Network/clvm)
+
+### Breaking Change
+The behaviour of `op_div` has changed. See detailed explanation [here](https://www.chia.net/2022/03/04/divided-we-fork.en.html) 
+
+### Changed
+- Made `op_div` bug-compatible with `clvm_rs`
+- Replaced npm package `@chiamine/bls-signatures` with `bls-signatures`
+
 ## [1.0.9]
 This version is compatible with [`389efa3fbe65c77600da63c78d29c0866d292754`](https://github.com/Chia-Network/clvm/tree/389efa3fbe65c77600da63c78d29c0866d292754) of [clvm](https://github.com/Chia-Network/clvm)
 
@@ -245,6 +255,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[2.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.9...v2.0.0
 [1.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.6...v1.0.7

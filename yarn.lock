@@ -323,13 +323,6 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@chiamine/bls-signatures@^0.2.1-beta.2":
-  version "0.2.1-beta.2"
-  resolved "https://registry.yarnpkg.com/@chiamine/bls-signatures/-/bls-signatures-0.2.1-beta.2.tgz#6ce2ef0b2ed76bf1e650bc93ba2640e69c3240b1"
-  integrity sha512-Pd7ZHvn4ao5UX1DwxWofat/xLwo2TGeAY7HdhJ3YHtXQxsfHJS1OirCTGjO6cx/miW57pAXW7pwlXYQXo67paw==
-  dependencies:
-    binascii "0.0.2"
-
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.3.tgz#90420f9f9c6d3987f176a19a7d8e764271a2f55d"
@@ -1187,6 +1180,13 @@ binascii@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/binascii/-/binascii-0.0.2.tgz#a7f8a8801dbccf8b1756b743daa0fee9e2d9e0ee"
   integrity sha1-p/iogB28z4sXVrdD2qD+6eLZ4O4=
+
+bls-signatures@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/bls-signatures/-/bls-signatures-1.0.14.tgz#cfd735d2241e244b187cf28c37b19181894c8732"
+  integrity sha512-QDPMfwetbfjwijtgmfrQ+VZc0hItMDopmhSfkDVDdlk10nHm1v0sQMc+CULKYbmaOT/8HZBOAHWlbWe89cqNYA==
+  dependencies:
+    binascii "0.0.2"
 
 brace-expansion@^1.1.7:
   version "1.1.11"

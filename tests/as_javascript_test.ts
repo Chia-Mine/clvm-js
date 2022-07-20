@@ -1,7 +1,7 @@
 import {SExp, t, h, b, Bytes, getBLSModule, initialize, None, Tuple, list, str, repr} from "../src";
 import {CLVMObject} from "../src/CLVMObject";
 import {EvalError} from "../src/EvalError";
-import type {ModuleInstance} from "@chiamine/bls-signatures";
+import type {ModuleInstance} from "bls-signatures";
 
 let BLS: ModuleInstance;
 
