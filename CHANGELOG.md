@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1]
+This version is compatible with [`480b32840c525e17b5ab2f29036c033febaae71e`](https://github.com/Chia-Network/clvm/tree/480b32840c525e17b5ab2f29036c033febaae71e) of [clvm](https://github.com/Chia-Network/clvm)
+
+### Changed
+- Changed error message format if argument of `x` is a single atom.  
+  For example, when you run `(x (q . 2000))`, output will be  
+  (Prev) `FAIL: clvm raise (2000)` => (Now)  `FAIL: clvm raise 2000`
+
 ## [2.0.0]
 This version is compatible with [`fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8`](https://github.com/Chia-Network/clvm/tree/fc73cd9dc2fc30a1fd461d0f05af9f9679e042c8) of [clvm](https://github.com/Chia-Network/clvm)
 
@@ -255,6 +263,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
+[2.0.1]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.9...v2.0.0
 [1.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.7...v1.0.8

@@ -28,7 +28,7 @@ module.exports = {
       "crypto": false,
     }
   },
-  target: ["es5"],
+  target: ["web"],
   optimization: {
     minimizer: [
       new TerserPlugin({

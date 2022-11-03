@@ -43,7 +43,12 @@ export function op_listp(args: SExp){
 }
 
 export function op_raise(args: SExp){
-  throw new EvalError("clvm raise", args);
+  if(args.list_len() === 1 && !args.first().listp()){
+    throw new EvalError("clvm raise", args.first());
+  }
+  else{
+    throw new EvalError("clvm raise", args);
+  }
 }
 
 export function op_eq(args: SExp){
