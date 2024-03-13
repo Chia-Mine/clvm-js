@@ -43,7 +43,7 @@ test("test_unknown_op_reserved", () => {
   
   expect(() => {
     // an empty atom is not a valid opcode
-    expect(default_unknown_op(b(""), SExp.null())).toEqual(t(1, SExp.null()));
+    default_unknown_op(b(""), SExp.null());
   }).toThrowError(EvalError);
   
   // a single ff is not sufficient to be treated as a reserved opcode

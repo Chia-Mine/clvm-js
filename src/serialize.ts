@@ -30,7 +30,7 @@ export function* sexp_to_byte_iterator(sexp: SExp){
   const todo_stack = [sexp];
   while(todo_stack.length){
     sexp = todo_stack.pop() as SExp;
-    const pair = sexp.as_pair();
+    const pair = sexp.pair;
     if(pair){
       // yield Bytes.from([CONS_BOX_MARKER]);
       yield new Bytes(new Uint8Array([CONS_BOX_MARKER]));

@@ -212,22 +212,17 @@ test("test_long_list", () => {
 
 test("test_invalid_type", () => {
   expect(() => {
-    const s = SExp.to(dummy_class as any);
-    // conversions are deferred, this is where it will fail:
-    const b = list(s.as_iter());
-    console.log(b);
+    SExp.to(dummy_class as any);
   }).toThrowError(Error);
 });
 
 test("test_invalid_tuple", () => {
   expect(() => {
-    const s = SExp.to(t(dummy_class, dummy_class));
-    // conversions are deferred, this is where it will fail:
-    const b = list(s.as_iter());
+    SExp.to(t(dummy_class, dummy_class));
   }).toThrowError(Error);
   
   expect(() => {
-    const s = SExp.to(t(dummy_class, dummy_class));
+    SExp.to(t(dummy_class, dummy_class));
   }).toThrowError(Error);
 });
 

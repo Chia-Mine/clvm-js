@@ -56,8 +56,16 @@ export function convert_atom_to_bytes(v: any): Bytes {
   else if(typeof v.serialize === "function"){
     return Bytes.from(v, "G1Element");
   }
+  else if(typeof v.toBytes === "function"){
+    return v.toBytes() as Bytes;
+  }
   
-  throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
+  try {
+    return Bytes.from(v);
+  }
+  catch (_) {
+    throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
+  }
 }
 
 const op_convert = 0;
