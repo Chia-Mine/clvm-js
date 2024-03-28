@@ -2,8 +2,8 @@ import type {G1Element as G1ElementType, ModuleInstance} from "bls-signatures";
 import * as blsLoader from "./loader";
 
 type TCreateModule = () => Promise<ModuleInstance>;
-export let BLS: ModuleInstance | undefined;
-export let loadPromise: Promise<ModuleInstance> | undefined;
+let BLS: ModuleInstance | undefined;
+let loadPromise: Promise<ModuleInstance> | undefined;
 
 /**
  * Load BLS Module instance.

@@ -176,6 +176,14 @@ test("test_convert_atom", () => {
   expect(convert_atom_to_bytes(None).equal_to(b(""))).toBeTruthy();
   expect(convert_atom_to_bytes([]).equal_to(b(""))).toBeTruthy();
   
+  class DummyByteConvertible {
+    toBytes(): Bytes {
+      return b("foobar");
+    }
+  }
+  
+  expect(convert_atom_to_bytes(new DummyByteConvertible()).equal_to(b("foobar"))).toBeTruthy();
+  
   expect(() => {
     convert_atom_to_bytes([1, 2, 3]);
   }).toThrow();

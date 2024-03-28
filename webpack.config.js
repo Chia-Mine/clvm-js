@@ -26,7 +26,11 @@ module.exports = {
       "path": false,
       "fs": false,
       "crypto": false,
-    }
+      "util": false,
+    },
+    alias: {
+      "clvm_wasm": false,
+    },
   },
   target: ["web"],
   optimization: {

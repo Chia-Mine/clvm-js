@@ -7,3 +7,4 @@ bin/
 pre_build.js
 jest.config.js
 src/__bls_signatures__/loader.js
+src/__clvm_wasm__/loader.js
