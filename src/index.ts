@@ -2,6 +2,7 @@ import {SExp} from "./SExp";
 
 export * from "./__debug__";
 export * from "./__bls_signatures__";
+export * from "./__clvm_wasm__";
 export * from "./__python_types__";
 export * from "./__type_compatibility__";
 export * from "./as_javascript";
