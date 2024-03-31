@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.2]
+## [2.1.0]
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
 
 ### Changed
@@ -271,7 +271,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
-[2.0.2]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.1...v2.0.2
+[2.0.2]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.9...v2.0.0
 [1.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.8...v1.0.9
