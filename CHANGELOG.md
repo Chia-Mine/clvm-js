@@ -6,7 +6,12 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
 ### Changed
 - Now `op_div` does not accept negative operands.
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
+- `SExp` can be initialized from `LazyNode` of `clvm_wasm` (Rust version of `clvm`)
 - Update tests.
+### Added
+- Added `clvm_rs` support
+  - Added `run_chia_program`
+- Added `asUint8Array()` method to `Stream`
 
 ## [2.0.1]
 This version is compatible with [`480b32840c525e17b5ab2f29036c033febaae71e`](https://github.com/Chia-Network/clvm/tree/480b32840c525e17b5ab2f29036c033febaae71e) of [clvm](https://github.com/Chia-Network/clvm)
