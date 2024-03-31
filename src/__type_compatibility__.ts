@@ -462,7 +462,11 @@ export class Stream {
   }
   
   public getValue(): Bytes {
-    return new Bytes(this._buffer.subarray(0, this.length));
+    return new Bytes(this.asUint8Array());
+  }
+  
+  public asUint8Array(): Uint8Array {
+    return this._buffer.subarray(0, this.length);
   }
 }
 
