@@ -179,11 +179,13 @@ export function to_sexp_type(value: CastableType): CLVMType {
  Exactly one of "atom" and "pair" must be None.
  */
 export class SExp implements CLVMType {
-  private readonly _atom: Optional<Bytes> = None;
+  // When instantiating SExp from `LazyNode` of `clvm_wasm`, _atom will be `Optional<Uint8Array>`.
+  // Otherwise, it will be `Optional<Bytes>`
+  private readonly _atom: Optional<Bytes|Uint8Array> = None;
   private readonly _pair: Optional<Tuple<any, any>> = None;
   
   get atom(){
-    return this._atom;
+    return this._atom instanceof Uint8Array ? new Bytes(this._atom) : this._atom;
   }
   get pair(){
     return this._pair;
