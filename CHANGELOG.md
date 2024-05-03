@@ -1,8 +1,9 @@
 # Changelog
 
-## [2.1.0]
+## [3.0.0]
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
-
+### Breaking Change
+- The type of `None` is now `undefined` (Previously it was `null`)
 ### Changed
 - Now `op_div` does not accept negative operands.
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
@@ -276,7 +277,7 @@ At this version, I've managed to improve test complete time to `79s` -> `2s` by 
 Initial (beta) release.
 
 <!--[Unreleased]: https://github.com/Chia-Mine/clvm-js/compare/v0.0.1...v0.0.2-->
-[2.0.2]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.1...v2.1.0
+[3.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.1...v3.0.0
 [2.0.1]: https://github.com/Chia-Mine/clvm-js/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.9...v2.0.0
 [1.0.9]: https://github.com/Chia-Mine/clvm-js/compare/v1.0.8...v1.0.9
