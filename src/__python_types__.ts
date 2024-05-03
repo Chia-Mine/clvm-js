@@ -16,8 +16,8 @@ export type bool = boolean;
 export type True = true;
 export type False = false;
 */
-export const None = null;
+export const None = undefined;
 // eslint-disable-next-line no-redeclare
-export type None = null;
+export type None = undefined;
 
 export type Optional<T> = T | None;
