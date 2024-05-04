@@ -19,6 +19,7 @@ test("run transactions generator", async () => {
    This comes from a block of height 600043 in the testnet11.
    You can get the block data by:
      chia rpc full_node get_blocks '{"start": 600043, "end": 600044}'
+   on testnet11.
    The transactions_generator in the block was serialized with backref enabled.
    */
   const transactions_generator = h(
