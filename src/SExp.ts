@@ -135,8 +135,8 @@ export function to_sexp_type(value: CastableType): CLVMType {
       continue;
     }
   
-    if(targetIndex === null){
-      throw new Error("Invalid target. target is null");
+    if(targetIndex === None){
+      throw new Error("Invalid target. target is None");
     }
     
     if (op === op_set_left){ // set left
@@ -327,8 +327,11 @@ export class SExp implements CLVMType {
 }
 
 export function isSExp(v: any): v is SExp {
-  return v && typeof v.atom !== "undefined"
-    && typeof v.pair !== "undefined"
+  return v
+    && (
+      (v.atom !== undefined && v.pair === undefined)
+      || (v.atom === undefined && v.pair !== undefined)
+    )
     && typeof v.first === "function"
     && typeof v.rest === "function"
     && typeof v.cons === "function"

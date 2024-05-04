@@ -86,7 +86,7 @@ export class Bytes {
   }
   
   public static from(value?: Uint8Array|Bytes|number[]|string|G1Element|None, type?: BytesFromType){
-    if(value === None || value === undefined){
+    if(value === None || value === null){
       return new Bytes(value);
     }
     else if(value instanceof Uint8Array){

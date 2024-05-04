@@ -4,6 +4,13 @@
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
 ### Breaking Change
 - The type of `None` is now `undefined` (Previously it was `null`)
+- Changed how `isSExp` and `isCLVMObject` check a value.  
+  Previously they checked whether the value is an object and both `the_object.atom` AND `the_object.pair`  
+  are not `undefined`.  
+  From this release, they check whether only one of `the_object.atom` and `the_object_pair` is not `undefined`,
+  while the other is `undefined`.  
+  Note: `isSExp()` additionally checks whether the value has `first`, `rest` and `cons` properties and  
+  the type of all of them are "function".
 ### Changed
 - Now `op_div` does not accept negative operands.
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
