@@ -12,6 +12,8 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
 ### Added
 - Added `clvm_rs` support
   - Added `run_chia_program`
+  - Added `run_clvm`
+  - Added `LazyNoe`
 - Added `asUint8Array()` method to `Stream`
 
 ## [2.0.1]
