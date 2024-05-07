@@ -31,19 +31,19 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.28",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@types/node": "^20.12.10",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^48.2.1",
+    "eslint-plugin-jsdoc": "^48.2.3",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "jest": "^29.7.0",
     "terser-webpack-plugin": "^5.3.10",
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.4.2",
-    "webpack": "^5.90.3",
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   },
   "browserslist": [
@@ -58,7 +58,7 @@
     "and_chr >= 67",
     "and_ff >= 68",
     "samsung >= 9.2",
-    "node >= 10.4.0",
-    "electron >= 4.0.0"
+    "node >= 18.0.0",
+    "electron >= 23.0.0"
   ]
 }
