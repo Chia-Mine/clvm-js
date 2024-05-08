@@ -71,11 +71,8 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 If you use [React](https://reactjs.org/), copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
 
 **Note1**  
-Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
+Don't forget to wait `clvm.initialize()`.  
 **Note2**  
-If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
-If so, you can make your code fully synchronous.  
-**Note3**  
 Redistributing your project with bundled `blsjs.wasm` and/or `clvm_wasm_bg.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
 
 ### Browser compatibility
@@ -96,8 +93,8 @@ Just copy and paste below to your `package.json` and you can avoid a lot of runt
   "and_chr >= 67",
   "and_ff >= 68",
   "samsung >= 9.2",
-  "node >= 10.4.0",
-  "electron >= 4.0.0"
+  "node >= 18.0.0",
+  "electron >= 23.0.0"
 ]
 ```
 

@@ -39,7 +39,7 @@ test("run transactions generator", async () => {
   expect(((sexp_as_js as Tuple<Bytes, any>)[0]).equal_to(h("0x01"))); // q: 0x01
   
   const program = transactions_generator;
-  const env = SExp.to([]).as_bin().raw();
+  const env = SExp.to([]).as_bin().raw(); // 0x80
   const max_cost = BigInt(20);
   
   // If you don't set a flag to allow backref, it throws an Error.
