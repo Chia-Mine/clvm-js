@@ -4,14 +4,14 @@ module.exports = {
   testEnvironment: "node",
   testMatch: ["<rootDir>/tests/**/*_test.ts"],
   collectCoverage: false,
-  globals: {
-    "ts-jest": {
-      tsConfig: {
+  transform: {
+    "^.+\\.tsx?$": ["ts-jest", {
+      tsconfig: {
         sourceMap: true,
         inlineSourceMap: true,
         allowJs: true,
       }
-    },
+    }]
   },
   modulePathIgnorePatterns: [
     "<rootDir>/.dist",
