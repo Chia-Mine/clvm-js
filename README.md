@@ -41,9 +41,9 @@ async function main(){
   await clvm.initialize();
   
   const {SExp, KEYWORD_TO_ATOM, h, t, run_chia_program, Flag} = clvm;
-  const plus = h(KEYWORD_TO_ATOM["+"]);
-  const q = h(KEYWORD_TO_ATOM["q"]);
-  const program = SExp.to([plus, 1, t(q, 175)]).as_bin().raw();
+  const plus = h(KEYWORD_TO_ATOM["+"]); // byte representation of '+' operator
+  const q = h(KEYWORD_TO_ATOM["q"]); // byte representation of 'q' operator
+  const program = SExp.to([plus, 1, t(q, 175)]).as_bin().raw(); // (+ . (1 . (q . 175)))
   const env = SExp.to(25).as_bin().raw();
   const max_cost = BigInt(10000000);
   const [cost, lazyNode] = run_chia_program(program, env, max_cost, Flag.allow_backrefs());

@@ -20,7 +20,7 @@ export type CastableType = SExp
 ;
 
 export function looks_like_clvm_object(o: any): o is CLVMType {
-  if(!o || typeof o !== "object"){
+  if(!o || (typeof o !== "object" && typeof o !== "function")){
     return false;
   }
   
@@ -77,7 +77,7 @@ type op_target = number | None;
 type op_and_target = Tuple<operations, op_target>;
 
 export function to_sexp_type(value: CastableType): CLVMType {
-  let v: CastableType|undefined = value;
+  let v: CastableType = value;
   const stack = [v];
   
   const ops: op_and_target[] = [t(0, None)];
@@ -184,10 +184,10 @@ export class SExp implements CLVMType {
   private readonly _atom: Optional<Bytes|Uint8Array> = None;
   private readonly _pair: Optional<Tuple<any, any>> = None;
   
-  get atom(){
+  get atom(): Optional<Bytes> {
     return this._atom instanceof Uint8Array ? new Bytes(this._atom) : this._atom;
   }
-  get pair(){
+  get pair(): Optional<Tuple<any, any>>{
     return this._pair;
   }
   
@@ -196,7 +196,7 @@ export class SExp implements CLVMType {
   static readonly __NULL__: SExp = new SExp(new CLVMObject(Bytes.NULL));
   
   static to(v: CastableType): SExp {
-    if(isSExp(v)){
+    if(v instanceof SExp){
       return v;
     }
     
@@ -324,16 +324,4 @@ export class SExp implements CLVMType {
   public __repr__(){
     return `SExp(${this.as_bin().hex()})`;
   }
-}
-
-export function isSExp(v: any): v is SExp {
-  return v
-    && (
-      (v.atom !== undefined && v.pair === undefined)
-      || (v.atom === undefined && v.pair !== undefined)
-    )
-    && typeof v.first === "function"
-    && typeof v.rest === "function"
-    && typeof v.cons === "function"
-  ;
 }

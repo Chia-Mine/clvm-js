@@ -4,24 +4,22 @@
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
 ### Breaking Change
 - The type of `None` is now `undefined` (Previously it was `null`)
-- Changed how `isSExp` and `isCLVMObject` check a value.  
-  Previously they checked whether the value is an object and both `the_object.atom` AND `the_object.pair`  
-  are not `undefined`.  
-  From this release, they check whether only one of `the_object.atom` and `the_object_pair` is not `undefined`,
-  while the other is `undefined`.  
-  Note: `isSExp()` additionally checks whether the value has `first`, `rest` and `cons` properties and  
-  the type of all of them are "function".
+- Removed `isSExp()` and `isCLVMObject()` since this doesn't exist in the Python's `clvm` and it brought slightly different behaviour.
 ### Changed
 - Now `op_div` does not accept negative operands.
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
 - `SExp` can be initialized from `LazyNode` of `clvm_wasm` (Rust version of `clvm`)
-- Update tests.
+- Upgraded npm dev dependencies
 ### Added
 - Added `clvm_rs` support
   - Added `run_chia_program`
   - Added `run_clvm`
-  - Added `LazyNoe`
+  - Added `LazyNode`
+  - Added `Flag`
+  - Added `serialized_length`
+  - Added `node_from_bytes`
 - Added `asUint8Array()` method to `Stream`
+- Added tests
 
 ## [2.0.1]
 This version is compatible with [`480b32840c525e17b5ab2f29036c033febaae71e`](https://github.com/Chia-Network/clvm/tree/480b32840c525e17b5ab2f29036c033febaae71e) of [clvm](https://github.com/Chia-Network/clvm)
