@@ -35,6 +35,10 @@ export class CLVMObject implements CLVMType {
       this._atom = v.atom;
       this._pair = v.pair;
     }
+    else if(v && (typeof v === "object" || typeof v === "function") && "atom" in v && "pair" in v){
+      this._atom = v.atom;
+      this._pair = v.pair;
+    }
     else if(isTuple(v)){
       this._pair = v;
       this._atom = None;
