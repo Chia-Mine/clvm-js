@@ -38,11 +38,9 @@ module.exports = {
       new TerserPlugin({
         terserOptions: {
           mangle: {
-            properties: {
-              regex: /^_.+/,
-            }
+            properties: false,
           },
-        }
+        },
       }),
     ]
   },
