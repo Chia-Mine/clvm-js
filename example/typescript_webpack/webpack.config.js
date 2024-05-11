@@ -4,7 +4,6 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
-  target: "web",
   entry: "./src/index.ts",
   devtool: "source-map",
   module: {
@@ -29,18 +28,15 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        {from: path.resolve(__dirname, "node_modules", "clvm", "browser", "blsjs.wasm")},
-        {from: path.resolve(__dirname, "node_modules", "clvm", "browser", "clvm_wasm_bg.wasm")},
+        {from: path.resolve(__dirname, "..", "..", ".dist", "npm", "browser", "blsjs.wasm")},
+        {from: path.resolve(__dirname, "..", "..", ".dist", "npm", "browser", "clvm_wasm_bg.wasm")},
       ]
     }),
   ],
-  optimization: {
-    minimize: false,
-  },
+  target: ["web"],
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, ".dist"),
     clean: true,
-    chunkFormat: "array-push",
   },
 };

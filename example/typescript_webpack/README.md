@@ -8,11 +8,13 @@ This is just an example code to use `clvm-js` with typescript and webpack.
 git clone https://github.com/Chia-Mine/clvm-js
 cd clvm-js
 
-# 2. Install dependencies
+# 2. Build clvm-js
+pnpm i
+pnpm build
+
+# 3. Build example code for web browsers
 cd example/typescript_webpack
 pnpm i
-
-# 3. Build files for web browsers
 pnpm build
 
 # 4. Run demo server
