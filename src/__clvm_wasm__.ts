@@ -11,7 +11,9 @@
  * 4. Annotate typings, fix lint issues
  * 5. Paste loader code preserved in the previous procedure
  * 6. Add `__wb*` functions to the `imports` object.
+ * 7. Add `toJSON()` method to `LazyNode`.
  */
+import {Word32Array} from "jscrypto/Word32Array";
 
 type ClvmWasmExports = {
   memory: WebAssembly.Memory;
@@ -396,6 +398,16 @@ export class LazyNode {
     } finally {
       wasm.__wbindgen_add_to_stack_pointer(16);
     }
+  }
+  
+  toJSON() {
+    if(this.pair){
+      return this.pair;
+    }
+    if(this.atom){
+      return (new Word32Array(this.atom)).toString();
+    }
+    throw new Error("Invalid object");
   }
 }
 

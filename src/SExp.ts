@@ -321,6 +321,16 @@ export class SExp implements CLVMType {
     return this.as_bin().hex();
   }
   
+  public toJSON(){
+    if(this.pair){
+      return this.pair;
+    }
+    if(this.atom){
+      return this.atom.hex();
+    }
+    throw new EvalError("Invalid object", this);
+  }
+  
   public __repr__(){
     return `SExp(${this.as_bin().hex()})`;
   }

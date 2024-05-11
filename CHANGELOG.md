@@ -15,10 +15,13 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
   - Exposed `run_chia_program`
   - Exposed `run_clvm`
   - Exposed `LazyNode`
+    - Added `toJSON()` method to `LazyNode` (This is not implemented in `clvm_wasm`)
   - Exposed `Flag`
   - Exposed `serialized_length`
   - Exposed `node_from_bytes`
 - Added `asUint8Array()` method to `Stream`
+- Added `toJSON()` method to `Bytes`
+- Added `toJSON()` method to `SExp`
 - Added tests
 
 ## [2.0.1]

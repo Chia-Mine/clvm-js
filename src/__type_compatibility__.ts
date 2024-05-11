@@ -287,6 +287,10 @@ export class Bytes {
   
     return 0;
   }
+  
+  public toJSON(){
+    return this.hex();
+  }
 }
 
 export function b(utf8Str: string, type:"utf8"|"hex" = "utf8"){
