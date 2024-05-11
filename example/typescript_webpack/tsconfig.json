@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./.dist",
+    "module": "es6",
+    "target": "es2022",
+    "allowJs": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "declaration": true,
+    "newLine": "lf",
+    "moduleResolution": "node",
+  },
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": ["node_modules"]
+}
