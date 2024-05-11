@@ -10,7 +10,6 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
 - `SExp` can be initialized from `LazyNode` of `clvm_wasm` (Rust version of `clvm`)
 - Upgraded npm dev dependencies
-- Incremented NodeJS version requirement to 18.x
 - Replaced `yarn.lock` with `pnpm-lock.yaml`
 - Updated `bls-signatures` to `2.0.3`
 ### Added

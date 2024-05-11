@@ -22,7 +22,7 @@
     "typescript"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=12.13.0"
   },
   "dependencies": {
     "bls-signatures": "^2.0.3",
@@ -58,7 +58,7 @@
     "and_chr >= 67",
     "and_ff >= 68",
     "samsung >= 9.2",
-    "node >= 18.0.0",
-    "electron >= 23.0.0"
+    "node >= 10.4.0",
+    "electron >= 4.0.0"
   ]
 }
