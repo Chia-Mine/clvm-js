@@ -68,7 +68,10 @@ you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
 └── clvm_wasm_bg.wasm   # copy it from npm_modules/clvm/browser/clvm_wasm_bg.wasm
 </pre>
 
-If you use [React](https://reactjs.org/), copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
+If you use [React](https://reactjs.org/) with [CRA(create-react-app)](https://github.com/facebook/create-react-app), copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
+
+If you use [React](https://reactjs.org/) with [vite](https://vitejs.dev/),
+copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/assets/` folder.
 
 **Note1**  
 Don't forget to wait `clvm.initialize()`.  
@@ -93,8 +96,8 @@ Just copy and paste below to your `package.json` and you can avoid a lot of runt
   "and_chr >= 67",
   "and_ff >= 68",
   "samsung >= 9.2",
-  "node >= 18.0.0",
-  "electron >= 23.0.0"
+  "node >= 10.4.0",
+  "electron >= 4.0.0"
 ]
 ```
 

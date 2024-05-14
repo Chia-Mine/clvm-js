@@ -6,7 +6,6 @@ import {
   run_chia_program,
   Flag,
   CLVMType,
-  Bytes,
 } from "clvm/browser";
 
 window.addEventListener("load", async function onWindowLoad() {

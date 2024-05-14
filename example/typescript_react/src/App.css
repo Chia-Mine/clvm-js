@@ -1,0 +1,49 @@
+.app-root {
+  width: 800px;
+  margin: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.input label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.input input {
+  width: 100%;
+}
+
+.input + .input {
+  margin-top: 16px;
+}
+
+.buttons {
+  margin-top: 16px;
+  position: relative;
+}
+
+.buttons button {
+  padding: 4px 8px;
+}
+
+.buttons button + button {
+  margin-left: 16px;
+}
+
+.buttons button:last-child {
+  position: absolute;
+  right: 0;
+}
+
+.output-container {
+  margin-top: 16px;
+}
+
+#output {
+  border: 1px solid #ccc;
+  padding: 8px;
+  white-space: pre-wrap;
+}
