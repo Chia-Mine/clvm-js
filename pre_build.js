@@ -25,6 +25,17 @@ if(!fs.existsSync(blsWasmSrcPath)){
   return;
 }
 fs.copyFileSync(blsWasmSrcPath, blsWasmDestPath);
+
+const clvmWasmSrcPath = path.join(__dirname, "node_modules", "clvm_wasm", "clvm_wasm_bg.wasm");
+const clvmWasmDestPath = path.join(browserDir, "clvm_wasm_bg.wasm");
+if (!fs.existsSync(clvmWasmSrcPath)) {
+  console.error("clvm_wasm_bg.wasm not found at:");
+  console.error(clvmWasmSrcPath);
+  console.error("Probably you haven't execute npm install yet");
+  return;
+}
+fs.copyFileSync(clvmWasmSrcPath, clvmWasmDestPath);
+
 const browserDtsPath = path.join(browserDir, "index.d.ts");
 fs.writeFileSync(browserDtsPath, 'export * from "..";\n');
 

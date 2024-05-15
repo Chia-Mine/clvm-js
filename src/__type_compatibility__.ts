@@ -3,7 +3,7 @@ import {Utf8} from "jscrypto/Utf8";
 import {Word32Array} from "jscrypto/Word32Array";
 import {SHA256} from "jscrypto/SHA256";
 import {None} from "./__python_types__";
-import {G1Element} from "bls-signatures";
+import type {G1Element} from "bls-signatures";
 
 export function to_hexstr(r: Uint8Array) {
   return (new Word32Array(r)).toString();
@@ -86,7 +86,7 @@ export class Bytes {
   }
   
   public static from(value?: Uint8Array|Bytes|number[]|string|G1Element|None, type?: BytesFromType){
-    if(value === None || value === undefined){
+    if(value === None || value === null){
       return new Bytes(value);
     }
     else if(value instanceof Uint8Array){
@@ -287,6 +287,10 @@ export class Bytes {
   
     return 0;
   }
+  
+  public toJSON(){
+    return this.hex();
+  }
 }
 
 export function b(utf8Str: string, type:"utf8"|"hex" = "utf8"){
@@ -462,7 +466,11 @@ export class Stream {
   }
   
   public getValue(): Bytes {
-    return new Bytes(this._buffer.subarray(0, this.length));
+    return new Bytes(this.asUint8Array());
+  }
+  
+  public asUint8Array(): Uint8Array {
+    return this._buffer.subarray(0, this.length);
   }
 }
 

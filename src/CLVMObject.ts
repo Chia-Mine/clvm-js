@@ -31,7 +31,11 @@ export class CLVMObject implements CLVMType {
   }
   
   public constructor(v: any) {
-    if(isCLVMObject(v)){
+    if(v instanceof CLVMObject){
+      this._atom = v.atom;
+      this._pair = v.pair;
+    }
+    else if(v && (typeof v === "object" || typeof v === "function") && "atom" in v && "pair" in v){
       this._atom = v.atom;
       this._pair = v.pair;
     }
@@ -60,8 +64,4 @@ export function isCons(obj: CLVMType): obj is Cons {
   }
   
   return Boolean((!obj.atom && obj.pair));
-}
-
-export function isCLVMObject(v: any): v is CLVMType {
-  return v && typeof v.atom !== "undefined" && typeof v.pair !== "undefined";
 }

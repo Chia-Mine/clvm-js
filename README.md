@@ -26,8 +26,8 @@ If you find something not compatible with Python's clvm, please report it to Git
 
 ## Compatibility
 This code is compatible with:
-- [`480b32840c525e17b5ab2f29036c033febaae71e`](https://github.com/Chia-Network/clvm/tree/480b32840c525e17b5ab2f29036c033febaae71e) of [clvm](https://github.com/Chia-Network/clvm)
-  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/480b32840c525e17b5ab2f29036c033febaae71e...main)
+- [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
+  - [Diff to the latest clvm](https://github.com/Chia-Network/clvm/compare/960f8d139940fa0814d3fac44da9a2975642f5d3...main)
 - [`34f504bd0ef2cd3a219fea8ce6b15ff7684687fd`](https://github.com/Chia-Network/bls-signatures/tree/34f504bd0ef2cd3a219fea8ce6b15ff7684687fd) of [bls-signatures](https://github.com/Chia-Network/bls-signatures)
   - [Diff to the latest bls-signatures](https://github.com/Chia-Network/bls-signatures/compare/34f504bd0ef2cd3a219fea8ce6b15ff7684687fd...main)
 
@@ -35,26 +35,23 @@ This code is compatible with:
 ```javascript
 // in nodejs context
 async function main(){
-  var clvm = require("clvm");
+  const clvm = require("clvm");
 
-  // 'clvm.initialize()' here is not required
-  // if you're so sure it never calls 'pubkey_for_exp' or 'point_add' operation.
-  // When one of those operations is called without prior 'clvm.initialize()'
-  // it will raise an Error.
-  // If it is unknown whether 'pubkey_for_exp' or 'point_add' will be called, 
-  // then put 'await clvm.initialize()' for safety.
-  // I know this 'await clvm.initialize()' makes code asynchronous
-  // and really impacts on code architecture.
-  // This is because 'clvm' relys on a wasm of 'bls-signatures',
-  // which requires asynchronous loading.
-  await clvm.initialize();
+  // `await clvm.initializeClvmWasm()` is now always necessary.
+  // This loads clvm_wasm_bg.wasm.
+  // If you have a strong reason to use features of bls-signatures,
+  // you need to do `await clvm.initialize()` instead.
+  // `clvm.initialize()` loads both blsjs.wasm and clvm_wasm_bg.wasm.
+  await clvm.initializeClvmWasm();
   
-  const {SExp, OPERATOR_LOOKUP, KEYWORD_TO_ATOM, h, t, run_program} = clvm;
-  const plus = h(KEYWORD_TO_ATOM["+"]);
-  const q = h(KEYWORD_TO_ATOM["q"]);
-  const program = SExp.to([plus, 1, t(q, 175)]);
-  const env = SExp.to(25);
-  const [cost, result] = run_program(program, env, OPERATOR_LOOKUP);
+  const {SExp, KEYWORD_TO_ATOM, h, t, run_chia_program, Flag} = clvm;
+  const plus = h(KEYWORD_TO_ATOM["+"]); // byte representation of '+' operator
+  const q = h(KEYWORD_TO_ATOM["q"]); // byte representation of 'q' operator
+  const program = SExp.to([plus, 1, t(q, 175)]).as_bin().raw(); // (+ . (1 . (q . 175)))
+  const env = SExp.to(25).as_bin().raw();
+  const max_cost = BigInt(10000000);
+  const [cost, lazyNode] = run_chia_program(program, env, max_cost, Flag.allow_backrefs());
+  const result = new SExp(lazyNode);
   let isEqual = result.equal_to(SExp.to(25 + 175));
   console.log(`isEqual: ${isEqual}`); // 'isEqual: true'
   isEqual = result.as_int() === (25 + 175);
@@ -64,25 +61,43 @@ async function main(){
 main().catch(e => console.error(e));
 ```
 
+## More example with clvm_wasm
+See this [test case for clvm_wasm](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/tests/original/clvm_wasm_test.ts)
+
 ## Use in browser
+- [Sample code - Use clvm-js with TypeScript, Webpack](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_webpack)
+- [Sample code - Use clvm-js with TypeScript, React, Vite](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react)
+
 If you'd like to run some javascript code which depends on `clvm` on browser,  
-you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
+you need to put `clvm_wasm_bg.wasm` and optionally `blsjs.wasm` to the same directory as the code who loads `clvm`.  
+Because most of BLS operations are now performed inside `clvm_wasm_bg.wasm`, in most cases you don't need `blsjs.wasm`.  
 
 <pre>
 ├── ...
 ├── main.js      # js file which clvm is compiled into
-└── blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
+├── clvm_wasm_bg.wasm   # copy it from npm_modules/clvm/browser/clvm_wasm_bg.wasm
+└── (Optional) blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
 </pre>
 
-If you use [React](https://reactjs.org/), copy `blsjs.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
+If you use [React](https://reactjs.org/) with [CRA(create-react-app)](https://github.com/facebook/create-react-app), copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
+
+If you use [React](https://reactjs.org/) with [vite](https://vitejs.dev/),
+copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/assets/` folder.  
+
+**IMPORTANT NOTE**  
+When your code is loaded as a module, such as with `<script type='module'/>` (common in React with Vite),
+there is a path restriction for loading the WebAssembly (WASM) module.  
+See [Known Issues](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/CHANGELOG.md#known-issues). Also see [code comment here](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react/src/index.tsx)  
 
 **Note1**  
-Don't forget to wait `clvm.initialize()` if you are not sure whether `pubkey_for_exp`/`point_add` will be called.  
+Don't forget to wait `clvm.initializeClvmWasm()`.  
+`clvm.initializeClvmWasm()` only loads `clvm_wasm_bg.wasm`.  
+If you have a strong reason to use features of `bls-signatures` inside `clvm-js`, you need to wait
+`clvm.initialize()` instead, since `clvm.initialize()` loads both `blsjs.wasm` and `clvm_wasm_bg.wasm`.  
 **Note2**  
-If you're really sure that `pubkey_for_exp`/`point_add` will never be called, then you can opt out `blsjs.wasm` and `await clvm.initialize()`.
-If so, you can make your code fully synchronous.  
-**Note3**  
-Redistributing your project with bundled `blsjs.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
+Redistributing your project with bundled `blsjs.wasm` and/or `clvm_wasm_bg.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)  
+**Note3**
+You may need `blsjs.wasm` if you want to run `run_program`, which has been deprecated as of clvm@3.0.0.
 
 ### Browser compatibility
 `clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work as well.  
@@ -211,6 +226,10 @@ str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by th
 ## clvm license
 `clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the
 [Apache license 2.0](https://github.com/Chia-Network/clvm/blob/main/LICENSE)
+
+## clvm_wasm license
+[clvm_wasm](https://github.com/Chia-Network/clvm_rs/tree/main/wasm) is used and redistributed under the
+[Apache license 2.0](https://github.com/Chia-Network/clvm_rs/blob/main/wasm/LICENSE)
 
 ## bls-signatures license
 [bls-signatures](https://github.com/Chia-Network/bls-signatures) is used and redistributed under the

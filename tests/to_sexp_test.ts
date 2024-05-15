@@ -1,4 +1,4 @@
-import {SExp, looks_like_clvm_object, convert_atom_to_bytes, isSExp} from "../src/SExp";
+import {SExp, looks_like_clvm_object, convert_atom_to_bytes} from "../src/SExp";
 import {CLVMObject, CLVMType} from "../src/CLVMObject";
 import {isBytes, isTuple, Tuple, b, Bytes, t} from "../src/__type_compatibility__";
 import {None} from "../src/__python_types__";
@@ -7,7 +7,7 @@ function validate_sexp(sexp: SExp){
   const validate_stack = [sexp];
   while(validate_stack.length){
     const v = validate_stack.pop() as SExp;
-    expect(isSExp(v)).toBeTruthy();
+    expect(v instanceof SExp).toBeTruthy();
     if(v.pair){
       expect(isTuple(v.pair)).toBeTruthy();
       const [v1, v2] = v.pair;
@@ -175,6 +175,14 @@ test("test_convert_atom", () => {
   expect(convert_atom_to_bytes(b("foobar")).equal_to(b("foobar"))).toBeTruthy();
   expect(convert_atom_to_bytes(None).equal_to(b(""))).toBeTruthy();
   expect(convert_atom_to_bytes([]).equal_to(b(""))).toBeTruthy();
+  
+  class DummyByteConvertible {
+    toBytes(): Bytes {
+      return b("foobar");
+    }
+  }
+  
+  expect(convert_atom_to_bytes(new DummyByteConvertible()).equal_to(b("foobar"))).toBeTruthy();
   
   expect(() => {
     convert_atom_to_bytes([1, 2, 3]);

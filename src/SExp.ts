@@ -1,4 +1,4 @@
-import {G1Element} from "bls-signatures";
+import type {G1Element} from "bls-signatures";
 import {None, Optional} from "./__python_types__";
 import {CLVMObject, CLVMType} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";
@@ -20,7 +20,7 @@ export type CastableType = SExp
 ;
 
 export function looks_like_clvm_object(o: any): o is CLVMType {
-  if(!o || typeof o !== "object"){
+  if(!o || (typeof o !== "object" && typeof o !== "function")){
     return false;
   }
   
@@ -56,8 +56,16 @@ export function convert_atom_to_bytes(v: any): Bytes {
   else if(typeof v.serialize === "function"){
     return Bytes.from(v, "G1Element");
   }
+  else if(typeof v.toBytes === "function"){
+    return v.toBytes() as Bytes;
+  }
   
-  throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
+  try {
+    return Bytes.from(v);
+  }
+  catch (_) {
+    throw new Error(`can't cast ${JSON.stringify(v)} to bytes`);
+  }
 }
 
 const op_convert = 0;
@@ -69,7 +77,7 @@ type op_target = number | None;
 type op_and_target = Tuple<operations, op_target>;
 
 export function to_sexp_type(value: CastableType): CLVMType {
-  let v: CastableType|undefined = value;
+  let v: CastableType = value;
   const stack = [v];
   
   const ops: op_and_target[] = [t(0, None)];
@@ -127,8 +135,8 @@ export function to_sexp_type(value: CastableType): CLVMType {
       continue;
     }
   
-    if(targetIndex === null){
-      throw new Error("Invalid target. target is null");
+    if(targetIndex === None){
+      throw new Error("Invalid target. target is None");
     }
     
     if (op === op_set_left){ // set left
@@ -171,13 +179,15 @@ export function to_sexp_type(value: CastableType): CLVMType {
  Exactly one of "atom" and "pair" must be None.
  */
 export class SExp implements CLVMType {
-  private readonly _atom: Optional<Bytes> = None;
+  // When instantiating SExp from `LazyNode` of `clvm_wasm`, _atom will be `Optional<Uint8Array>`.
+  // Otherwise, it will be `Optional<Bytes>`
+  private readonly _atom: Optional<Bytes|Uint8Array> = None;
   private readonly _pair: Optional<Tuple<any, any>> = None;
   
-  get atom(){
-    return this._atom;
+  get atom(): Optional<Bytes> {
+    return this._atom instanceof Uint8Array ? new Bytes(this._atom) : this._atom;
   }
-  get pair(){
+  get pair(): Optional<Tuple<any, any>>{
     return this._pair;
   }
   
@@ -186,7 +196,7 @@ export class SExp implements CLVMType {
   static readonly __NULL__: SExp = new SExp(new CLVMObject(Bytes.NULL));
   
   static to(v: CastableType): SExp {
-    if(isSExp(v)){
+    if(v instanceof SExp){
       return v;
     }
     
@@ -311,16 +321,17 @@ export class SExp implements CLVMType {
     return this.as_bin().hex();
   }
   
+  public toJSON(){
+    if(this.pair){
+      return this.pair;
+    }
+    if(this.atom){
+      return this.atom.hex();
+    }
+    throw new EvalError("Invalid object", this);
+  }
+  
   public __repr__(){
     return `SExp(${this.as_bin().hex()})`;
   }
-}
-
-export function isSExp(v: any): v is SExp {
-  return v && typeof v.atom !== "undefined"
-    && typeof v.pair !== "undefined"
-    && typeof v.first === "function"
-    && typeof v.rest === "function"
-    && typeof v.cons === "function"
-  ;
 }

@@ -41,7 +41,7 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, list, Stream, t, division, modulo, divmod, Tuple} from "./__type_compatibility__";
+import {Bytes, list, Stream, t, modulo, divmod, Tuple} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 import {bigint_from_bytes, bigint_to_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
@@ -205,16 +205,13 @@ export function op_div(args: SExp){
   if(i1 === BigInt(0)){
     throw new EvalError("div with 0", SExp.to(i0));
   }
+  if(i0 < BigInt(0) || i1 < BigInt(0)){
+    throw new EvalError("div operator with negative operands is deprecated", args);
+  }
   cost += (l0+l1)*DIV_COST_PER_BYTE;
   const divmod_result = divmod(i0, i1) as Tuple<bigint, bigint>;
-  let q = divmod_result[0];
-  const r = divmod_result[1];
-  
-  // this is to preserve a buggy behavior from the initial implementation
-  // of this operator.
-  if (q === BigInt(-1) && r !== BigInt(0)) {
-    q += BigInt(1);
-  }
+  const q = divmod_result[0];
+  // const r = divmod_result[1];
   
   return malloc_cost(cost, SExp.to(q));
 }

@@ -26,7 +26,11 @@ module.exports = {
       "path": false,
       "fs": false,
       "crypto": false,
-    }
+      "util": false,
+    },
+    alias: {
+      "clvm_wasm": false,
+    },
   },
   target: ["web"],
   optimization: {
@@ -34,11 +38,9 @@ module.exports = {
       new TerserPlugin({
         terserOptions: {
           mangle: {
-            properties: {
-              regex: /^_.+/,
-            }
+            properties: false,
           },
-        }
+        },
       }),
     ]
   },
