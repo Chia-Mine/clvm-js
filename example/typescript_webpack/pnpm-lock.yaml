@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       clvm:
-        specifier: ^3.0.0-beta.1
-        version: 3.0.0-beta.1
+        specifier: ^3.0.0
+        version: 3.0.0
     devDependencies:
       copy-webpack-plugin:
         specifier: ^12.0.2
@@ -291,8 +291,8 @@ packages:
     resolution: {integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==}
     engines: {node: '>=6'}
 
-  clvm@3.0.0-beta.1:
-    resolution: {integrity: sha512-tlwhjd58Wn5t2V5hhBzIlINk/ZHEDIVH5+rd/kp8bylCWHTqZ3IQLeCBOCId/KkWYgfWZXd6V1SafiG92Lfgkw==}
+  clvm@3.0.0:
+    resolution: {integrity: sha512-1hxMGut5nC2eswgsgc6bHk6FRWiPJOoAEYhCxXCH0HlmNP/In3iG1P/6sAXS3wbJn4RV8a7/CrgXNvWgE0101Q==}
     engines: {node: '>=12.13.0'}
 
   clvm_wasm@0.7.0:
@@ -1379,7 +1379,7 @@ snapshots:
       kind-of: 6.0.3
       shallow-clone: 3.0.1
 
-  clvm@3.0.0-beta.1:
+  clvm@3.0.0:
     dependencies:
       bls-signatures: 2.0.3
       clvm_wasm: 0.7.0

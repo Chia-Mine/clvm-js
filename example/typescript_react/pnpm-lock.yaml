@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       clvm:
-        specifier: ^3.0.0-beta.1
-        version: 3.0.0-beta.1
+        specifier: ^3.0.0
+        version: 3.0.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -575,8 +575,8 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
-  clvm@3.0.0-beta.1:
-    resolution: {integrity: sha512-tlwhjd58Wn5t2V5hhBzIlINk/ZHEDIVH5+rd/kp8bylCWHTqZ3IQLeCBOCId/KkWYgfWZXd6V1SafiG92Lfgkw==}
+  clvm@3.0.0:
+    resolution: {integrity: sha512-1hxMGut5nC2eswgsgc6bHk6FRWiPJOoAEYhCxXCH0HlmNP/In3iG1P/6sAXS3wbJn4RV8a7/CrgXNvWgE0101Q==}
     engines: {node: '>=12.13.0'}
 
   clvm_wasm@0.7.0:
@@ -1939,7 +1939,7 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  clvm@3.0.0-beta.1:
+  clvm@3.0.0:
     dependencies:
       bls-signatures: 2.0.3
       clvm_wasm: 0.7.0
