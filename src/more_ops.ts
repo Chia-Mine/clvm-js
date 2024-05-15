@@ -41,7 +41,7 @@ import {
   STRLEN_BASE_COST,
   STRLEN_COST_PER_BYTE
 } from "./costs";
-import {Bytes, list, Stream, t, division, modulo, divmod, Tuple} from "./__type_compatibility__";
+import {Bytes, list, Stream, t, modulo, divmod, Tuple} from "./__type_compatibility__";
 import {EvalError} from "./EvalError";
 import {bigint_from_bytes, bigint_to_bytes, limbs_for_int} from "./casts";
 import {isAtom} from "./CLVMObject";
@@ -210,8 +210,8 @@ export function op_div(args: SExp){
   }
   cost += (l0+l1)*DIV_COST_PER_BYTE;
   const divmod_result = divmod(i0, i1) as Tuple<bigint, bigint>;
-  let q = divmod_result[0];
-  const r = divmod_result[1];
+  const q = divmod_result[0];
+  // const r = divmod_result[1];
   
   return malloc_cost(cost, SExp.to(q));
 }

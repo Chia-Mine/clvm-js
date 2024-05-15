@@ -5,6 +5,8 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
 ### Breaking Change
 - The type of `None` is now `undefined` (Previously it was `null`)
 - Removed `isSExp()` and `isCLVMObject()` since these don't exist in the Python's `clvm` and they brought slightly different behaviour.
+- `run_program()` has been deprecated. Use `run_chia_program` or `run_clvm` instead.  
+  Note: `run_program()` is still available, but it cannot handle new CHIP-0011 operators like `secp256k1_verify`.
 ### Changed
 - Now `op_div` does not accept negative operands.
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
@@ -25,6 +27,17 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
 - Added `toJSON()` method to `Bytes`
 - Added `toJSON()` method to `SExp`
 - Added tests
+- Added example code
+### Known Issues
+- Loading `blsjs.wasm` into a web browser from ESModule code requires to put the wasm file into url's root path.  
+  For example, when the main (compiled) js file is loaded by  
+    `<script type='module' src="https://xxx.yyy.zzz/aaa/bbb/ccc/main.js"></script>`  
+  `blsjs.wasm` will be fetched from `https://xxx.yyy.zzz/blsjs.wasm`.  
+  This is module context only. if the main js file is not on module context like  
+  `<script defer src="https://xxx.yyy.zzz/aaa/bbb/ccc/main.js"></script>`,  
+  `blsjs.wasm` will be fetched from `https://xxx.yyy.zzz/aaa/bbb/ccc/blsjs.wasm`.  
+  However, with clvm >= 3.0.0, most of bls operations are run inside clvm_wasm_bg.wasm.  
+  So I believe you don't need to load `blsjs.wasm` in most cases.
 
 ## [2.0.1]
 This version is compatible with [`480b32840c525e17b5ab2f29036c033febaae71e`](https://github.com/Chia-Network/clvm/tree/480b32840c525e17b5ab2f29036c033febaae71e) of [clvm](https://github.com/Chia-Network/clvm)

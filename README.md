@@ -37,8 +37,12 @@ This code is compatible with:
 async function main(){
   const clvm = require("clvm");
 
-  // 'clvm.initialize()' is now always necessary on and after clvm-js@3.0.0
-  await clvm.initialize();
+  // `await clvm.initializeClvmWasm()` is now always necessary.
+  // This loads clvm_wasm_bg.wasm.
+  // If you have a strong reason to use features of bls-signatures,
+  // you need to do `await clvm.initialize()` instead.
+  // `clvm.initialize()` loads both blsjs.wasm and clvm_wasm_bg.wasm.
+  await clvm.initializeClvmWasm();
   
   const {SExp, KEYWORD_TO_ATOM, h, t, run_chia_program, Flag} = clvm;
   const plus = h(KEYWORD_TO_ATOM["+"]); // byte representation of '+' operator
@@ -59,24 +63,35 @@ main().catch(e => console.error(e));
 
 ## Use in browser
 If you'd like to run some javascript code which depends on `clvm` on browser,  
-you need to put `blsjs.wasm` to the same directory as the code who loads `clvm`.
+you need to put `clvm_wasm_bg.wasm` and optionally `blsjs.wasm` to the same directory as the code who loads `clvm`.  
+Because most of BLS operations are now performed inside `clvm_wasm_bg.wasm`, in most cases you don't need `blsjs.wasm`.  
 
 <pre>
 ├── ...
 ├── main.js      # js file which clvm is compiled into
-├── blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
-└── clvm_wasm_bg.wasm   # copy it from npm_modules/clvm/browser/clvm_wasm_bg.wasm
+├── clvm_wasm_bg.wasm   # copy it from npm_modules/clvm/browser/clvm_wasm_bg.wasm
+└── (Optional) blsjs.wasm   # copy it from npm_modules/clvm/browser/blsjs.wasm
 </pre>
 
 If you use [React](https://reactjs.org/) with [CRA(create-react-app)](https://github.com/facebook/create-react-app), copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/static/js/` folder. It automatically copies wasm file next to main js file.
 
 If you use [React](https://reactjs.org/) with [vite](https://vitejs.dev/),
-copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/assets/` folder.
+copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/assets/` folder.  
+
+**IMPORTANT NOTE**  
+When your code is loaded as a module, such as with `<script type='module'/>` (common in React with Vite),
+there is a path restriction for loading the WebAssembly (WASM) module.  
+See [Known Issues](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/CHANGELOG.md#known-issues). Also see [code comment here](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react/src/index.tsx)  
 
 **Note1**  
-Don't forget to wait `clvm.initialize()`.  
+Don't forget to wait `clvm.initializeClvmWasm()`.  
+`clvm.initializeClvmWasm()` only loads `clvm_wasm_bg.wasm`.  
+If you have a strong reason to use features of `bls-signatures` inside `clvm-js`, you need to wait
+`clvm.initialize()` instead, since `clvm.initialize()` loads both `blsjs.wasm` and `clvm_wasm_bg.wasm`.  
 **Note2**  
-Redistributing your project with bundled `blsjs.wasm` and/or `clvm_wasm_bg.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)
+Redistributing your project with bundled `blsjs.wasm` and/or `clvm_wasm_bg.wasm` must be compliant with Apache2.0 License provided by [Chia-Network](https://github.com/Chia-Network/bls-signatures/blob/main/LICENSE)  
+**Note3**
+You may need `blsjs.wasm` if you want to run `run_program`, which has been deprecated as of clvm@3.0.0.
 
 ### Browser compatibility
 `clvm-js` uses `BigInt`. So if runtime environment does not support `BigInt`, `clvm-js` doesn't work as well.  
@@ -205,6 +220,10 @@ str(SExp.to([1, [2, 3]])); // You can use str() function as well as Python by th
 ## clvm license
 `clvm-js` is based on [clvm](https://github.com/Chia-Network/clvm) with the
 [Apache license 2.0](https://github.com/Chia-Network/clvm/blob/main/LICENSE)
+
+## clvm_wasm license
+[clvm_wasm](https://github.com/Chia-Network/clvm_rs/tree/main/wasm) is used and redistributed under the
+[Apache license 2.0](https://github.com/Chia-Network/clvm_rs/blob/main/wasm/LICENSE)
 
 ## bls-signatures license
 [bls-signatures](https://github.com/Chia-Network/bls-signatures) is used and redistributed under the

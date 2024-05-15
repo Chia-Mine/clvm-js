@@ -454,14 +454,13 @@ const defaultClvmRsWasmPath = (() => {
   if (typeof document !== "undefined" && document.currentScript) {
     const scriptDir = (document.currentScript as HTMLScriptElement).src.replace(/\/[^/]+$/, "");
     return scriptDir + "/clvm_wasm_bg.wasm";
-  } else {
-    return "./clvm_wasm_bg.wasm";
   }
+  return "./clvm_wasm_bg.wasm";
 })();
 
 export type TInitOption = {
-  pathToWasm: string;
-  fetchOption: RequestInit;
+  pathToWasm?: string;
+  fetchOption?: RequestInit;
 }
 
 export async function initializeClvmWasm(option?: TInitOption) {

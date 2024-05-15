@@ -1,5 +1,5 @@
 import {
-  initialize,
+  initializeClvmWasm,
   h,
   SExp,
   run_chia_program,
@@ -11,7 +11,7 @@ import {
 } from "../../src/index";
 
 beforeAll(() => {
-  return initialize();
+  return initializeClvmWasm();
 });
 
 test("run transactions generator", async () => {

@@ -40,6 +40,9 @@ export function msb_mask(byte: number){
   return (byte + 1) >> 1;
 }
 
+/**
+ * @deprecated Use `run_chia_program` instead.
+ */
 export function run_program(
   program: SExp,
   args: CLVMType,
@@ -47,6 +50,8 @@ export function run_program(
   max_cost: number|None = None,
   pre_eval_f: TPreEvalF|None = None,
 ): Tuple<number, CLVMType>{
+  console.warn("`run_program is deprecated. Use `run_chia_program` instead.`");
+  
   program = SExp.to(program);
   const pre_eval_op = pre_eval_f ? to_pre_eval_op(pre_eval_f, SExp.to) : None;
   
