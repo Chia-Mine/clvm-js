@@ -61,6 +61,9 @@ async function main(){
 main().catch(e => console.error(e));
 ```
 
+## More example with clvm_wasm
+See this [test case for clvm_wasm](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/tests/original/clvm_wasm_test.ts)
+
 ## Use in browser
 - [Sample code - Use clvm-js with TypeScript, Webpack](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_webpack)
 - [Sample code - Use clvm-js with TypeScript, React, Vite](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react)

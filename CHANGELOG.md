@@ -11,9 +11,9 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
 - Now `op_div` does not accept negative operands.
 - `convert_atom_to_bytes()` now is able to convert an object which has `toBytes()` method.
 - `SExp` can be initialized from `LazyNode` of `clvm_wasm` (Rust version of `clvm`)
+- Upgraded `bls-signatures` to `2.0.3`
 - Upgraded npm dev dependencies
 - Replaced `yarn.lock` with `pnpm-lock.yaml`
-- Updated `bls-signatures` to `2.0.3`
 ### Added
 - Added `clvm_rs`(`clvm_wasm`) support
   - Exposed `run_chia_program`
@@ -36,7 +36,7 @@ This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](htt
   This is module context only. if the main js file is not on module context like  
   `<script defer src="https://xxx.yyy.zzz/aaa/bbb/ccc/main.js"></script>`,  
   `blsjs.wasm` will be fetched from `https://xxx.yyy.zzz/aaa/bbb/ccc/blsjs.wasm`.  
-  However, with clvm >= 3.0.0, most of bls operations are run inside clvm_wasm_bg.wasm.  
+  However, with clvm >= 3.0.0, most of bls operations run inside clvm_wasm_bg.wasm.  
   So I believe you don't need to load `blsjs.wasm` in most cases.
 
 ## [2.0.1]
