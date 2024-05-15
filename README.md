@@ -62,6 +62,9 @@ main().catch(e => console.error(e));
 ```
 
 ## Use in browser
+- [Sample code - Use clvm-js with TypeScript, Webpack](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_webpack)
+- [Sample code - Use clvm-js with TypeScript, React, Vite](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react)
+
 If you'd like to run some javascript code which depends on `clvm` on browser,  
 you need to put `clvm_wasm_bg.wasm` and optionally `blsjs.wasm` to the same directory as the code who loads `clvm`.  
 Because most of BLS operations are now performed inside `clvm_wasm_bg.wasm`, in most cases you don't need `blsjs.wasm`.  

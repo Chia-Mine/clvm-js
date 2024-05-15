@@ -17,7 +17,7 @@ async function main() {
    * If you don't specify the path to wasm, `initializeClvmWasm()` tries to load from the url
    *   - https://example.com/clvm_wasm_bg.wasm
    *
-   * As you may notice, this example uses typescript, react with vite and the code is loaded as an ESModule,
+   * As you may notice, this example uses TypeScript, React with Vite and the code is loaded as an ESModule,
    * where the code is run by <script type="module" src="..."></script>.
    * With ESModule, you need to specify the path of wasm files like below.
    */

@@ -1,5 +1,5 @@
 # Summary
-This is an example code to use `clvm-js` with typescript and webpack.
+This is an example code to use `clvm-js` with TypeScript and Webpack.
 
 # Setup
 ```shell

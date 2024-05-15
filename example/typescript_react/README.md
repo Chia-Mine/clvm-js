@@ -1,5 +1,5 @@
 # Summary
-This is an example code to use `clvm-js` with typescript and react with vite.
+This is an example code to use `clvm-js` with TypeScript, React and Vite.
 
 # Setup
 
