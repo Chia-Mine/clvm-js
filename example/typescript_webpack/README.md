@@ -1,5 +1,5 @@
 # Summary
-This is just an example code to use `clvm-js` with typescript and webpack.
+This is an example code to use `clvm-js` with typescript and webpack.
 
 # Setup
 ```shell
@@ -9,14 +9,14 @@ git clone https://github.com/Chia-Mine/clvm-js
 cd clvm-js
 
 # 2. Build clvm-js
-pnpm i
-pnpm build
+pnpm i # or `yarn`, `npm i`
+pnpm build # or `yarn build`, `npm run build`
 
 # 3. Build example code for web browsers
 cd example/typescript_webpack
-pnpm i
-pnpm build
+pnpm i # or `yarn`, `npm i`
+pnpm build # or `yarn build`, `npm run build`
 
 # 4. Run demo server
-pnpm start
+pnpm start # or `yarn start`, `npm start`
 ```
