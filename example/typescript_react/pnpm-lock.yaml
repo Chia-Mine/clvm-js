@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       clvm:
-        specifier: ^3.0.0-beta.0
-        version: 3.0.0-beta.0
+        specifier: ^3.0.0-beta.1
+        version: 3.0.0-beta.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -550,8 +550,8 @@ packages:
   binascii@0.0.2:
     resolution: {integrity: sha512-rA2CrUl1+6yKrn+XgLs8Hdy18OER1UW146nM+ixzhQXDY+Bd3ySkyIJGwF2a4I45JwbvF1mDL/nWkqBwpOcdBA==}
 
-  bls-signatures@1.0.16:
-    resolution: {integrity: sha512-Efw50HSo8taGOGRExBdGn3EVxclcF62TfHJDI1zd3kaIQe0W+j86+hrZJSyGoofv9LtwYas8wp3sflBdcGgStA==}
+  bls-signatures@2.0.3:
+    resolution: {integrity: sha512-6hp0od7VJkXthuANiABt+0z3nWbfGBKGu17JrzZR+mg6+hy3hpt1uwZS2xkK2eXwc1pz1jzVeYJxjMKNj4km+A==}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -575,9 +575,9 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
-  clvm@3.0.0-beta.0:
-    resolution: {integrity: sha512-2nP9zMeZn20KqJ0TUp3fgHIzwLU3qrp4PPl9+PC/z1N14vz6F+dAYWDenNl6BEXiERTY8827dXJ9FUCddu1elw==}
-    engines: {node: '>=18.0.0'}
+  clvm@3.0.0-beta.1:
+    resolution: {integrity: sha512-tlwhjd58Wn5t2V5hhBzIlINk/ZHEDIVH5+rd/kp8bylCWHTqZ3IQLeCBOCId/KkWYgfWZXd6V1SafiG92Lfgkw==}
+    engines: {node: '>=12.13.0'}
 
   clvm_wasm@0.7.0:
     resolution: {integrity: sha512-JsGOuZEjA1DS2rNtCNL+4PbXWXvvE5nBpHCfg9pe2KVh+IUwUl3xTer4pk++jj+3CIaML9BvnvFowL117E8PSw==}
@@ -591,6 +591,9 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+
+  core-js@3.37.1:
+    resolution: {integrity: sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==}
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -1903,9 +1906,10 @@ snapshots:
 
   binascii@0.0.2: {}
 
-  bls-signatures@1.0.16:
+  bls-signatures@2.0.3:
     dependencies:
       binascii: 0.0.2
+      core-js: 3.37.1
 
   brace-expansion@1.1.11:
     dependencies:
@@ -1935,9 +1939,9 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  clvm@3.0.0-beta.0:
+  clvm@3.0.0-beta.1:
     dependencies:
-      bls-signatures: 1.0.16
+      bls-signatures: 2.0.3
       clvm_wasm: 0.7.0
       jscrypto: 1.0.3
 
@@ -1950,6 +1954,8 @@ snapshots:
   color-name@1.1.4: {}
 
   concat-map@0.0.1: {}
+
+  core-js@3.37.1: {}
 
   cross-spawn@7.0.3:
     dependencies:

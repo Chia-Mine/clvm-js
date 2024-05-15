@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       clvm:
-        specifier: link:../../.dist/npm
-        version: link:../../.dist/npm
+        specifier: ^3.0.0-beta.1
+        version: 3.0.0-beta.1
     devDependencies:
       copy-webpack-plugin:
         specifier: ^12.0.2
@@ -240,6 +240,12 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
+  binascii@0.0.2:
+    resolution: {integrity: sha512-rA2CrUl1+6yKrn+XgLs8Hdy18OER1UW146nM+ixzhQXDY+Bd3ySkyIJGwF2a4I45JwbvF1mDL/nWkqBwpOcdBA==}
+
+  bls-signatures@2.0.3:
+    resolution: {integrity: sha512-6hp0od7VJkXthuANiABt+0z3nWbfGBKGu17JrzZR+mg6+hy3hpt1uwZS2xkK2eXwc1pz1jzVeYJxjMKNj4km+A==}
+
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
 
@@ -285,6 +291,13 @@ packages:
     resolution: {integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==}
     engines: {node: '>=6'}
 
+  clvm@3.0.0-beta.1:
+    resolution: {integrity: sha512-tlwhjd58Wn5t2V5hhBzIlINk/ZHEDIVH5+rd/kp8bylCWHTqZ3IQLeCBOCId/KkWYgfWZXd6V1SafiG92Lfgkw==}
+    engines: {node: '>=12.13.0'}
+
+  clvm_wasm@0.7.0:
+    resolution: {integrity: sha512-JsGOuZEjA1DS2rNtCNL+4PbXWXvvE5nBpHCfg9pe2KVh+IUwUl3xTer4pk++jj+3CIaML9BvnvFowL117E8PSw==}
+
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -311,6 +324,9 @@ packages:
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       webpack: ^5.1.0
+
+  core-js@3.37.1:
+    resolution: {integrity: sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==}
 
   corser@2.0.1:
     resolution: {integrity: sha512-utCYNzRSQIZNPIcGZdQc92UVJYAhtGAteCFg0yRaFm8f0P+CPtyGyHXJcGXnffjCybUCEx3FQ2G7U3/o9eIkVQ==}
@@ -614,6 +630,10 @@ packages:
   jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
+
+  jscrypto@1.0.3:
+    resolution: {integrity: sha512-lryZl0flhodv4SZHOqyb1bx5sKcJxj0VBo0Kzb4QMAg3L021IC9uGpl0RCZa+9KJwlRGSK2C80ITcwbe19OKLQ==}
+    hasBin: true
 
   json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
@@ -1293,6 +1313,13 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
+  binascii@0.0.2: {}
+
+  bls-signatures@2.0.3:
+    dependencies:
+      binascii: 0.0.2
+      core-js: 3.37.1
+
   boolbase@1.0.0: {}
 
   braces@3.0.2:
@@ -1352,6 +1379,14 @@ snapshots:
       kind-of: 6.0.3
       shallow-clone: 3.0.1
 
+  clvm@3.0.0-beta.1:
+    dependencies:
+      bls-signatures: 2.0.3
+      clvm_wasm: 0.7.0
+      jscrypto: 1.0.3
+
+  clvm_wasm@0.7.0: {}
+
   color-convert@2.0.1:
     dependencies:
       color-name: 1.1.4
@@ -1375,6 +1410,8 @@ snapshots:
       schema-utils: 4.2.0
       serialize-javascript: 6.0.2
       webpack: 5.91.0(webpack-cli@5.1.4)
+
+  core-js@3.37.1: {}
 
   corser@2.0.1: {}
 
@@ -1675,6 +1712,8 @@ snapshots:
       '@types/node': 20.12.11
       merge-stream: 2.0.0
       supports-color: 8.1.1
+
+  jscrypto@1.0.3: {}
 
   json-parse-even-better-errors@2.3.1: {}
 
