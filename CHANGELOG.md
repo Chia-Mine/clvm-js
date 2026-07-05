@@ -17,6 +17,12 @@ This version is compatible with [`a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4`](htt
     Note: `serialized_length` is not re-exported from the package root because the name conflicts with `serialized_length` of `clvm_wasm`. Import it from `clvm/object_cache` directly.
   - Added `ReadCacheLookup` in `read_cache_lookup`
   - Exposed `traverse_path` and `MAX_SAFE_BYTES` from `serialize`
+### Changed
+- Resolved all known security advisories reported for `pnpm-lock.yaml` of the project root, `example/typescript_react` and `example/typescript_webpack`
+  - Upgraded `webpack` to `5.108.4`
+  - Upgraded `vite` of `example/typescript_react` to `6.4.3`
+  - Added `pnpm.overrides` to `package.json` to force vulnerable transitive dependencies onto patched versions
+  - No runtime dependency of the published `clvm` package (`bls-signatures`, `clvm_wasm`, `jscrypto`) was affected
 
 ## [3.0.0]
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
