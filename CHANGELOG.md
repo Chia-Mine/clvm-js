@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.0.0]
+This version is compatible with [`a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4`](https://github.com/Chia-Network/clvm/tree/a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4) of [clvm](https://github.com/Chia-Network/clvm)
+### Breaking Change
+- `SExp.as_iter()` now accepts lists that are not null-terminated. Iteration stops at any terminating atom instead of throwing `EvalError`.
+  (Ported from [clvm#170](https://github.com/Chia-Network/clvm/pull/170))
+- `sexp_to_stream()` and `SExp.as_bin()` now throw `Error("SExp exceeds maximum size")` if the serialized output exceeds 2,000,000 bytes.
+  Pass `{max_size: <number>}` to raise the limit.
+  (Ported from [clvm#173](https://github.com/Chia-Network/clvm/pull/173) and [clvm#174](https://github.com/Chia-Network/clvm/pull/174))
+### Added
+- Added support for serialization with back-references, compatible with `clvm_rs`.
+  (Ported from [clvm#168](https://github.com/Chia-Network/clvm/pull/168))
+  - `SExp.as_bin({allow_backrefs: true})` and `sexp_to_stream(sexp, f, {allow_backrefs: true})` serialize with back-references
+  - `sexp_from_stream(f, to_sexp_f, {allow_backrefs: true})` deserializes blobs containing back-references
+  - Added `ObjectCache`, `treehash` and `serialized_length` in `object_cache`  
+    Note: `serialized_length` is not re-exported from the package root because the name conflicts with `serialized_length` of `clvm_wasm`. Import it from `clvm/object_cache` directly.
+  - Added `ReadCacheLookup` in `read_cache_lookup`
+  - Exposed `traverse_path` and `MAX_SAFE_BYTES` from `serialize`
+### Changed
+- Resolved all known security advisories reported for `pnpm-lock.yaml` of the project root, `example/typescript_react` and `example/typescript_webpack`
+  - Upgraded `webpack` to `5.108.4`
+  - Upgraded `vite` of `example/typescript_react` to `6.4.3`
+  - Added `pnpm.overrides` to `package.json` to force vulnerable transitive dependencies onto patched versions
+  - No runtime dependency of the published `clvm` package (`bls-signatures`, `clvm_wasm`, `jscrypto`) was affected
+- All dependencies and `pnpm.overrides` in `package.json` are now pinned to exact versions (no `^` ranges) to protect against supply-chain attacks via newly published malicious versions
+
 ## [3.0.0]
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
 ### Breaking Change

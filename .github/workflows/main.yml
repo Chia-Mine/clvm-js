@@ -3,46 +3,39 @@ name: Test
 on:
   push:
     branches:
-      - '*'
-      - '!main'
+      - main
   pull_request:
     branches:
-      - '*'
-      - '!main'
+      - main
+
+# The GITHUB_TOKEN never needs more than read access in this workflow.
+# (GitHub additionally forces the token to read-only for fork PRs.)
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
- 
-      - name: Setup Node 18
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
-          node-version: '18.x'
+          version: 10
 
-      - name: Get yarn version
-        run: echo "yarn_version=$(yarn -v)" >> $GITHUB_ENV
-
-      - name: Get yarn(v1) cache directory path
-        if: startsWith(env.yarn_version, '1')
-        run: echo "cache_dir=$(yarn cache dir)" >> $GITHUB_ENV
-
-      - name: Get yarn(v2) cache directory path
-        if: startsWith(env.yarn_version, '2')
-        run: echo "cache_dir=$(yarn config get cacheFolder)"
-
-      - name: Cache Node.js modules
-        id: yarn-cache
-        uses: actions/cache@v4
+      - name: Setup Node 20
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          path: ${{ env.cache_dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version: '20.x'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - run: yarn build
-      - run: yarn test
+      - run: pnpm build
+      - run: pnpm test

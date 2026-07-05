@@ -3,7 +3,7 @@ import {None, Optional} from "./__python_types__";
 import {CLVMObject, CLVMType} from "./CLVMObject";
 import {Bytes, isIterable, Tuple, t, Stream, isBytes, isTuple} from "./__type_compatibility__";
 import {bigint_from_bytes, bigint_to_bytes, int_from_bytes, int_to_bytes} from "./casts";
-import {sexp_to_stream} from "./serialize";
+import {sexp_to_stream, TSerializeOption} from "./serialize";
 import {as_javascript} from "./as_javascript";
 import {EvalError} from "./EvalError";
 
@@ -241,9 +241,9 @@ export class SExp implements CLVMType {
     return bigint_from_bytes(this.atom, {signed: true});
   }
   
-  public as_bin(){
+  public as_bin(option?: Partial<TSerializeOption>){
     const f = new Stream();
-    sexp_to_stream(this, f);
+    sexp_to_stream(this, f, option);
     return f.getValue();
   }
   
@@ -269,7 +269,7 @@ export class SExp implements CLVMType {
   
   public *as_iter(){
     let v: SExp = this;
-    while(!v.nullp()){
+    while(v.pair !== None){
       yield v.first();
       v = v.rest();
     }
