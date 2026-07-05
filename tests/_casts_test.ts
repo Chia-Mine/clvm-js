@@ -195,3 +195,57 @@ test("limbs_for_int", () => {
   expect(limbs_for_int(65536)).toBe(3);
   expect(limbs_for_int(-65536)).toBe(3);
 });
+
+test("minimal signed encoding at power-of-two boundaries", () => {
+  // Expected values generated with Python clvm's `int_to_bytes`.
+  // Before the fix, values like -32768 and -(2**31) were encoded with a
+  // redundant leading 0xff byte (e.g. ff8000 instead of 8000).
+  const cases: Array<[string, string]> = [
+    ["1", "01"],
+    ["-1", "ff"],
+    ["127", "7f"],
+    ["-127", "81"],
+    ["128", "0080"],
+    ["-128", "80"],
+    ["129", "0081"],
+    ["-129", "ff7f"],
+    ["255", "00ff"],
+    ["-255", "ff01"],
+    ["256", "0100"],
+    ["-256", "ff00"],
+    ["32767", "7fff"],
+    ["-32767", "8001"],
+    ["32768", "008000"],
+    ["-32768", "8000"],
+    ["32769", "008001"],
+    ["-32769", "ff7fff"],
+    ["8388607", "7fffff"],
+    ["-8388608", "800000"],
+    ["8388608", "00800000"],
+    ["-8388609", "ff7fffff"],
+    ["2147483647", "7fffffff"],
+    ["-2147483648", "80000000"],
+    ["2147483648", "0080000000"],
+    ["-2147483649", "ff7fffffff"],
+    ["140737488355327", "7fffffffffff"],
+    ["-140737488355328", "800000000000"],
+    ["140737488355328", "00800000000000"],
+    ["9223372036854775807", "7fffffffffffffff"],
+    ["-9223372036854775808", "8000000000000000"],
+    ["9223372036854775808", "008000000000000000"],
+    ["-9223372036854775809", "ff7fffffffffffffff"],
+  ];
+  for(const [decimal, hex] of cases){
+    const b = BigInt(decimal);
+    expect(bigint_to_bytes(b, {signed: true}).hex()).toBe(hex);
+    // round trip
+    expect(bigint_from_bytes(h(`0x${hex}`), {signed: true})).toBe(b);
+    const n = Number(decimal);
+    if(Number.isSafeInteger(n)){
+      expect(int_to_bytes(n, {signed: true}).hex()).toBe(hex);
+      if(hex.length * 4 <= 52){
+        expect(int_from_bytes(h(`0x${hex}`), {signed: true})).toBe(n);
+      }
+    }
+  }
+});
