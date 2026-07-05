@@ -22,8 +22,8 @@ importers:
   .:
     dependencies:
       clvm:
-        specifier: ^4.0.1
-        version: 4.0.1
+        specifier: ^4.1.0
+        version: 4.1.0
     devDependencies:
       copy-webpack-plugin:
         specifier: 12.0.2
@@ -300,12 +300,12 @@ packages:
     resolution: {integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==}
     engines: {node: '>=6'}
 
-  clvm@4.0.1:
-    resolution: {integrity: sha512-47ffjifHMT/PNBSFqIilbLlp/pG9VY92vCW/LoO1QNGI4eRxnW+7H0TQ5j2Tro9dl9PMuf0mQlXmbwIM/tX26A==}
+  clvm@4.1.0:
+    resolution: {integrity: sha512-iYJgPwHjM/GbOe70iXIuuG2uSSZEgJDoWZhkArWqIMzVoxuMLRbweS5IeyvtjXvj1H7uS7zEPcPA28et9TahtQ==}
     engines: {node: '>=12.13.0'}
 
-  clvm_wasm@0.7.0:
-    resolution: {integrity: sha512-JsGOuZEjA1DS2rNtCNL+4PbXWXvvE5nBpHCfg9pe2KVh+IUwUl3xTer4pk++jj+3CIaML9BvnvFowL117E8PSw==}
+  clvm_wasm@0.16.2:
+    resolution: {integrity: sha512-UNfgrXnPwXCrmHHLvQZM47CO62MeNEZTv7N7ZTtptOqHsmo6YQHHf8B6nvGkIlqq4BcyIXAZ8kVS+aq5MwYvTw==}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -1387,13 +1387,13 @@ snapshots:
       kind-of: 6.0.3
       shallow-clone: 3.0.1
 
-  clvm@4.0.1:
+  clvm@4.1.0:
     dependencies:
       bls-signatures: 2.0.3
-      clvm_wasm: 0.7.0
+      clvm_wasm: 0.16.2
       jscrypto: 1.0.3
 
-  clvm_wasm@0.7.0: {}
+  clvm_wasm@0.16.2: {}
 
   color-convert@2.0.1:
     dependencies:
