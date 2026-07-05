@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.1.0]
+## [4.0.0]
 This version is compatible with [`a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4`](https://github.com/Chia-Network/clvm/tree/a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4) of [clvm](https://github.com/Chia-Network/clvm)
 ### Breaking Change
 - `SExp.as_iter()` now accepts lists that are not null-terminated. Iteration stops at any terminating atom instead of throwing `EvalError`.
