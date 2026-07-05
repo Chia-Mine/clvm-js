@@ -2,6 +2,8 @@ name: Test
 
 on:
   push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -17,9 +19,6 @@ concurrency:
 
 jobs:
   build:
-    # Same-repo branches are already tested by the push event, so skip their
-    # duplicate pull_request runs. Fork PRs only ever trigger pull_request.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
