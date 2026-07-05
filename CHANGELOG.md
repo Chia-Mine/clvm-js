@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.1]
+### Fixed
+- Fixed `int_to_bytes()` and `bigint_to_bytes()` encoding signed negative integers at exact power-of-two boundaries (`-128*256**n`, e.g. `-32768`, `-(2**31)`, `-(2**63)`) with a redundant leading `0xff` byte instead of the minimal encoding produced by Python's `clvm` and by `clvm_rs`.  
+  This also affected arithmetic results of the deprecated JavaScript evaluator (`run_program`) for those exact values. Found by differential fuzzing against Python `clvm_tools`.
+- Fixed `int_to_bytes()` producing incorrect bytes for values at or beyond `2**31` (JavaScript's `>>` operates on 32-bit integers). It now delegates to `bigint_to_bytes()`.
+
 ## [4.0.0]
 This version is compatible with [`a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4`](https://github.com/Chia-Network/clvm/tree/a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4) of [clvm](https://github.com/Chia-Network/clvm)
 ### Breaking Change

@@ -84,47 +84,11 @@ export function int_to_bytes(v: number, option?: Partial<TConvertOption>): Bytes
   if(v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER){
     throw new Error(`The int value is beyond ${v > 0 ? "MAX_SAFE_INTEGER" : "MIN_SAFE_INTEGER"}: ${v}`);
   }
-  if(v === 0){
-    return Bytes.NULL;
-  }
-  
-  const signed = (option && typeof option.signed === "boolean") ? option.signed : false;
-  if(!signed && v < 0){
-    throw new Error("OverflowError: can't convert negative int to unsigned");
-  }
-  
-  let byte_count = 1;
-  const div = signed ? 1 : 0;
-  const b16 = 65536;
-  if(v > 0){
-    let right_hand = (v + 1) * (div + 1);
-    while((b16 ** ((byte_count-1)/2 + 1)) < right_hand){
-      byte_count += 2;
-    }
-    right_hand = (v + 1) * (div + 1);
-    while (2 ** (8 * byte_count) < right_hand) {
-      byte_count++;
-    }
-  }
-  else if(v < 0){
-    let right_hand = (-v + 1) * (div + 1);
-    while((b16 ** ((byte_count-1)/2 + 1)) < right_hand){
-      byte_count += 2;
-    }
-    right_hand = -v * 2;
-    while (2 ** (8 * byte_count) < right_hand) {
-      byte_count++;
-    }
-  }
-  
-  const extraByte = signed && v > 0 && ((v >> ((byte_count-1)*8)) & 0x80) > 0 ? 1 : 0;
-  const u8 = new Uint8Array(byte_count + extraByte);
-  for(let i=0;i<byte_count;i++){
-    const j = extraByte ? i+1 : i;
-    u8[j] = (v >> (byte_count-i-1)*8) & 0xff;
-  }
-  
-  return new Bytes(u8);
+  // Delegate to `bigint_to_bytes`. The previous `number`-based implementation
+  // was incorrect for |v| >= 2**31 (JavaScript's `>>` operates on 32-bit
+  // integers) and produced a redundant leading 0xff byte for negative values
+  // at exact power-of-two boundaries such as -32768.
+  return bigint_to_bytes(BigInt(v), option);
 }
 
 // The reason to use `pow` instead of `**` is that some transpiler automatically converts `**` into `Math.pow`
@@ -193,7 +157,10 @@ export function bigint_to_bytes(v: bigint, option?: Partial<TConvertOption>): By
     }
   }
   else if(v < 0){
-    let right_hand = (-v + BigInt(1)) * (div + BigInt(1));
+    // A signed negative v fits in n bytes iff -v*2 <= 2**(8n).
+    // (-v+1)*2 overestimated by one at exact boundaries like -(2**31),
+    // producing a redundant leading 0xff byte.
+    let right_hand = -v * (div + BigInt(1));
     while(pow(b32, BigInt((byte_count-1)/4 + 1)) < right_hand){
       byte_count += 4;
     }
