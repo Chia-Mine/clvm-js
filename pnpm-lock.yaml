@@ -29,8 +29,8 @@ importers:
         specifier: 2.0.3
         version: 2.0.3
       clvm_wasm:
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.16.2
+        version: 0.16.2
       jscrypto:
         specifier: 1.0.3
         version: 1.0.3
@@ -862,8 +862,8 @@ packages:
     resolution: {integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==}
     engines: {node: '>=6'}
 
-  clvm_wasm@0.7.0:
-    resolution: {integrity: sha512-JsGOuZEjA1DS2rNtCNL+4PbXWXvvE5nBpHCfg9pe2KVh+IUwUl3xTer4pk++jj+3CIaML9BvnvFowL117E8PSw==}
+  clvm_wasm@0.16.2:
+    resolution: {integrity: sha512-UNfgrXnPwXCrmHHLvQZM47CO62MeNEZTv7N7ZTtptOqHsmo6YQHHf8B6nvGkIlqq4BcyIXAZ8kVS+aq5MwYvTw==}
 
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
@@ -3578,7 +3578,7 @@ snapshots:
       kind-of: 6.0.3
       shallow-clone: 3.0.1
 
-  clvm_wasm@0.7.0: {}
+  clvm_wasm@0.16.2: {}
 
   co@4.6.0: {}
 

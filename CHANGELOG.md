@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0]
+### Changed
+- Upgraded bundled `clvm_wasm` from `0.7.0` to `0.16.2` (the latest wasm build published from [clvm_rs](https://github.com/Chia-Network/clvm_rs)), picking up about two years of `clvm_rs` runtime updates for the `run_chia_program`/`run_clvm` backend
+  - **Behavior change**: `div` with negative operands is now allowed and computes floor division, matching current `clvm_rs` consensus behaviour (verified against `clvm_rs` 0.18.0). `clvm_wasm` 0.7.0 still raised `div operator with negative operands is deprecated`, which is pre-hard-fork behaviour. Note that the deprecated JavaScript evaluator (`run_program`) and Python's `clvm` still reject negative operands
+  - `src/__clvm_wasm__.ts` regenerated for the new wasm-bindgen ABI (externref table instead of the JS heap)
+  - Error strings thrown by `run_chia_program` changed format (e.g. `Raise(NodePtr(SmallAtom, 1337))` instead of `EvalErr(NodePtr(...), "clvm raise")`). They remain opaque strings; do not parse them
+
 ## [4.0.1]
 ### Fixed
 - Fixed `int_to_bytes()` and `bigint_to_bytes()` encoding signed negative integers at exact power-of-two boundaries (`-128*256**n`, e.g. `-32768`, `-(2**31)`, `-(2**63)`) with a redundant leading `0xff` byte instead of the minimal encoding produced by Python's `clvm` and by `clvm_rs`.  

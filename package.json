@@ -1,6 +1,6 @@
 {
   "name": "clvm",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "author": "ChiaMineJP <admin@chiamine.jp>",
   "description": "Javascript implementation of chia lisp",
   "license": "MIT",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "bls-signatures": "2.0.3",
-    "clvm_wasm": "0.7.0",
+    "clvm_wasm": "0.16.2",
     "jscrypto": "1.0.3"
   },
   "devDependencies": {
