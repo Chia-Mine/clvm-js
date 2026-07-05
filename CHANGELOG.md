@@ -23,6 +23,7 @@ This version is compatible with [`a5b92bb1b3c2e3865ee54060f5188b5b8fd2d9a4`](htt
   - Upgraded `vite` of `example/typescript_react` to `6.4.3`
   - Added `pnpm.overrides` to `package.json` to force vulnerable transitive dependencies onto patched versions
   - No runtime dependency of the published `clvm` package (`bls-signatures`, `clvm_wasm`, `jscrypto`) was affected
+- All dependencies and `pnpm.overrides` in `package.json` are now pinned to exact versions (no `^` ranges) to protect against supply-chain attacks via newly published malicious versions
 
 ## [3.0.0]
 This version is compatible with [`960f8d139940fa0814d3fac44da9a2975642f5d3`](https://github.com/Chia-Network/clvm/tree/960f8d139940fa0814d3fac44da9a2975642f5d3) of [clvm](https://github.com/Chia-Network/clvm)
