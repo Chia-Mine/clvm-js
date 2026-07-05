@@ -62,11 +62,11 @@ main().catch(e => console.error(e));
 ```
 
 ## More example with clvm_wasm
-See this [test case for clvm_wasm](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/tests/original/clvm_wasm_test.ts)
+See this [test case for clvm_wasm](https://github.com/Chia-Mine/clvm-js/blob/v4.0.1/tests/original/clvm_wasm_test.ts)
 
 ## Use in browser
-- [Sample code - Use clvm-js with TypeScript, Webpack](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_webpack)
-- [Sample code - Use clvm-js with TypeScript, React, Vite](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react)
+- [Sample code - Use clvm-js with TypeScript, Webpack](https://github.com/Chia-Mine/clvm-js/blob/v4.0.1/example/typescript_webpack)
+- [Sample code - Use clvm-js with TypeScript, React, Vite](https://github.com/Chia-Mine/clvm-js/blob/v4.0.1/example/typescript_react)
 
 If you'd like to run some javascript code which depends on `clvm` on browser,  
 you need to put `clvm_wasm_bg.wasm` and optionally `blsjs.wasm` to the same directory as the code who loads `clvm`.  
@@ -87,7 +87,7 @@ copy `blsjs.wasm` and `clvm_wasm_bg.wasm` into `<react-project-root>/public/asse
 **IMPORTANT NOTE**  
 When your code is loaded as a module, such as with `<script type='module'/>` (common in React with Vite),
 there is a path restriction for loading the WebAssembly (WASM) module.  
-See [Known Issues](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/CHANGELOG.md#known-issues). Also see [code comment here](https://github.com/Chia-Mine/clvm-js/blob/v3.0.0/example/typescript_react/src/index.tsx)  
+See [Known Issues](https://github.com/Chia-Mine/clvm-js/blob/v4.0.1/CHANGELOG.md#known-issues). Also see [code comment here](https://github.com/Chia-Mine/clvm-js/blob/v4.0.1/example/typescript_react/src/index.tsx)  
 
 **Note1**  
 Don't forget to wait `clvm.initializeClvmWasm()`.  
