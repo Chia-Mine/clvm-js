@@ -13,8 +13,13 @@ export * from "./costs";
 export * from "./EvalError";
 export * from "./initialize";
 export * from "./more_ops";
+// `serialized_length` of "./object_cache" is not re-exported here because
+// its name conflicts with `serialized_length` of "./__clvm_wasm__".
+// Import it from "clvm/object_cache" directly if you need it.
+export {ObjectCache, treehash} from "./object_cache";
 export * from "./op_utils";
 export * from "./operators";
+export * from "./read_cache_lookup";
 export * from "./run_program";
 export * from "./serialize";
 export * from "./SExp";

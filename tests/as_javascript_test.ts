@@ -261,11 +261,12 @@ test("test_as_iter", () => {
   val = list(SExp.to(t(1, b(""))).as_iter());
   assertArrayEqual(val, [1]);
   
-  // these fail because the lists are not null-terminated
-  expect(() => list(SExp.to(1).as_iter())).toThrowError(EvalError);
-  expect(() => {
-    list(SExp.to(t(1, t(2, t(3, t(4, 5))))).as_iter());
-  }).toThrowError(EvalError);
+  // we accept lists that are not null-terminated
+  val = list(SExp.to(1).as_iter());
+  assertArrayEqual(val, []);
+
+  val = list(SExp.to(t(1, t(2, t(3, t(4, 5))))).as_iter());
+  assertArrayEqual(val, [1, 2, 3, 4]);
 });
 
 test("test_eq", () => {
