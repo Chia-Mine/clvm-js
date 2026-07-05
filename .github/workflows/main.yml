@@ -2,16 +2,19 @@ name: Test
 
 on:
   push:
-    branches:
-      - '*'
-      - '!main'
   pull_request:
     branches:
-      - '*'
-      - '!main'
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    # Same-repo branches are already tested by the push event, so skip their
+    # duplicate pull_request runs. Fork PRs only ever trigger pull_request.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
